@@ -21,6 +21,10 @@ class Node implements NodeInterface {
 
   NodeInterface get parent => _parent;
   
+  bool get isDirty => _isDirty;
+  
+  bool get hasDirtyDescendant => _hasDirtyDescendant;
+  
   /**
    * mark this instance as dirty and if status was changed, 
    * than flag whole route to root of node tree as "has dirty descendant".
@@ -55,7 +59,8 @@ class Node implements NodeInterface {
    */
   Node(this._parent, ComponentDescriptionInterface description) : _factory = description.factory {
     this._component = description.createComponent(this);
-    this._isDirty = true;
+    this.isDirty = true;
+    this._children = [];
   }
 
   /**
@@ -159,7 +164,7 @@ class Node implements NodeInterface {
         result.addAll(child.update());
       }
     } else if(children.length > newChildren.length){
-      for(int i = 0; children.length - newChildren.length; ++i){
+      for(int i = 0; i < children.length - newChildren.length; ++i){
         NodeInterface removed = children.removeLast();
         result.add(new NodeChange(NodeChangeType.DELETED, removed));
       }

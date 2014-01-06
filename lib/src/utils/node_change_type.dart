@@ -15,4 +15,15 @@ class NodeChangeType {
   final int value;
 
   const NodeChangeType._(this.value);
+  
+  String toString(){
+    if (this == CREATED)
+      return "CREATED";
+    if (this == UPDATED)
+      return "UPDATED";
+    if (this == MOVED)
+      return "MOVED";
+    if (this == DELETED)
+      return "DELETED";
+  }
 }
