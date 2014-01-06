@@ -5,6 +5,6 @@ abstract class NodeChangeInterface {
   NodeInterface get node;
   PropsInterface get oldProps;
   PropsInterface get newProps;
-  NodeChangeInterface(NodeChangeType type, NodeInterface node, PropsInterface oldProps, PropsInterface newProps);
+  NodeChangeInterface(NodeChangeType type, NodeInterface node, [PropsInterface oldProps, PropsInterface newProps]);
   
 }
