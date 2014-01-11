@@ -14,4 +14,6 @@ class Props {
   }
   List<ComponentDescription> get children => _children;
   
+  Props([this._children]);
+  
 }

@@ -10,7 +10,7 @@ class NodeChangeType {
   static const MOVED   = const NodeChangeType._(2);
   static const DELETED = const NodeChangeType._(3);
 
-  static get values => [CREATED, UPDATED, MOVED, DELETED];
+  static List<NodeChangeType> get values => [CREATED, UPDATED, MOVED, DELETED];
 
   final int value;
 
