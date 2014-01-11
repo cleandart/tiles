@@ -1,11 +1,10 @@
+library tiles_node_test;
+
 import 'package:unittest/unittest.dart';
 import 'package:unittest/mock.dart';
+import 'mocks.dart';
 import 'package:library/library.dart';
 
-
-class ComponentMock extends Mock implements Component {}
-
-class ComponentDescriptionMock extends Mock implements ComponentDescription {}
 
 main() {
   

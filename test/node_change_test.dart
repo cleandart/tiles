@@ -1,10 +1,9 @@
+library tiles_node_change_test;
+
 import 'package:unittest/unittest.dart';
-import 'package:unittest/mock.dart';
+import 'mocks.dart';
 import 'package:library/library.dart';
 import 'dart:math';
-
-class PropsMock extends Mock implements Props {}
-class NodeMock extends Mock implements Node {}
 
 main() {
   

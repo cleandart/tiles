@@ -1,8 +1,8 @@
-import 'package:unittest/unittest.dart';
-import 'package:unittest/mock.dart';
-import 'package:library/library.dart';
+library tiles_props_test;
 
-class ComponentDescriptionMock extends Mock implements ComponentDescription {}
+import 'package:unittest/unittest.dart';
+import 'mocks.dart';
+import 'package:library/library.dart';
 
 main() {
   group("(Props)", (){

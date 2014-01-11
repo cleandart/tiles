@@ -1,3 +1,5 @@
+library tiles_test;
+
 import "node_test.dart" as node;
 import "component_description_test.dart" as componentDescription;
 import "node_change_test.dart" as nodeChange;
