@@ -17,13 +17,27 @@ class NodeChangeType {
   const NodeChangeType._(this.value);
   
   String toString(){
-    if (this == CREATED)
-      return "CREATED";
-    if (this == UPDATED)
-      return "UPDATED";
-    if (this == MOVED)
-      return "MOVED";
-    if (this == DELETED)
-      return "DELETED";
+    return {
+      CREATED: "CREATED",
+      UPDATED: "UPDATED",
+      MOVED: "MOVED",
+      DELETED: "DELETED"
+    }[this];
+//    if (this == CREATED)
+//      return "CREATED";
+//    if (this == UPDATED)
+//      return "UPDATED";
+//    if (this == MOVED)
+//      return "MOVED";
+//    if (this == DELETED)
+//      return "DELETED";
   }
+}
+
+main () {
+  print(NodeChangeType.CREATED);
+  print(NodeChangeType.UPDATED);
+  print(NodeChangeType.MOVED);
+  print(NodeChangeType.DELETED);
+  
 }

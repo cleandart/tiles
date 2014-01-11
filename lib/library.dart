@@ -1,4 +1,5 @@
 library library;
+import 'dart:async';
 
 part 'src/core/component.dart';
 part 'src/core/component_description.dart';

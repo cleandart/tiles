@@ -1,11 +1,9 @@
 part of library;
 
 class Node {
-  Component _component;
+  final Component _component;
   
-  final ComponentFactory _factory;
-  
-  List<Node> _children;
+  List<_NodeWithFactory> _children;
   
   final Node _parent;
   
@@ -13,11 +11,17 @@ class Node {
   
   bool _hasDirtyDescendant = false;
   
+  Props _oldProps;
+  
   Component get component => _component;
   
-  ComponentFactory get factory => _factory;
+  List<Node> get children {
+    List<Node> children = new List<Node>();
+    _children.forEach((childWithFactory) => children.add(childWithFactory.node));
+    return children;
+  }
   
-  List<Node> get children => _children;
+  List<_NodeWithFactory> get rawChildren => _children;
 
   Node get parent => _parent;
   
@@ -57,8 +61,7 @@ class Node {
    * 
    *   Node node = new Node(parent, description); 
    */
-  Node(this._parent, ComponentDescription description) : _factory = description.factory {
-    this._component = description.createComponent(this);
+  Node(this._parent, Component this._component){
     this.isDirty = true;
     this._children = [];
   }
@@ -91,7 +94,7 @@ class Node {
     /**
      * and in every case, add everything from children.
      */
-    _children.forEach((child) => result.addAll(child.update()));
+    children.forEach((child) => result.addAll(child.update()));
 
     /**
      * tag this node as clean without dirty descendants
@@ -117,7 +120,7 @@ class Node {
     /**
      * create result as list with this as updated.
      */
-    List<NodeChange> result = [new NodeChange(NodeChangeType.UPDATED, this)];
+    List<NodeChange> result = [new NodeChange(NodeChangeType.UPDATED, this, _oldProps, this.component.props)];
 
     /**
      * get components descriptions from this.component.render
@@ -140,11 +143,11 @@ class Node {
       /** 
        * if factory is same, update child, else replace child 
        */
-      if(children[i].factory == newChildren[i].factory) {
-        children[i].apply(newChildren[i]);
+      if(_children[i].factory == newChildren[i].factory) {
+        children[i].apply(newChildren[i].props);
       } else {
         Node oldChild = children[i];
-        children[i] = new Node(this, newChildren[i]);
+        _children[i] = new _NodeWithFactory(new Node(this, newChildren[i].createComponent()), newChildren[i].factory);
         result.add(new NodeChange(NodeChangeType.DELETED, oldChild));
         result.add(new NodeChange(NodeChangeType.CREATED, children[i]));
       }
@@ -160,15 +163,15 @@ class Node {
      */
     if (children.length < newChildren.length) {
       for(int i = children.length; i < newChildren.length; ++i){
-        Node child = new Node(this,  newChildren[i]);
-        children.add(child);
-        result.add(new NodeChange(NodeChangeType.CREATED, child));
-        result.addAll(child.update());
+        _NodeWithFactory child = new _NodeWithFactory(new Node(this,  newChildren[i].createComponent()), newChildren[i].factory);
+        _children.add(child);
+        result.add(new NodeChange(NodeChangeType.CREATED, child.node));
+        result.addAll(child.node.update());
       }
     } else if(children.length > newChildren.length){
       for(int i = 0; i < children.length - newChildren.length; ++i){
-        Node removed = children.removeLast();
-        result.add(new NodeChange(NodeChangeType.DELETED, removed));
+        _NodeWithFactory removed = _children.removeLast();
+        result.add(new NodeChange(NodeChangeType.DELETED, removed.node));
       }
     }
     
@@ -181,13 +184,10 @@ class Node {
   /**
    * apply propagate props from description to inner component. 
    */
-  void apply(ComponentDescription description){
-    if(description.factory != this._factory){
-      throw new DifferentFactoryException();
-    }
-
-    this.component.willReceiveProps(description.props);
-    this.component.props = description.props;
+  void apply(Props props){
+    this.component.willReceiveProps(props);
+    this._oldProps = this.component.props;
+    this.component.props = props;
     this.isDirty = true;
   }
   

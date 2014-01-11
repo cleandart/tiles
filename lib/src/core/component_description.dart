@@ -7,6 +7,6 @@ class ComponentDescription {
   
   ComponentDescription (ComponentFactory factory, Props  props) {}
   
-  Component createComponent([Node node]) {}
+  Component createComponent() {}
   
 }
