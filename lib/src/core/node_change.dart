@@ -1,19 +1,19 @@
 part of library;
 
-class NodeChange implements NodeChangeInterface {
+class NodeChange {
   final NodeChangeType _type;
-  final NodeInterface _node;
-  final NodeInterface _newNode;
-  final PropsInterface _oldProps;
-  final PropsInterface _newProps;
+  final Node _node;
+  final Node _newNode;
+  final Props _oldProps;
+  final Props _newProps;
 
   
   NodeChangeType get type => _type;
-  NodeInterface get node => _node;
-  NodeInterface get newNode => _newNode;
-  PropsInterface get oldProps => _oldProps;
-  PropsInterface get newProps => _newProps;
+  Node get node => _node;
+  Node get newNode => _newNode;
+  Props get oldProps => _oldProps;
+  Props get newProps => _newProps;
   
-  NodeChange(NodeChangeType this._type, NodeInterface this._node, [NodeInterface this._newNode, PropsInterface this._oldProps, PropsInterface this._newProps]);
+  NodeChange(NodeChangeType this._type, Node this._node, [Node this._newNode, Props this._oldProps, Props this._newProps]);
   
 }

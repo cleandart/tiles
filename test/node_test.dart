@@ -1,21 +1,29 @@
 import 'package:unittest/unittest.dart';
-//import 'package:unittest/mock.dart';
+import 'package:unittest/mock.dart';
 import 'package:library/library.dart';
 
+
+class ComponentMock extends Mock implements Component {}
+
 main() {
+  
+//  var component = new ComponentMock()
+//    ..when(callsTo('render')).alwaysReturn([]);
+//  
+//  component.getLogs(callsTo('componentWillReceiveProps')).verify(happenedOnce);
   group("(Node)", () {
 
     /**
      * prepare default factory and component description
      */
-    ComponentFactory factory = ([NodeInterface node, PropsInterface props]) => new MockComponent(node, props);
-    ComponentDescriptionInterface description = new MockComponentDescription(factory, null);
+    ComponentFactory factory = ([Node node, Props props]) => new MockComponent(node, props);
+    ComponentDescription description = new MockComponentDescription(factory, null);
     
     /**
      * prepare more complex factory and descriptions, which work with another component class
      */
-    ComponentFactory complexFactory = ([NodeInterface node, PropsInterface props]) => new RenderingMockComponent(node, props);
-    ComponentDescriptionInterface complexDescription = new MockComponentDescription(complexFactory, null);
+    ComponentFactory complexFactory = ([Node node, Props props]) => new RenderingMockComponent(node, props);
+    ComponentDescription complexDescription = new MockComponentDescription(complexFactory, null);
 
     /**
      * test simple constructor and state after constructor was called
@@ -156,9 +164,9 @@ main() {
       /**
        * new factory of "rendering always new" component.
        */
-      ComponentFactory rf = ([NodeInterface node, PropsInterface props]) => 
+      ComponentFactory rf = ([Node node, Props props]) => 
           new RenderingAlwaysNewFactoryComponent(node, props);
-      ComponentDescriptionInterface rd = new MockComponentDescription(rf, null);
+      ComponentDescription rd = new MockComponentDescription(rf, null);
       
       Node node = new Node(null, rd);
       node.update();
@@ -199,15 +207,15 @@ main() {
   });
 }
 
-class MockComponent implements ComponentInterface {
+class MockComponent implements Component {
   
-  PropsInterface get props => null;
+  Props get props => null;
   
-  void set props(PropsInterface newProps){}
+  void set props(Props newProps){}
 
-  willReceiveProps(PropsInterface newProps){}
+  willReceiveProps(Props newProps){}
   
-  shouldUpdate(PropsInterface newProps, PropsInterface oldProps){}
+  shouldUpdate(Props newProps, Props oldProps){}
   
   didMount(){}
   
@@ -215,37 +223,37 @@ class MockComponent implements ComponentInterface {
   
   willUnmount(){}
   
-  List<ComponentDescriptionInterface> render(){}
+  List<ComponentDescription> render(){}
   
-  MockComponent(NodeInterface this.node, PropsInterface this._props){}
+  MockComponent(Node this.node, Props this._props){}
   
-  NodeInterface node;
+  Node node;
   
-  PropsInterface _props;
+  Props _props;
 
 }
 
-class MockComponentDescription implements ComponentDescriptionInterface {
+class MockComponentDescription implements ComponentDescription {
   ComponentFactory get factory => _factory;
   ComponentFactory _factory;
   
-  PropsInterface get props => _props;
-  PropsInterface _props;
+  Props get props => _props;
+  Props _props;
   
-  MockComponentDescription (ComponentFactory this._factory, PropsInterface  this._props);
+  MockComponentDescription (ComponentFactory this._factory, Props  this._props);
   
-  ComponentInterface createComponent([NodeInterface node]) => factory(node, props);
+  Component createComponent([Node node]) => factory(node, props);
 }
 
-class RenderingMockComponent implements ComponentInterface {
+class RenderingMockComponent implements Component {
   
-  PropsInterface get props => null;
+  Props get props => null;
   
-  void set props(PropsInterface newProps){}
+  void set props(Props newProps){}
 
-  willReceiveProps(PropsInterface newProps){}
+  willReceiveProps(Props newProps){}
   
-  shouldUpdate(PropsInterface newProps, PropsInterface oldProps){}
+  shouldUpdate(Props newProps, Props oldProps){}
   
   didMount(){}
   
@@ -253,29 +261,29 @@ class RenderingMockComponent implements ComponentInterface {
   
   willUnmount(){}
   
-  List<ComponentDescriptionInterface> render(){
+  List<ComponentDescription> render(){
     return [new MockComponentDescription(componentFactory, null)];
   }
   
-  RenderingMockComponent(NodeInterface this.node, PropsInterface this._props){}
+  RenderingMockComponent(Node this.node, Props this._props){}
   
-  NodeInterface node;
+  Node node;
   
-  PropsInterface _props;
+  Props _props;
 
 }
 
-ComponentFactory componentFactory = ([NodeInterface node, PropsInterface props]) => new MockComponent(node, props);
+ComponentFactory componentFactory = ([Node node, Props props]) => new MockComponent(node, props);
 
-class RenderingAlwaysNewFactoryComponent implements ComponentInterface {
+class RenderingAlwaysNewFactoryComponent implements Component {
   
-  PropsInterface get props => null;
+  Props get props => null;
   
-  void set props(PropsInterface newProps){}
+  void set props(Props newProps){}
 
-  willReceiveProps(PropsInterface newProps){}
+  willReceiveProps(Props newProps){}
   
-  shouldUpdate(PropsInterface newProps, PropsInterface oldProps){}
+  shouldUpdate(Props newProps, Props oldProps){}
   
   didMount(){}
   
@@ -283,15 +291,15 @@ class RenderingAlwaysNewFactoryComponent implements ComponentInterface {
   
   willUnmount(){}
   
-  List<ComponentDescriptionInterface> render(){
-    return [new MockComponentDescription(([NodeInterface node, PropsInterface props]) => new MockComponent(node, props), null)];
+  List<ComponentDescription> render(){
+    return [new MockComponentDescription(([Node node, Props props]) => new MockComponent(node, props), null)];
   }
   
-  RenderingAlwaysNewFactoryComponent (NodeInterface this.node, PropsInterface this._props);
+  RenderingAlwaysNewFactoryComponent (Node this.node, Props this._props);
   
-  NodeInterface node;
+  Node node;
   
-  PropsInterface _props;
+  Props _props;
 
 }
 

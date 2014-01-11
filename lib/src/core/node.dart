@@ -1,25 +1,25 @@
 part of library;
 
-class Node implements NodeInterface {
-  ComponentInterface _component;
+class Node {
+  Component _component;
   
   final ComponentFactory _factory;
   
-  List<NodeInterface> _children;
+  List<Node> _children;
   
-  final NodeInterface _parent;
+  final Node _parent;
   
   bool _isDirty = false;
   
   bool _hasDirtyDescendant = false;
   
-  ComponentInterface get component => _component;
+  Component get component => _component;
   
   ComponentFactory get factory => _factory;
   
-  List<NodeInterface> get children => _children;
+  List<Node> get children => _children;
 
-  NodeInterface get parent => _parent;
+  Node get parent => _parent;
   
   bool get isDirty => _isDirty;
   
@@ -57,16 +57,18 @@ class Node implements NodeInterface {
    * 
    *   Node node = new Node(parent, description); 
    */
-  Node(this._parent, ComponentDescriptionInterface description) : _factory = description.factory {
+  Node(this._parent, ComponentDescription description) : _factory = description.factory {
     this._component = description.createComponent(this);
     this.isDirty = true;
     this._children = [];
   }
+  
+//  Node(...)
 
   /**
    * Recognize if update this instance or children by _isDirty and _hasDirtyDescendants
    */
-  List<NodeChangeInterface> update(){
+  List<NodeChange> update(){
     /**
      * if nothing in this subtree is changed, return empty list
      */
@@ -77,7 +79,7 @@ class Node implements NodeInterface {
     /**
      * else create list and 
      */
-    List<NodeChangeInterface> result = [];
+    List<NodeChange> result = [];
 
     /**
      * if node is dirty, add everything returned by _updateThis, 
@@ -111,16 +113,16 @@ class Node implements NodeInterface {
    * 
    * Returns changes on children 
    */
-  List<NodeChangeInterface> _updateThis(){
+  List<NodeChange> _updateThis(){
     /**
      * create result as list with this as updated.
      */
-    List<NodeChangeInterface> result = [new NodeChange(NodeChangeType.UPDATED, this)];
+    List<NodeChange> result = [new NodeChange(NodeChangeType.UPDATED, this)];
 
     /**
      * get components descriptions from this.component.render
      */
-    List<ComponentDescriptionInterface> newChildren = this.component.render();
+    List<ComponentDescription> newChildren = this.component.render();
     
     /** 
      * if component don't render anything and return null instead of empty list,
@@ -141,7 +143,7 @@ class Node implements NodeInterface {
       if(children[i].factory == newChildren[i].factory) {
         children[i].apply(newChildren[i]);
       } else {
-        NodeInterface oldChild = children[i];
+        Node oldChild = children[i];
         children[i] = new Node(this, newChildren[i]);
         result.add(new NodeChange(NodeChangeType.DELETED, oldChild));
         result.add(new NodeChange(NodeChangeType.CREATED, children[i]));
@@ -165,7 +167,7 @@ class Node implements NodeInterface {
       }
     } else if(children.length > newChildren.length){
       for(int i = 0; i < children.length - newChildren.length; ++i){
-        NodeInterface removed = children.removeLast();
+        Node removed = children.removeLast();
         result.add(new NodeChange(NodeChangeType.DELETED, removed));
       }
     }
@@ -179,7 +181,7 @@ class Node implements NodeInterface {
   /**
    * apply propagate props from description to inner component. 
    */
-  void apply(ComponentDescriptionInterface description){
+  void apply(ComponentDescription description){
     if(description.factory != this._factory){
       throw new DifferentFactoryException();
     }
@@ -190,3 +192,11 @@ class Node implements NodeInterface {
   }
   
 }
+
+class _NodeWithFactory {
+  final Node node; 
+  final ComponentFactory factory;
+  
+  _NodeWithFactory(this.node, this.factory);
+}
+

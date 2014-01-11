@@ -1,8 +1,7 @@
 part of library;
 
-abstract class PropsInterface {
-  void mergeIn(PropsInterface newProps);
- 
+class Props {
+  List<ComponentDescription> _children;
   /**
    * getter and setter for children. 
    * 
@@ -10,7 +9,9 @@ abstract class PropsInterface {
    * 
    * But to good working api in Component factory, wee need this "value" in every props;
    */
-  void set children(List<ComponentDescriptionInterface> children);
-  List<ComponentDescriptionInterface> get children;
+  void set children(List<ComponentDescription> children) { 
+    _children = children; 
+  }
+  List<ComponentDescription> get children => _children;
   
 }
