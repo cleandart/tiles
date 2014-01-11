@@ -182,9 +182,11 @@ class Node {
   }
   
   /**
-   * apply propagate props from description to inner component. 
+   * apply props to inner component.
+   * 
+   * if no props, apply null
    */
-  void apply(Props props){
+  void apply([Props props]){
     this.component.willReceiveProps(props);
     this._oldProps = this.component.props;
     this.component.props = props;

@@ -1,9 +1,11 @@
 import 'package:unittest/unittest.dart';
-//import 'package:unittest/mock.dart';
+import 'package:unittest/mock.dart';
 import 'package:library/library.dart';
 
 
-//class ComponentMock extends Mock implements Component {}
+class ComponentMock extends Mock implements Component {}
+
+class ComponentDescriptionMock extends Mock implements ComponentDescription {}
 
 main() {
   
@@ -14,36 +16,22 @@ main() {
   group("(Node)", () {
 
     /**
-     * prepare default factory and component description
-     */
-    ComponentFactory factory = ([Node node, Props props]) => new MockComponent(node, props);
-    ComponentDescription description = new MockComponentDescription(factory, null);
-    
-    /**
-     * prepare more complex factory and descriptions, which work with another component class
-     */
-    ComponentFactory complexFactory = ([Node node, Props props]) => new RenderingMockComponent(node, props);
-    ComponentDescription complexDescription = new MockComponentDescription(complexFactory, null);
-
-    /**
      * test simple constructor and state after constructor was called
      */
     test("constructor", () {
-      
-      Node node = new Node(null, description.createComponent());
+      Node node = new Node(null, new ComponentMock());
       expect(node.component.props, equals(null));
       expect(node.isDirty, equals(true));
       expect(node.hasDirtyDescendant, equals(false));
-      expect(node.component is MockComponent, equals(true));
       expect(node.children, isEmpty);
     });
     
     /**
      * test if constructor set parent path as has dirty descendant
      */
-    test("constructor - as child, parent has dirty descendant", () {
-      Node node = new Node(null, description.createComponent());
-      Node node2 = new Node(node, description.createComponent());
+    test("constructor - set has dirty descendant to parent", () {
+      Node node = new Node(null, new ComponentMock());
+      Node node2 = new Node(node, new ComponentMock());
       
       expect(node.hasDirtyDescendant, equals(true));
     });
@@ -51,23 +39,29 @@ main() {
     /**
      * test simple update, with no children
      */
-    test("update - isDirty is false after update", () {
-      Node node = new Node(null, description.createComponent());
+    test("update - check isDirty before and after", () {
+      Node node = new Node(null, new ComponentMock());
       expect(node.isDirty, equals(true));
       
       node.update();
       expect(node.isDirty, equals(false));
       
-      /**
-       * create new node as child of our node.
-       */
     });
     
     /**
      * test node with component, which render always return description with same factory.
      */
-    test("update - more complex", () {
-      Node node = new Node(null, complexDescription.createComponent());
+    test("update - component will return description of one component, node should have one child", () {
+      ComponentDescriptionMock description = new ComponentDescriptionMock();
+
+      description.when(callsTo("createComponent")).alwaysReturn(new ComponentMock());
+      description.when(callsTo("get factory")).alwaysReturn(([Props props]) => new ComponentMock());
+      
+      ComponentMock component = new ComponentMock();
+
+      component.when(callsTo("render")).alwaysReturn([description]);
+      
+      Node node = new Node(null, component);
       var changes = node.update();
       
       /**
@@ -92,53 +86,99 @@ main() {
        * as node is not dirty, and don't have dirty descendatns, 
        * no change is generated 
        */
-      changes = node.update();
+    });
+    
+    test("update - if no apply called, update will do no change", () {
+      ComponentDescriptionMock description = new ComponentDescriptionMock();
+
+      description.when(callsTo("createComponent")).alwaysReturn(new ComponentMock());
+      description.when(callsTo("get factory")).alwaysReturn(([Props props]) => new ComponentMock());
+      
+      ComponentMock component = new ComponentMock();
+
+      component.when(callsTo("render")).alwaysReturn([description]);
+      
+      Node node = new Node(null, component);
+      node.update();
+      
+      var changes = node.update();
       expect(changes, isEmpty);
       
-      /**
-       * try scenario, that child was somehow "updated"
-       */
+    });
+    
+    test("update - node with dirty child, update will return only change of updated child", () {
+      ComponentDescriptionMock description = new ComponentDescriptionMock();
+
+      description.when(callsTo("createComponent")).alwaysReturn(new ComponentMock());
+      description.when(callsTo("get factory")).alwaysReturn(([Props props]) => new ComponentMock());
+      
+      ComponentMock component = new ComponentMock();
+
+      component.when(callsTo("render")).alwaysReturn([description]);
+      
+      Node node = new Node(null, component);
+      node.update();
+      
       node.children.first.isDirty = true;
       
       expect(node.hasDirtyDescendant, isTrue);
       
-      changes = node.update();
+      var changes = node.update();
 
       expect(node.hasDirtyDescendant, isFalse);
       
       expect(changes.isEmpty, isFalse);
       expect(changes.length, equals(1));
       expect(changes.first.node, equals(node.children.first));
+      expect(changes.first.type, equals(NodeChangeType.UPDATED));
 
-      /**
-       * and try, if after updated of node is not generated new child, 
-       * but only existing is updated
-       */
+    });
+    
+    test("update - if factory is the same, child will be the same", () {
+      ComponentDescriptionMock description = new ComponentDescriptionMock();
+
+      description.when(callsTo("createComponent")).alwaysReturn(new ComponentMock());
+      description.when(callsTo("get factory")).alwaysReturn(([Props props]) => new ComponentMock());
+      
+      ComponentMock component = new ComponentMock();
+
+      component.when(callsTo("render")).alwaysReturn([description]);
+      
+      Node node = new Node(null, component);
+      node.update();
+      
       Node oldNode = node.children.first;
       
-      node.apply(complexDescription.props);
+      node.apply();
       
-      changes = node.update();
+      var changes = node.update();
       expect(changes.isEmpty, isFalse);
       expect(changes.length, equals(2)); // both, node and it's child is updated
       
-      /**
-       * as RenderingMockComponent return always description with the same factory, 
-       * child is only updated, not replaced
-       */
       expect(node.children.first, equals(oldNode));
       
     });
     
-    test("update - always replacing children", () {
-      /**
-       * new factory of "rendering always new" component.
-       */
-      ComponentFactory rf = ([Node node, Props props]) => 
-          new RenderingAlwaysNewFactoryComponent(node, props);
-      ComponentDescription rd = new MockComponentDescription(rf, null);
+    test("update - when factory is different, child will be replaced", () {
       
-      Node node = new Node(null, rd.createComponent());
+      ComponentDescriptionMock description = new ComponentDescriptionMock();
+
+      description.when(callsTo("createComponent")).alwaysReturn(new ComponentMock());
+      
+      /**
+       * return every time new factory
+       */
+      description.when(callsTo("get factory"))
+        .thenReturn(([Props props]) => new ComponentMock())
+        .thenReturn(([Props props]) => new ComponentMock())
+        .thenReturn(([Props props]) => new ComponentMock());
+      
+      ComponentMock component = new ComponentMock();
+
+      component.when(callsTo("render")).alwaysReturn([description]);
+      
+
+      Node node = new Node(null, component);
       node.update();
       
       /**
@@ -151,7 +191,8 @@ main() {
        */
       Node oldChild = node.children.first;
       
-      node.apply(rd.props);
+      node.apply();
+
       node.update();
       /**
        * because in RenderingAlwaysNewFactoryComponent is always created new, 
@@ -162,106 +203,3 @@ main() {
     
   });
 }
-
-class MockComponent implements Component {
-  
-  Props get props => null;
-  
-  void set props(Props newProps){}
-
-  get needUpdate => null;
-
-  willReceiveProps(Props newProps){}
-  
-  shouldUpdate(Props newProps, Props oldProps){}
-  
-  didMount(){}
-  
-  didUpdate(){}
-  
-  willUnmount(){}
-  
-  List<ComponentDescription> render(){}
-  
-  MockComponent(Node this.node, Props this._props){}
-  
-  Node node;
-  
-  Props _props;
-
-}
-
-class MockComponentDescription implements ComponentDescription {
-  ComponentFactory get factory => _factory;
-  ComponentFactory _factory;
-  
-  Props get props => _props;
-  Props _props;
-  
-  MockComponentDescription (ComponentFactory this._factory, Props  this._props);
-  
-  Component createComponent([Node node]) => factory(node, props);
-}
-
-class RenderingMockComponent implements Component {
-  
-  Props get props => null;
-  
-  void set props(Props newProps){}
-
-  get needUpdate => null;
-
-  willReceiveProps(Props newProps){}
-  
-  shouldUpdate(Props newProps, Props oldProps){}
-  
-  didMount(){}
-  
-  didUpdate(){}
-  
-  willUnmount(){}
-  
-  List<ComponentDescription> render(){
-    return [new MockComponentDescription(componentFactory, null)];
-  }
-  
-  RenderingMockComponent(Node this.node, Props this._props){}
-  
-  Node node;
-  
-  Props _props;
-
-}
-
-ComponentFactory componentFactory = ([Node node, Props props]) => new MockComponent(node, props);
-
-class RenderingAlwaysNewFactoryComponent implements Component {
-  
-  Props get props => null;
-  
-  void set props(Props newProps){}
-
-  get needUpdate => null;
-
-  willReceiveProps(Props newProps){}
-  
-  shouldUpdate(Props newProps, Props oldProps){}
-  
-  didMount(){}
-  
-  didUpdate(){}
-  
-  willUnmount(){}
-  
-  List<ComponentDescription> render(){
-    return [new MockComponentDescription(([Node node, Props props]) => new MockComponent(node, props), null)];
-  }
-  
-  RenderingAlwaysNewFactoryComponent (Node this.node, Props this._props);
-  
-  Node node;
-  
-  Props _props;
-
-}
-

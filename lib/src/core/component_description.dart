@@ -1,12 +1,20 @@
 part of library;
 
 class ComponentDescription {
-  ComponentFactory get factory {}
+  final ComponentFactory _factory;
+  ComponentFactory get factory => _factory;
   
-  Props get props {}
+  final Props _props;
+  Props get props => _props;
   
-  ComponentDescription (ComponentFactory factory, Props  props) {}
+  /**
+   * default constructor which only set final vars.
+   */
+  ComponentDescription (ComponentFactory this._factory, [Props  this._props]) {}
   
-  Component createComponent() {}
+  /**
+   * creates component by factory with props.
+   */
+  Component createComponent() => this._factory(this.props);
   
 }
