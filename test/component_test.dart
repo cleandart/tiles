@@ -1,7 +1,7 @@
 library tiles_component_test;
 import 'package:unittest/unittest.dart';
 import 'package:unittest/mock.dart';
-import 'package:library/library.dart';
+import 'package:tiles/tiles.dart';
 import 'mocks.dart';
 import 'dart:async';
 
@@ -14,7 +14,7 @@ main() {
     /**
      * setup method, by default create new props, new otherProps and new component with props; 
      */
-    setUp((){
+    setUp(() {
       props = new PropsMock();
       otherProps = new PropsMock();
       component = new Component(props);
@@ -25,7 +25,7 @@ main() {
       expect(component.props, equals(props));
     });
     
-    test("constructor with stream", (){
+    test("constructor with stream", () {
       StreamController controller = new StreamController();
       component = new Component(props, controller);
       
@@ -46,19 +46,19 @@ main() {
       expect(component.needUpdate is Stream, isTrue);
     });
     
-    test("needUpdate do not add nothing if redraw is not called", (){
-      component.needUpdate.listen(expectAsync1((now){}, count: 0));
+    test("needUpdate do not add nothing if redraw is not called", () {
+      component.needUpdate.listen(expectAsync1((now) {}, count: 0));
     });
 
-    test("redraw create one event in needUpdate", (){
+    test("redraw create one event in needUpdate", () {
       bool needed = false;
-      component.needUpdate.listen(expectAsync1((now){}, count: 1));
+      component.needUpdate.listen(expectAsync1((now) {}, count: 1));
       component.redraw();
     });
 
-    test("2 redraws -> 2 events in needUpdate", (){
+    test("2 redraws -> 2 events in needUpdate", () {
       bool needed = false;
-      component.needUpdate.listen(expectAsync1((now){}, count: 2));
+      component.needUpdate.listen(expectAsync1((now) {}, count: 2));
       component.redraw();
       component.redraw();
     });
@@ -72,14 +72,14 @@ main() {
       controller.getLogs(callsTo("add")).verify(happenedOnce);
     });
     
-    test("default redraw is not immediate", (){
+    test("default redraw is not immediate", () {
       component.redraw();
-      component.needUpdate.listen(expectAsync1((now){if(now == true) throw 0;}, count: 1));
+      component.needUpdate.listen(expectAsync1((now) {if (now == true) throw 0;}, count: 1));
     });
     
-    test("immediate redraw add event with true argument", (){
+    test("immediate redraw add event with true argument", () {
       component.redraw(true);
-      component.needUpdate.listen(expectAsync1((now){if(now != true) throw 0;}, count: 1));
+      component.needUpdate.listen(expectAsync1((now) {if (now != true) throw 0;}, count: 1));
     });
 
     

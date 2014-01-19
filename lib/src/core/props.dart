@@ -1,4 +1,4 @@
-part of library;
+part of tiles;
 
 class Props {
   List<ComponentDescription> _children;
@@ -9,9 +9,12 @@ class Props {
    * 
    * But to good working api in Component factory, wee need this "value" in every props;
    */
-  void set children(List<ComponentDescription> children) { 
-    _children = children; 
+  void set children(List<ComponentDescription> children) {
+    if (_children == null) {
+      _children = children; 
+    }
   }
+  
   List<ComponentDescription> get children => _children;
   
   Props([this._children]);

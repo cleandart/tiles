@@ -1,4 +1,4 @@
-part of library;
+part of tiles;
 
 /**
  * Create enum of type of node change.
@@ -16,7 +16,7 @@ class NodeChangeType {
 
   const NodeChangeType._(this.value);
   
-  String toString(){
+  String toString() {
     return {
       CREATED: "CREATED",
       UPDATED: "UPDATED",
@@ -32,12 +32,4 @@ class NodeChangeType {
 //    if (this == DELETED)
 //      return "DELETED";
   }
-}
-
-main () {
-  print(NodeChangeType.CREATED);
-  print(NodeChangeType.UPDATED);
-  print(NodeChangeType.MOVED);
-  print(NodeChangeType.DELETED);
-  
 }

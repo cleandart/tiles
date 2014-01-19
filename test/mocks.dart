@@ -1,7 +1,7 @@
 library tiles_test_mocks;
 
 import 'package:unittest/mock.dart';
-import 'package:library/library.dart';
+import 'package:tiles/tiles.dart';
 import 'dart:async';
 
 class ComponentMock extends Mock implements Component {}

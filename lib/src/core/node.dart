@@ -1,4 +1,4 @@
-part of library;
+part of tiles;
 
 class Node {
   final Component _component;
@@ -21,8 +21,6 @@ class Node {
     return children;
   }
   
-  List<_NodeWithFactory> get rawChildren => _children;
-
   Node get parent => _parent;
   
   bool get isDirty => _isDirty;
@@ -33,11 +31,11 @@ class Node {
    * mark this instance as dirty and if status was changed, 
    * than flag whole route to root of node tree as "has dirty descendant".
    */
-  void set isDirty(bool value){
-    if(value){
+  void set isDirty(bool value) {
+    if (value) {
       bool changed = !_isDirty;
       this._isDirty = true;
-      if(_parent != null && changed && !_hasDirtyDescendant){
+      if (_parent != null && changed && !_hasDirtyDescendant) {
         _parent.hasDirtyDescendant = true;
       }
     }
@@ -46,11 +44,11 @@ class Node {
   /**
    * set only if it is true and set it true too to whole parent path 
    */
-  void set hasDirtyDescendant(bool value){
-    if(value){
+  void set hasDirtyDescendant(bool value) {
+    if (value) {
       bool changed = !_hasDirtyDescendant;
       _hasDirtyDescendant = true;
-      if(_parent != null && changed){
+      if (_parent != null && changed) {
         _parent.hasDirtyDescendant = true;
       }
     }
@@ -61,7 +59,7 @@ class Node {
    * 
    *   Node node = new Node(parent, description); 
    */
-  Node(this._parent, Component this._component){
+  Node(this._parent, Component this._component) {
     this.isDirty = true;
     this._children = [];
   }
@@ -71,11 +69,11 @@ class Node {
   /**
    * Recognize if update this instance or children by _isDirty and _hasDirtyDescendants
    */
-  List<NodeChange> update(){
+  List<NodeChange> update() {
     /**
      * if nothing in this subtree is changed, return empty list
      */
-    if(!_isDirty && !_hasDirtyDescendant){
+    if (!_isDirty && !_hasDirtyDescendant) {
       return [];
     }
     
@@ -87,7 +85,7 @@ class Node {
     /**
      * if node is dirty, add everything returned by _updateThis, 
      */
-    if(_isDirty){
+    if (_isDirty) {
       result.addAll(_updateThis());
     }
 
@@ -116,7 +114,7 @@ class Node {
    * 
    * Returns changes on children 
    */
-  List<NodeChange> _updateThis(){
+  List<NodeChange> _updateThis() {
     /**
      * create result as list with this as updated.
      */
@@ -131,19 +129,19 @@ class Node {
      * if component don't render anything and return null instead of empty list,
      * replace null with empty list. 
      */
-    if(newChildren == null){
+    if (newChildren == null) {
       newChildren = [];
     }
     
     /**
      * for all children which are in both, children and newChildren, 
-     * update ( or replace ) it
+     * update (or replace) it
      */
     for(int i = 0; i < children.length && i < newChildren.length; ++i) {
       /** 
        * if factory is same, update child, else replace child 
        */
-      if(_children[i].factory == newChildren[i].factory) {
+      if (_children[i].factory == newChildren[i].factory) {
         children[i].apply(newChildren[i].props);
       } else {
         Node oldChild = children[i];
@@ -162,14 +160,14 @@ class Node {
      * if new children is less then old, remove old from last
      */
     if (children.length < newChildren.length) {
-      for(int i = children.length; i < newChildren.length; ++i){
+      for(int i = children.length; i < newChildren.length; ++i) {
         _NodeWithFactory child = new _NodeWithFactory(new Node(this,  newChildren[i].createComponent()), newChildren[i].factory);
         _children.add(child);
         result.add(new NodeChange(NodeChangeType.CREATED, child.node));
         result.addAll(child.node.update());
       }
-    } else if(children.length > newChildren.length){
-      for(int i = 0; i < children.length - newChildren.length; ++i){
+    } else if (children.length > newChildren.length) {
+      for(int i = 0; i < children.length - newChildren.length; ++i) {
         _NodeWithFactory removed = _children.removeLast();
         result.add(new NodeChange(NodeChangeType.DELETED, removed.node));
       }
@@ -186,7 +184,7 @@ class Node {
    * 
    * if no props, apply null
    */
-  void apply([Props props]){
+  void apply([Props props]) {
     this.component.willReceiveProps(props);
     this._oldProps = this.component.props;
     this.component.props = props;
@@ -201,4 +199,3 @@ class _NodeWithFactory {
   
   _NodeWithFactory(this.node, this.factory);
 }
-

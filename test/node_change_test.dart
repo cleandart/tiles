@@ -1,14 +1,14 @@
 library tiles_node_change_test;
 
 import 'package:unittest/unittest.dart';
+import 'package:tiles/tiles.dart';
 import 'mocks.dart';
-import 'package:library/library.dart';
 import 'dart:math';
 
 main() {
   
-  group("(NodeChange)", (){
-    test("constructor", (){
+  group("(NodeChange)", () {
+    test("constructor", () {
       Props oldProps = new PropsMock();
       Props newProps = new PropsMock();
       Node node = new NodeMock();

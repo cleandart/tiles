@@ -1,4 +1,4 @@
-library library;
+library tiles;
 import 'dart:async';
 
 part 'src/core/component.dart';
@@ -10,4 +10,3 @@ part 'src/core/node_change.dart';
 part 'src/utils/component_description_factory.dart';
 part 'src/utils/component_factory.dart';
 part 'src/utils/node_change_type.dart';
-

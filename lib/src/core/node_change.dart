@@ -1,4 +1,4 @@
-part of library;
+part of tiles;
 
 class NodeChange {
   final NodeChangeType _type;
