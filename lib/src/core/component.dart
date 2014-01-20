@@ -67,7 +67,7 @@ class Component {
 ComponentDescriptionFactory registerComponent(ComponentFactory factory) {
   return ([Props props, List<ComponentDescription> children]) {
     if (props != null && children != null) {
-      props.children = children;
+      props._children = children;
     }
     
     return new ComponentDescription(factory, props);

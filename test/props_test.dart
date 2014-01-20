@@ -17,11 +17,5 @@ main() {
       expect(props.children, equals(children));
     });
 
-    test("children setter", () {
-      var children = [new ComponentDescriptionMock()];
-      Props props = new Props();
-      props.children = children;
-      expect(props.children, equals(children));
-    });
   });
 }
