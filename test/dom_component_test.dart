@@ -1,18 +1,18 @@
 library tiles_dom_component_test;
+
 import 'package:unittest/unittest.dart';
 import 'package:unittest/mock.dart';
-import 'package:tiles/tiles.dart';
+//import 'package:tiles/tiles.dart';
 import 'package:tiles/tiles_dom.dart';
 import 'mocks.dart';
-import 'dart:async';
 
 main(){
   
   group("(DomComponent)", () {
-    Props props;
+    DomProps props;
     
     setUp(() {
-      props = new Props();
+      props = new DomProps();
     });
     
     test("easy consturcor without pair flag...", () {
@@ -48,7 +48,25 @@ main(){
       expect(component.openMarkup(), equals("<tagname />"));
       expect(component.closeMarkup(), isNull);
     });
-  
+    
+    test("markup with attrs", () {
+      DomPropsMock props = new DomPropsMock();
+      props.when(callsTo("htmlAttrs")).alwaysReturn(' attr="value"');
+      
+      DomComponent component = new DomComponent(props, null, "tagname");
+      
+      expect(component.openMarkup(), equals('<tagname attr="value">'));
+    });
+    
+    test("not pair markup with attrs", () {
+      DomPropsMock props = new DomPropsMock();
+      props.when(callsTo("htmlAttrs")).alwaysReturn(' attr="value"');
+      
+      DomComponent component = new DomComponent(props, null, "tagname", false);
+      
+      expect(component.openMarkup(), equals('<tagname attr="value" />'));
+    });
+    
   });
   
 }
