@@ -70,3 +70,4 @@ class DomProps extends Props implements Map<String, dynamic> {
     return result.toString();
   }
 }
+

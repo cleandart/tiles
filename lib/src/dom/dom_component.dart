@@ -39,3 +39,4 @@ class DomComponent extends Component {
   String closeMarkup() => _pair ? "$_OPENMARK$_CLOSESIGN$_tagName$_CLOSEMARK" : null;
   
 }
+
