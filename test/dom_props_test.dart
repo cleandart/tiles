@@ -42,21 +42,33 @@ main() {
     });
     
     test("generate html attribute list from instance - 1 attribute", () {
-      props = new DomProps({"attr": "value"});
+      props = new DomProps({"id": "value"});
       
-      expect(props.htmlAttrs(), equals(' attr="value"'));
+      expect(props.htmlAttrs(), equals(' id="value"'));
     });
 
     test("generate html attribute list from instance - 2 attributes", () {
-      props = new DomProps({"attr": "value", "attr2": "value2"});
+      props = new DomProps({"id": "value", "type": "value2"});
       
-      expect(props.htmlAttrs(), equals(' attr="value" attr2="value2"'));
+      expect(props.htmlAttrs(), equals(' id="value" type="value2"'));
     });
     
     test("empty map shoult produce empty stirng of html attris", () {
       props = new DomProps();
       
       expect(props.htmlAttrs(), equals(''));
+    });
+    
+    test("should filter only valid html attriubes", () {
+      props = new DomProps({"value": "HelloWorld", "d": "something"});
+      
+      expect(props.htmlAttrs(), equals(' value="HelloWorld"'));
+    });
+    
+    test("should filter svg attrs instead of html attrs if svg flag of htmlAttrs is ste", () {
+      props = new DomProps({"value": "HelloWorld", "d": "something"});
+      
+      expect(props.htmlAttrs(true), equals(' d="something"'));
     });
   });
 }

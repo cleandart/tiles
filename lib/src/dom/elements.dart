@@ -8,10 +8,10 @@ part of tiles_dom;
  * @param bool   pair    parity of final html element
  * @return ComponentDescriptionFactory which contains ComponentFactory to create DomCommponent 
  */
-ComponentDescriptionFactory _registerDomComponent(String tagname, [bool pair]) {
+ComponentDescriptionFactory _registerDomComponent(String tagname, [bool pair, bool svg = false]) {
   
   /** create factory which create DomComponent */
-  var factory = ([dynamic props]) => new DomComponent(props, null, tagname, pair);
+  var factory = ([dynamic props]) => new DomComponent(props, null, tagname, pair, svg);
   
   /**  
    * return ComponentDescription similar to that, 
@@ -55,7 +55,7 @@ ComponentDescriptionFactory _registerDomComponent(String tagname, [bool pair]) {
  * for now, function _registerSvgComponent do the same, as _registerDomComponent
  */
 ComponentDescriptionFactory _registerSvgComponent(String tagname, [bool pair]) {
-  return _registerDomComponent(tagname, pair);
+  return _registerDomComponent(tagname, pair, true);
 }
 
 /**

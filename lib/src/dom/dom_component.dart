@@ -12,9 +12,11 @@ class DomComponent extends Component {
   
   bool get pair => _pair;
   
-  DomComponent(DomProps this.props, [needUpdateController, this._tagName, pair]): 
-    super(null, needUpdateController), 
-    this._pair = pair == null || pair 
+  final bool svg;
+  
+  DomComponent(DomProps this.props, [needUpdateController, this._tagName, pair, this.svg = false]):
+    this._pair = pair == null || pair,
+    super(null, needUpdateController) 
     {}
   
   /**
@@ -26,7 +28,7 @@ class DomComponent extends Component {
     StringBuffer result = new StringBuffer("$_OPENMARK$_tagName");
     
     if (props != null) {
-      result.write(props.htmlAttrs());
+      result.write(props.htmlAttrs(this.svg));
     }
     
     result.write("${_pair ? "" : " $_CLOSESIGN"}$_CLOSEMARK");

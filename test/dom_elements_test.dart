@@ -55,7 +55,33 @@ main() {
       ComponentDescription aa = a({}, [div(null, [span(), span()]), div()]);
       Component aaa = aa.createComponent();
       
-      expect(aaa.render()[0].createComponent().render()[0].createComponent().openMarkup(), contains("span"));
+      DomComponent innerSpan = aaa.render()[0].createComponent().render()[0].createComponent(); 
+      
+      expect(innerSpan.openMarkup(), contains("span"));
+    });
+    
+    test("div should not produce svg component", () {
+      DomComponent divComponent = div().createComponent();
+      
+      expect(divComponent.svg, isFalse);
+    });
+
+    test("svg should produce svg component", () {
+      DomComponent svgComponent = svg().createComponent();
+      
+      expect(svgComponent.svg, isTrue);
+    });
+    
+    test ("div should show id attribute and not d atribute", () {
+      DomComponent divCompoennt = div({"id": "id", "d": "d"}).createComponent();
+      
+      expect(divCompoennt.openMarkup(), equals('<div id="id">'));
+    });
+
+    test ("svg should show d attribute and not id atribute", () {
+      DomComponent svgCompoennt = svg({"id": "id", "d": "d"}).createComponent();
+      
+      expect(svgCompoennt.openMarkup(), equals('<svg d="d">'));
     });
 
   });
