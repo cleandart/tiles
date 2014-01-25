@@ -38,5 +38,12 @@ class DomComponent extends Component {
    */
   String closeMarkup() => _pair ? "$_OPENMARK$_CLOSESIGN$_tagName$_CLOSEMARK" : null;
   
+  List<ComponentDescription> render() {
+    if (props != null) {
+      return props.children;
+    }
+    return null;
+  }
+  
 }
 

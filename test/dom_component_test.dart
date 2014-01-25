@@ -67,6 +67,16 @@ main() {
       expect(component.openMarkup(), equals('<tagname attr="value" />'));
     });
     
+    test("render should return children from props", () {
+      DomPropsMock props = new DomPropsMock();
+      var children = [new ComponentDescriptionMock(), new ComponentDescriptionMock()];
+      props.when(callsTo("get children")).alwaysReturn(children);
+
+      DomComponent component = new DomComponent(props);
+      
+      expect(component.render(), equals(children));
+    });
+    
   });
   
 }

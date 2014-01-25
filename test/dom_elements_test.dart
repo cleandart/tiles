@@ -50,6 +50,13 @@ main() {
     test("component produced should be instance of DomComponent", () {
       expect(element().createComponent() is DomComponent, isTrue);
     });
+    
+    test("nested rendering", () {
+      ComponentDescription aa = a({}, [div(null, [span(), span()]), div()]);
+      Component aaa = aa.createComponent();
+      
+      expect(aaa.render()[0].createComponent().render()[0].createComponent().openMarkup(), contains("span"));
+    });
 
   });
   

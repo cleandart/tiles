@@ -26,8 +26,24 @@ ComponentDescriptionFactory _registerDomComponent(String tagname, [bool pair]) {
       props = new DomProps(props);
     }    
 
+    /**
+     * if we have props and also children, 
+     * we add children to props
+     */
     if (props != null && children != null) {
       props._children = children;
+    }
+    
+    /**
+     * if props are null but we have children, 
+     * wee need to add chilren to some props, so we create them
+     */
+    if (props == null && children != null) {
+      props = new DomProps(null, children);
+    }
+    
+    if (props != null && !(props is Props)) {
+      throw "props should be instance of DomProps, Map or null";
     }
     
     return new ComponentDescription(factory, props);
