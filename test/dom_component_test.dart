@@ -6,7 +6,7 @@ import 'package:unittest/mock.dart';
 import 'package:tiles/tiles_dom.dart';
 import 'mocks.dart';
 
-main(){
+main() {
   
   group("(DomComponent)", () {
     DomProps props;

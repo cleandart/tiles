@@ -8,13 +8,13 @@ import 'mocks.dart';
 //import 'package:tiles/tiles.dart';
 
 
-main(){
+main() {
   
   group("(DOM elements)", () {
     var element = div;
     var notPairElement = link;
     
-    test("dom component description factories create factories with different ComponentFactory", (){
+    test("dom component description factories create factories with different ComponentFactory", () {
       ComponentFactory notPairElementFactory = notPairElement().factory;
       ComponentFactory elementFactory = element().factory;
 
@@ -47,7 +47,7 @@ main(){
       expect(elementComponent.props.children, equals(children));
     });
     
-    test("component produced should be instance of DomComponent", (){
+    test("component produced should be instance of DomComponent", () {
       expect(element().createComponent() is DomComponent, isTrue);
     });
 

@@ -60,10 +60,10 @@ class DomProps extends Props implements Map<String, dynamic> {
    * 
    * Generate attributes in html syntas attr="value" for future use in DomComponent.
    */
-  String htmlAttrs(){
+  String htmlAttrs() {
     StringBuffer result = new StringBuffer();
     
-    _map.forEach((String key, dynamic value){
+    _map.forEach((String key, dynamic value) {
       result.write(' $key="$value"');
     });
     

@@ -25,7 +25,7 @@ class DomComponent extends Component {
   String openMarkup() {
     StringBuffer result = new StringBuffer("$_OPENMARK$_tagName");
     
-    if(props != null){
+    if (props != null) {
       result.write(props.htmlAttrs());
     }
     

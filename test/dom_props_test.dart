@@ -5,7 +5,7 @@ import 'package:tiles/tiles.dart';
 import 'package:unittest/unittest.dart';
 import 'mocks.dart';
 
-main(){
+main() {
   group("(DomProps)", () {
     DomProps props;
     ComponentDescription desc = new ComponentDescriptionMock();
@@ -42,13 +42,13 @@ main(){
     });
     
     test("generate html attribute list from instance - 1 attribute", () {
-      props = new DomProps({"attr":"value"});
+      props = new DomProps({"attr": "value"});
       
       expect(props.htmlAttrs(), equals(' attr="value"'));
     });
 
     test("generate html attribute list from instance - 2 attributes", () {
-      props = new DomProps({"attr":"value", "attr2": "value2"});
+      props = new DomProps({"attr": "value", "attr2": "value2"});
       
       expect(props.htmlAttrs(), equals(' attr="value" attr2="value2"'));
     });
