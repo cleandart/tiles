@@ -6,8 +6,9 @@ import "node_change_test.dart" as nodeChange;
 import "props_test.dart" as props;
 import "component_test.dart" as component;
 import "dom_component_test.dart" as domComponent;
-import "dom_elements_test.dart" as domElements;
 import "dom_props_test.dart" as domProps;
+import "dom_elements_test.dart" as domElements;
+import "dom_elements_special_test.dart" as domElementsSpecial;
 
 main () {
   node.main();
@@ -16,6 +17,7 @@ main () {
   props.main();
   component.main();
   domComponent.main();
-  domElements.main();
   domProps.main();
+  domElements.main();
+  domElementsSpecial.main();
 }

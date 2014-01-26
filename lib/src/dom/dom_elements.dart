@@ -8,47 +8,70 @@ part of tiles_dom;
  * @param bool   pair    parity of final html element
  * @return ComponentDescriptionFactory which contains ComponentFactory to create DomCommponent 
  */
-ComponentDescriptionFactory _registerDomComponent(String tagname, [bool pair, bool svg = false]) {
+ComponentDescriptionFactory _registerDomComponent(String tagname, [bool pair, bool svg = false, ComponentFactory factory]) {
   
   /** create factory which create DomComponent */
-  var factory = ([dynamic props]) => new DomComponent(props, null, tagname, pair, svg);
+  var _standardFactory = ([DomProps props]) => new DomComponent(props, null, tagname, pair, svg);
+  
+  if (factory == null) {
+    factory = _standardFactory;
+  }
   
   /**  
    * return ComponentDescription similar to that, 
    * which return registerComponent, 
    * but with small difference in proccessing props, which in this case can be Map too.
    */
-  return ([dynamic props, List<ComponentDescription> children]) {
-    /**
-     * if props are Map, then cover it by DomProps
-     */
-    if (props is Map) {
-      props = new DomProps(props);
-    }    
-
-    /**
-     * if we have props and also children, 
-     * we add children to props
-     */
-    if (props != null && children != null) {
-      props._children = children;
-    }
-    
-    /**
-     * if props are null but we have children, 
-     * wee need to add chilren to some props, so we create them
-     */
-    if (props == null && children != null) {
-      props = new DomProps(null, children);
-    }
-    
-    if (props != null && !(props is Props)) {
-      throw "props should be instance of DomProps, Map or null";
-    }
+  return ([dynamic props, List<dynamic> children]) {
+    props = _putChildrenIntoProps(props, children);
     
     return new ComponentDescription(factory, props);
   };
 
+}
+
+_putChildrenIntoProps(dynamic props, List<dynamic> children) {
+  /**
+   * iterage children to recognize string
+   */
+  if (children != null) {
+    List newChildren = [];
+    children.forEach((child) {
+      if (child is ComponentDescription) {
+        newChildren.add(child);
+      } else if (child is String) {
+        newChildren.add(span(null, child));
+      } else {
+        throw "Children should contain only instance of ComponentDescription or String";
+      }
+    });
+    children = newChildren;
+  }
+  
+  /**
+   * if props are Map, then cover it by DomProps
+   */
+  if (props is Map) {
+    props = new DomProps(props);
+  }    
+
+  if (props == null) {
+    props = new DomProps();
+  }
+  
+  /**
+   * if we have props and also children, 
+   * we add children to props
+   */
+  if (children != null) {
+    props._children = children;
+  }
+  
+  if (!(props is Props)) {
+    throw "props should be instance of DomProps, Map or null";
+  }
+  
+  return props;
 }
 
 /**
@@ -136,7 +159,7 @@ ComponentDescriptionFactory a = _registerDomComponent("a"),
   section = _registerDomComponent("section"),
   select = _registerDomComponent("select"),
   small = _registerDomComponent("small"),
-  span = _registerDomComponent("span"),
+  span = _spanDescriptionFactory,
   strong = _registerDomComponent("strong"),
   style = _registerDomComponent("style"),
   sub = _registerDomComponent("sub"),
@@ -145,7 +168,7 @@ ComponentDescriptionFactory a = _registerDomComponent("a"),
   table = _registerDomComponent("table"),
   tbody = _registerDomComponent("tbody"),
   td = _registerDomComponent("td"),
-  textarea = _registerDomComponent("textarea"),
+  textarea = _registerDomComponent("textarea", true, false, _textareaFactory),
   tfoot = _registerDomComponent("tfoot"),
   th = _registerDomComponent("th"),
   thead = _registerDomComponent("thead"),

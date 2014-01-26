@@ -52,7 +52,9 @@ class DomProps extends Props implements Map<String, dynamic> {
  
   operator [](String key) => _map[key];
   
-  void operator []=(String key, dynamic value) => _map[key] = value;
+  void operator []=(String key, dynamic value) {
+    _map[key] = value;
+  }
   
   
   /**
