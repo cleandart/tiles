@@ -31,3 +31,12 @@ for i in `find -name *.dart`; do
 	sed -i 's/dart: /dart:/g' $i;
 
 done
+
+for i in `find . -type f -not -iwholename '*/.*' -not -iwholename '*/packages/*' -not -iwholename '*~'`; do
+	c=`tail -c 1 $i`
+	if [ "$c" != "" ]; then 
+		echo "No EOF newline - $i"; 
+		echo "\n" >> $i;
+	fi
+done
+
