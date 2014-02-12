@@ -7,14 +7,14 @@ class SpanComponent extends DomComponent {
   
   String _content;
   
-  SpanComponent(DomProps props, List<ComponentDescription> children):
+  SpanComponent(Map props, List<ComponentDescription> children):
     _content = props[_CONTENT],
     super(props, children, null, "span") 
     {
     props.remove(_CONTENT);
     }
   
-  set props(DomProps data) {
+  set props(Map data) {
     _content = data[_CONTENT];
     data.remove(_CONTENT);
     super.props = data;
@@ -24,11 +24,11 @@ class SpanComponent extends DomComponent {
 
 }
 
-ComponentFactory _spanFactory = ([DomProps props, List<ComponentDescription> children]) => new SpanComponent(props, children);
+ComponentFactory _spanFactory = ([Map props, List<ComponentDescription> children]) => new SpanComponent(props, children);
 
 ComponentDescriptionFactory _spanDescriptionFactory = ([dynamic props, dynamic children]) {
   /**
-   * if props are Map, then cover it by DomProps
+   * if props are Map, then cover it by Map
    */
   String content;
   
@@ -55,13 +55,13 @@ class TextareaComponent extends DomComponent {
   
   String _content;
   
-  set props(DomProps data) {
+  set props(Map data) {
     _content = data[_VALUE];
     data.remove(_VALUE);
     super.props = data;
   }
 
-  TextareaComponent(DomProps props):
+  TextareaComponent(Map props):
     this._content = props[_VALUE],
     super(props, null, null, "textarea") 
     {
@@ -73,4 +73,4 @@ class TextareaComponent extends DomComponent {
  
 }
 
-ComponentFactory _textareaFactory = ([DomProps props, children]) => new TextareaComponent(props);
+ComponentFactory _textareaFactory = ([Map props, children]) => new TextareaComponent(props);

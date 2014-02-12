@@ -14,6 +14,3 @@ class NodeMock extends Mock implements Node {}
 class ComponentDescriptionMock extends Mock implements ComponentDescription {}
 
 class StreamControllerMock extends Mock implements StreamController {}
-
-class DomPropsMock extends Mock implements DomProps {}
-

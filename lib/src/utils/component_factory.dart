@@ -4,4 +4,4 @@ part of tiles;
  * Define type for component factory (function which return new instance of Component with props)
  */
 
-typedef Component ComponentFactory([Props props, List<ComponentDescription> children]);
+typedef Component ComponentFactory([dynamic props, List<ComponentDescription> children]);
