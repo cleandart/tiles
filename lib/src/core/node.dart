@@ -11,7 +11,7 @@ class Node {
   
   bool _hasDirtyDescendant = false;
   
-  Props _oldProps;
+  dynamic _oldProps;
   
   Component get component => _component;
   
@@ -184,7 +184,7 @@ class Node {
    * 
    * if no props, apply null
    */
-  void apply([Props props]) {
+  void apply([dynamic props]) {
     this.component.willReceiveProps(props);
     this._oldProps = this.component.props;
     this.component.props = props;

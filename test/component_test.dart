@@ -8,7 +8,7 @@ import 'dart:async';
 main() {
   
   group("(Component)", () {
-    Props props, otherProps;
+    dynamic props, otherProps;
     Component component;
     List<ComponentDescription> children;
     
@@ -16,8 +16,8 @@ main() {
      * setup method, by default create new props, new otherProps and new component with props; 
      */
     setUp(() {
-      props = new PropsMock();
-      otherProps = new PropsMock();
+      props = new Mock();
+      otherProps = new Mock();
       component = new Component(props);
       children = [new ComponentDescriptionMock()];
     });

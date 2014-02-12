@@ -5,7 +5,7 @@ class Component {
   /**
    * props of component
    */
-  Props props;
+  dynamic props;
   
   List<ComponentDescription> children;
 
@@ -27,14 +27,14 @@ class Component {
    * 
    * If stream was not passed, it will create own stream controller
    */
-  Component(Props this.props, [this.children, StreamController needUpdateController]): 
+  Component(this.props, [this.children, StreamController needUpdateController]): 
     this._needUpdateController = needUpdateController != null ? needUpdateController : new StreamController<bool>() {}
   
   didMount() {}
 
-  willReceiveProps(Props newProps) {}
+  willReceiveProps(dynamic newProps) {}
   
-  shouldUpdate(Props newProps, Props oldProps) => true;
+  shouldUpdate(dynamic newProps, dynamic oldProps) => true;
   
   List<ComponentDescription> render() {}
   
@@ -60,14 +60,14 @@ class Component {
  * 
  *     class MyComponent extends Component {}
  *     /*...*/
- *     ComponentDescriptionFactory myComponent = registerComponent(([Props props]) => new MyComponent(props));
+ *     ComponentDescriptionFactory myComponent = registerComponent(([dynamic props]) => new MyComponent(props));
  *     /*...*/
  *     var props = new MyProps(myArgs);
  *     var children = [/*...*/];
  *     ComponentDescription child = myComponent(props, children);  
  */
 ComponentDescriptionFactory registerComponent(ComponentFactory factory) {
-  return ([Props props, List<ComponentDescription> children]) {
+  return ([dynamic props, List<ComponentDescription> children]) {
     return new ComponentDescription(factory, props, children);
   };
 }
