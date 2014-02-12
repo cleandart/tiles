@@ -6,6 +6,8 @@ class Component {
    * props of component
    */
   Props props;
+  
+  List<ComponentDescription> children;
 
   /**
    * stream controller used to signalize to node, 
@@ -25,7 +27,7 @@ class Component {
    * 
    * If stream was not passed, it will create own stream controller
    */
-  Component(Props this.props, [StreamController needUpdateController]): 
+  Component(Props this.props, [this.children, StreamController needUpdateController]): 
     this._needUpdateController = needUpdateController != null ? needUpdateController : new StreamController<bool>() {}
   
   didMount() {}

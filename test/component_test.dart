@@ -10,6 +10,7 @@ main() {
   group("(Component)", () {
     Props props, otherProps;
     Component component;
+    List<ComponentDescription> children;
     
     /**
      * setup method, by default create new props, new otherProps and new component with props; 
@@ -18,6 +19,7 @@ main() {
       props = new PropsMock();
       otherProps = new PropsMock();
       component = new Component(props);
+      children = [new ComponentDescriptionMock()];
     });
     
     test("constructor", () {
@@ -27,15 +29,38 @@ main() {
     
     test("constructor with stream", () {
       StreamController controller = new StreamController();
-      component = new Component(props, controller);
+      component = new Component(props, null, controller);
       
       expect(component.needUpdate, equals(controller.stream));
+    });
+    
+    test("constructor with children", () {
+      component = new Component(null, children);
+      
+      expect(component.children, equals(children));
     });
     
     test("props setter change props", () {
       component.props = otherProps;
       
       expect(component.props, equals(otherProps));
+    });
+    
+    test("should accept setted children", () {
+      expect(component.children, isNull);
+      
+      component.children = children;
+      
+      expect(component.children, equals(children));
+    });
+    
+    test("should accept removing children", () {
+      component.children = children;
+      expect(component.children, equals(children));
+      
+      component.children = null;
+      
+      expect(component.children, isNull);
     });
     
     test("shouldUpdate return by default true", () {
@@ -65,7 +90,7 @@ main() {
     
     test("redraw call needUpdateController add", () {
       StreamControllerMock controller = new StreamControllerMock();
-      component = new Component(props, controller);
+      component = new Component(props, null, controller);
       
       component.redraw();
       
