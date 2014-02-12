@@ -2,7 +2,7 @@ library tiles_component_test;
 import 'package:unittest/unittest.dart';
 import 'package:unittest/mock.dart';
 import 'package:tiles/tiles.dart';
-import 'mocks.dart';
+import '../mocks.dart';
 import 'dart:async';
 
 main() {

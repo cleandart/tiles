@@ -67,7 +67,13 @@ class Component {
  *     ComponentDescription child = myComponent(props, children);  
  */
 ComponentDescriptionFactory registerComponent(ComponentFactory factory) {
-  return ([dynamic props, List<ComponentDescription> children]) {
+  return ([dynamic props, dynamic children]) {
+    /**
+     * parse children, as they can be in different forms
+     * 
+     * here is the place, where strings are converted to DomTextComponent description factory
+     */
+    children = _processChildren(children);
     return new ComponentDescription(factory, props, children);
   };
 }

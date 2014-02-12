@@ -2,7 +2,7 @@ library tiles_node_change_test;
 
 import 'package:unittest/unittest.dart';
 import 'package:tiles/tiles.dart';
-import 'mocks.dart';
+import '../mocks.dart';
 import 'dart:math';
 import 'package:unittest/mock.dart';
 

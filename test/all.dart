@@ -1,12 +1,13 @@
 library tiles_test;
 
-import "node_test.dart" as node;
-import "component_description_test.dart" as componentDescription;
-import "node_change_test.dart" as nodeChange;
-import "component_test.dart" as component;
-import "dom_component_test.dart" as domComponent;
-import "dom_elements_test.dart" as domElements;
-import "dom_elements_special_test.dart" as domElementsSpecial;
+import "core/node_test.dart" as node;
+import "core/component_description_test.dart" as componentDescription;
+import "core/node_change_test.dart" as nodeChange;
+import "core/component_test.dart" as component;
+import "dom/dom_component_test.dart" as domComponent;
+import "dom/dom_elements_test.dart" as domElements;
+import "dom/dom_elements_special_test.dart" as domElementsSpecial;
+import "dom/dom_text_component_test.dart" as domTextComponent;
 
 main () {
   node.main();
@@ -16,4 +17,5 @@ main () {
   domComponent.main();
   domElements.main();
   domElementsSpecial.main();
+  domTextComponent.main();
 }

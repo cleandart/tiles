@@ -1,10 +1,8 @@
 library tiles_dom_component_test;
 
 import 'package:unittest/unittest.dart';
-import 'package:unittest/mock.dart';
-//import 'package:tiles/tiles.dart';
-import 'package:tiles/tiles_dom.dart';
-import 'mocks.dart';
+import 'package:tiles/tiles.dart';
+import '../mocks.dart';
 
 main() {
   

@@ -1,4 +1,4 @@
-part of tiles_dom;
+part of tiles;
 
 const _OPENMARK = "<";
 const _CLOSEMARK = ">";
