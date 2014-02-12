@@ -11,7 +11,7 @@ part of tiles_dom;
 ComponentDescriptionFactory _registerDomComponent(String tagname, [bool pair, bool svg = false, ComponentFactory factory]) {
   
   /** create factory which create DomComponent */
-  var _standardFactory = ([DomProps props]) => new DomComponent(props, null, tagname, pair, svg);
+  var _standardFactory = ([DomProps props, List<ComponentDescription> children]) => new DomComponent(props, children, null, tagname, pair, svg);
   
   if (factory == null) {
     factory = _standardFactory;
@@ -23,14 +23,16 @@ ComponentDescriptionFactory _registerDomComponent(String tagname, [bool pair, bo
    * but with small difference in proccessing props, which in this case can be Map too.
    */
   return ([dynamic props, List<dynamic> children]) {
-    props = _putChildrenIntoProps(props, children);
-    
-    return new ComponentDescription(factory, props);
+    props = _processProps(props);
+
+    children = _processChildren(children);
+
+    return new ComponentDescription(factory, props, children);
   };
 
 }
 
-_putChildrenIntoProps(dynamic props, List<dynamic> children) {
+_processChildren(List<dynamic> children) {
   /**
    * iterage children to recognize string
    */
@@ -45,9 +47,11 @@ _putChildrenIntoProps(dynamic props, List<dynamic> children) {
         throw "Children should contain only instance of ComponentDescription or String";
       }
     });
-    children = newChildren;
+    return  newChildren;
   }
-  
+}
+
+_processProps(props) {
   /**
    * if props are Map, then cover it by DomProps
    */
@@ -59,19 +63,12 @@ _putChildrenIntoProps(dynamic props, List<dynamic> children) {
     props = new DomProps();
   }
   
-  /**
-   * if we have props and also children, 
-   * we add children to props
-   */
-  if (children != null) {
-    props._children = children;
-  }
-  
   if (!(props is Props)) {
     throw "props should be instance of DomProps, Map or null";
   }
   
   return props;
+
 }
 
 /**

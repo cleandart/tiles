@@ -38,13 +38,13 @@ main() {
       expect(elementComponent.props["attr"], equals("value"));
     });
     
-    test("html element with props as map and children", () {
+    test("html element with children", () {
       ComponentDescription child = new ComponentDescriptionMock();
       List<ComponentDescription> children = [child];
       
-      DomComponent elementComponent = element({"attr": "value"}, children).createComponent();
+      DomComponent elementComponent = element(null, children).createComponent();
       
-      expect(elementComponent.props.children, equals(children));
+      expect(elementComponent.children, equals(children));
     });
     
     test("component produced should be instance of DomComponent", () {

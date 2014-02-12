@@ -28,23 +28,23 @@ main() {
     });
     
     test("constructor should create not pair element if pair argument is false", () {
-      DomComponent component = new DomComponent(props, null, null, false);
+      DomComponent component = new DomComponent(props, null, null, null, false);
       expect(component.pair, isFalse);
     });
 
     test("constructor should create pair element if pair argument is true", () {
-      DomComponent component = new DomComponent(props, null, null, true);
+      DomComponent component = new DomComponent(props, null, null, null, true);
       expect(component.pair, isTrue);
     });
     
     test("without props should reutrn <tagname> as open markup and </tagname> as close one", () {
-      DomComponent component = new DomComponent(null, null, "tagname");
+      DomComponent component = new DomComponent(null, null, null, "tagname");
       expect(component.openMarkup(), equals("<tagname>"));
       expect(component.closeMarkup(), equals("</tagname>"));
     });
   
     test("not pair without props should reutrn <tagname /> as open markup and null as close one", () {
-      DomComponent component = new DomComponent(null, null, "tagname", false);
+      DomComponent component = new DomComponent(null, null, null, "tagname", false);
       expect(component.openMarkup(), equals("<tagname />"));
       expect(component.closeMarkup(), isNull);
     });
@@ -62,7 +62,7 @@ main() {
     });
     
     test("should create svg component if in controller is svg = true", () {
-      DomComponent component = new DomComponent(null, null, null, null, true);
+      DomComponent component = new DomComponent(null, null, null, null, null, true);
       
       expect(component.svg, isTrue);
     });
@@ -70,7 +70,7 @@ main() {
     test("markup with attrs", () {
       props.when(callsTo("htmlAttrs")).alwaysReturn(' attr="value"');
       
-      DomComponent component = new DomComponent(props, null, "tagname");
+      DomComponent component = new DomComponent(props, null, null, "tagname");
       
       expect(component.openMarkup(), equals('<tagname attr="value">'));
     });
@@ -78,16 +78,15 @@ main() {
     test("not pair markup with attrs", () {
       props.when(callsTo("htmlAttrs")).alwaysReturn(' attr="value"');
       
-      DomComponent component = new DomComponent(props, null, "tagname", false);
+      DomComponent component = new DomComponent(props, null, null, "tagname", false);
       
       expect(component.openMarkup(), equals('<tagname attr="value" />'));
     });
     
     test("render should return children from props", () {
       var children = [new ComponentDescriptionMock(), new ComponentDescriptionMock()];
-      props.when(callsTo("get children")).alwaysReturn(children);
 
-      DomComponent component = new DomComponent(props);
+      DomComponent component = new DomComponent(props, children);
       
       expect(component.render(), equals(children));
     });
@@ -96,7 +95,7 @@ main() {
       props.when(callsTo("htmlAttrs", true)).alwaysReturn(' svg="true"');
       props.when(callsTo("htmlAttrs", false)).alwaysReturn(' svg="false"');
       
-      DomComponent component = new DomComponent(props, null, null, null, true);
+      DomComponent component = new DomComponent(props, null, null, null, null, true);
       
       expect(component.openMarkup(), contains('svg="true"'));
     });

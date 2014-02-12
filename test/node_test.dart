@@ -20,6 +20,7 @@ main() {
     test("constructor", () {
       Node node = new Node(null, new ComponentMock());
       expect(node.component.props, equals(null));
+      expect(node.component.children, equals(null));
       expect(node.isDirty, equals(true));
       expect(node.hasDirtyDescendant, equals(false));
       expect(node.children, isEmpty);
@@ -54,7 +55,7 @@ main() {
       ComponentDescriptionMock description = new ComponentDescriptionMock();
 
       description.when(callsTo("createComponent")).alwaysReturn(new ComponentMock());
-      description.when(callsTo("get factory")).alwaysReturn(([Props props]) => new ComponentMock());
+      description.when(callsTo("get factory")).alwaysReturn(([Props props, children]) => new ComponentMock());
       
       ComponentMock component = new ComponentMock();
 
@@ -91,7 +92,7 @@ main() {
       ComponentDescriptionMock description = new ComponentDescriptionMock();
 
       description.when(callsTo("createComponent")).alwaysReturn(new ComponentMock());
-      description.when(callsTo("get factory")).alwaysReturn(([Props props]) => new ComponentMock());
+      description.when(callsTo("get factory")).alwaysReturn(([Props props, children]) => new ComponentMock());
       
       ComponentMock component = new ComponentMock();
 
@@ -109,7 +110,7 @@ main() {
       ComponentDescriptionMock description = new ComponentDescriptionMock();
 
       description.when(callsTo("createComponent")).alwaysReturn(new ComponentMock());
-      description.when(callsTo("get factory")).alwaysReturn(([Props props]) => new ComponentMock());
+      description.when(callsTo("get factory")).alwaysReturn(([Props props, children]) => new ComponentMock());
       
       ComponentMock component = new ComponentMock();
 
@@ -137,7 +138,7 @@ main() {
       ComponentDescriptionMock description = new ComponentDescriptionMock();
 
       description.when(callsTo("createComponent")).alwaysReturn(new ComponentMock());
-      description.when(callsTo("get factory")).alwaysReturn(([Props props]) => new ComponentMock());
+      description.when(callsTo("get factory")).alwaysReturn(([Props props, children]) => new ComponentMock());
       
       ComponentMock component = new ComponentMock();
 
@@ -168,9 +169,9 @@ main() {
        * return every time new factory
        */
       description.when(callsTo("get factory"))
-        .thenReturn(([Props props]) => new ComponentMock())
-        .thenReturn(([Props props]) => new ComponentMock())
-        .thenReturn(([Props props]) => new ComponentMock());
+        .thenReturn(([Props props, children]) => new ComponentMock())
+        .thenReturn(([Props props, children]) => new ComponentMock())
+        .thenReturn(([Props props, children]) => new ComponentMock());
       
       ComponentMock component = new ComponentMock();
 
