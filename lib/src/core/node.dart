@@ -27,6 +27,10 @@ class Node {
   
   bool get hasDirtyDescendant => _hasDirtyDescendant;
   
+  void componentNeedUpdate(bool now) {
+    this.isDirty = true;
+  }
+  
   /**
    * mark this instance as dirty and if status was changed, 
    * than flag whole route to root of node tree as "has dirty descendant".
@@ -62,6 +66,9 @@ class Node {
   Node(this._parent, Component this._component) {
     this.isDirty = true;
     this._children = [];
+    if (_component.needUpdate != null) {
+      _component.needUpdate.listen(componentNeedUpdate);
+    }
   }
   
 //  Node(...)

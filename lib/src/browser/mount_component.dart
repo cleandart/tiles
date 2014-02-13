@@ -1,4 +1,4 @@
-part of tiles;
+part of tiles_browser;
 
 /**
  * Mount component into the html element. 
@@ -6,7 +6,7 @@ part of tiles;
  * That means, that render structure described 
  * in the component description into element 
  */
-mountComponent(ComponentDescription description, HtmlElement mountRoot) {
+mountComponent(ComponentDescription description, html.HtmlElement mountRoot) {
   Node node = new Node(null, description.createComponent());
   _mountNode(node, mountRoot, true);
 }
@@ -16,7 +16,7 @@ mountComponent(ComponentDescription description, HtmlElement mountRoot) {
  *  
  * That means, it render it's tree structure into element.
  */
-_mountNode(Node node, HtmlElement mountRoot, [bool clear = false]) {
+_mountNode(Node node, html.HtmlElement mountRoot, [bool clear = false]) {
   /**
    * first if param clear is true, clear this html element
    */
@@ -33,7 +33,7 @@ _mountNode(Node node, HtmlElement mountRoot, [bool clear = false]) {
     /**
      * if node contains text, write text and end recursion
      */
-    Text text = new Text(node.component.props);
+    html.Text text = new html.Text(node.component.props);
     _nodeToElement[node] = text;
     mountRoot.append(text);
 
@@ -47,7 +47,7 @@ _mountNode(Node node, HtmlElement mountRoot, [bool clear = false]) {
      */
   
     DomComponent component = node.component;
-    Element componentElement = new Element.tag(component.tagName);
+    html.Element componentElement = new html.Element.tag(component.tagName);
     component.props.forEach((key, value) => componentElement.setAttribute(key, value));
     _nodeToElement[node] = componentElement;
     

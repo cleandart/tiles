@@ -3,6 +3,7 @@ library tiles_mount_component_test;
 import 'package:unittest/unittest.dart';
 import 'package:unittest/mock.dart';
 import 'package:tiles/tiles.dart';
+import 'package:tiles/tiles_browser.dart';
 import 'dart:html';
 import '../mocks.dart';
 import 'dart:convert';
@@ -10,14 +11,37 @@ import 'dart:convert';
 main() {
   group("(browser) (mountComponent)", () {
     Element mountRoot;
+    String imageSource = "http: //github.global.ssl.fastly.net/images/modules/logos_page/GitHub-Mark.png";
     
+    ComponentDescriptionMock descriptionWithSpan;
+    ComponentDescriptionMock descriptionWithImage;
+
     setUp(() {
+      /**
+       * create new mountRoot
+       */
       mountRoot = new Element.div();
       
       /**
+       * Prepare descriptions
+       */
+      
+      ComponentMock componentWithSpan = new ComponentMock();
+      componentWithSpan.when(callsTo("render")).alwaysReturn([span()]);
+      
+      descriptionWithSpan = new ComponentDescriptionMock();
+      descriptionWithSpan.when(callsTo("createComponent")).alwaysReturn(componentWithSpan);
+      
+      ComponentMock componentWithImage = new ComponentMock();
+      componentWithImage.when(callsTo("render")).alwaysReturn([img()]);
+      
+      descriptionWithImage = new ComponentDescriptionMock();
+      descriptionWithImage.when(callsTo("createComponent")).alwaysReturn(componentWithImage);
+
+      /**
        * uncomment to see what theese test do in browser
        */
-//      querySelector("body").append(mountRoot);
+      querySelector("body").append(mountRoot);
     });
     
     test("should exist such function", () {
@@ -70,9 +94,8 @@ main() {
     });
     
     test("should create image if image passed", () {
-      String src = "https: //encrypted-tbn2.gstatic.com/images?q=tbn: ANd9GcRoEfjv0a02ICVrPaGrveSlhiCHj4pfnvXHd4Eh324FlWT_xUVTDPwQCg6-";
       mountComponent(img({
-        "src": src,
+        "src": imageSource,
         "style": "height: 500px;",
           }), mountRoot);
       
@@ -80,17 +103,11 @@ main() {
 
       ImageElement image = mountRoot.children.first;
       expect(image is ImageElement, isTrue);
-      expect(image.attributes["src"], equals(_htmlEscape.convert(src)));
+      expect(image.attributes["src"], equals(_htmlEscape.convert(imageSource)));
     });
     
     test("should skip not DomComponent Component", () {
-      ComponentMock component = new ComponentMock();
-      component.when(callsTo("render")).alwaysReturn([span()]);
-      
-      ComponentDescriptionMock description = new ComponentDescriptionMock();
-      description.when(callsTo("createComponent")).alwaysReturn(component);
-      
-      mountComponent(description, mountRoot);
+      mountComponent(descriptionWithSpan, mountRoot);
       
       expect(mountRoot.children.length, equals(1));
       expect(mountRoot.children.first is SpanElement, isTrue);
@@ -98,19 +115,7 @@ main() {
     });
     
     test("should write all children of children into element, if first level children was not dom components", () {
-      ComponentMock component1 = new ComponentMock();
-      component1.when(callsTo("render")).alwaysReturn([span()]);
-      
-      ComponentDescriptionMock description1 = new ComponentDescriptionMock();
-      description1.when(callsTo("createComponent")).alwaysReturn(component1);
-      
-      ComponentMock component2 = new ComponentMock();
-      component2.when(callsTo("render")).alwaysReturn([img()]);
-      
-      ComponentDescriptionMock description2 = new ComponentDescriptionMock();
-      description2.when(callsTo("createComponent")).alwaysReturn(component2);
-      
-      mountComponent(div(null, [description1, description2]), mountRoot);
+      mountComponent(div(null, [descriptionWithSpan, descriptionWithImage]), mountRoot);
       
       expect(mountRoot.children.length, equals(1));
       Element el = mountRoot.children.first;

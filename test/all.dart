@@ -8,7 +8,6 @@ import "dom/dom_component_test.dart" as domComponent;
 import "dom/dom_elements_test.dart" as domElements;
 import "dom/dom_elements_special_test.dart" as domElementsSpecial;
 import "dom/dom_text_component_test.dart" as domTextComponent;
-import 'browser/mount_component_test.dart' as mountComponent;
 
 main () {
   node.main();
@@ -19,5 +18,4 @@ main () {
   domElements.main();
   domElementsSpecial.main();
   domTextComponent.main();
-  mountComponent.main();
 }
