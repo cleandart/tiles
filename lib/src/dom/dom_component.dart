@@ -5,7 +5,7 @@ const _CLOSEMARK = ">";
 const _CLOSESIGN = "/";
 
 class DomComponent extends Component {
-  final String _tagName;
+  final String tagName;
   final bool pair;
   
   Map _props;
@@ -32,7 +32,7 @@ class DomComponent extends Component {
   
   final bool svg;
   
-  DomComponent([this._props, List<ComponentDescription> children, needUpdateController, this._tagName, pair, this.svg = false]):
+  DomComponent([this._props, List<ComponentDescription> children, needUpdateController, this.tagName, pair, this.svg = false]):
       this.pair = pair == null || pair,
       super(null, children, needUpdateController){
     if (_props != null && !(_props is Map)) throw "Props should be map or string";
@@ -44,7 +44,7 @@ class DomComponent extends Component {
    * if this component is not pair html element, then create self-closing tag
    */
   String openMarkup() {
-    StringBuffer result = new StringBuffer("$_OPENMARK$_tagName");
+    StringBuffer result = new StringBuffer("$_OPENMARK$tagName");
     
     if (props != null) {
       result.write(htmlAttrs(this.svg));
@@ -57,8 +57,8 @@ class DomComponent extends Component {
   /**
    * if component corespond with pair element, return close markup, else return null
    */
-  String closeMarkup() => pair ? "$_OPENMARK$_CLOSESIGN$_tagName$_CLOSEMARK" : null;
-  
+  String closeMarkup() => pair ? "$_OPENMARK$_CLOSESIGN$tagName$_CLOSEMARK" : null;
+ 
   List<ComponentDescription> render() {
     return this.children;
   }
