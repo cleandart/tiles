@@ -15,6 +15,12 @@ main() {
     
     ComponentDescriptionMock descriptionWithSpan;
     ComponentDescriptionMock descriptionWithImage;
+    ComponentMock componentWithSpan;
+    ComponentMock componentWithImage;
+
+    try {
+      initTilesBrowserConfiguration();
+    } catch (e) {}
 
     setUp(() {
       /**
@@ -26,13 +32,13 @@ main() {
        * Prepare descriptions
        */
       
-      ComponentMock componentWithSpan = new ComponentMock();
+      componentWithSpan = new ComponentMock();
       componentWithSpan.when(callsTo("render")).alwaysReturn([span()]);
       
       descriptionWithSpan = new ComponentDescriptionMock();
       descriptionWithSpan.when(callsTo("createComponent")).alwaysReturn(componentWithSpan);
       
-      ComponentMock componentWithImage = new ComponentMock();
+      componentWithImage = new ComponentMock();
       componentWithImage.when(callsTo("render")).alwaysReturn([img()]);
       
       descriptionWithImage = new ComponentDescriptionMock();
@@ -131,6 +137,37 @@ main() {
       mountComponent(b(), mountRoot);
       
       expect(mountRoot.children.length, equals(1));
+    });
+    
+    test("if component have ref callback in props, it should be called with component instance when it is completely mounted", () {
+      var props = {};
+      
+      props["ref"] = expectAsync((Component component) {
+        expect(component, equals(componentWithSpan));
+      });
+      
+      componentWithSpan.when(callsTo("get props")).alwaysReturn(props);
+      
+      mountComponent(descriptionWithSpan, mountRoot);
+      expect(descriptionWithSpan.createComponent(), equals(componentWithSpan));
+      expect(descriptionWithSpan.createComponent().props, equals(props));
+    });
+    
+    test("should work if component not have props", () {
+      componentWithSpan.when(callsTo("get props")).alwaysReturn(null);
+      
+      /**
+       * just test, if no exception is thrown
+       */
+      expect(() => mountComponent(descriptionWithSpan, mountRoot), isNot(throws));
+    });
+    
+    test("should work with something weird in props ref", () {
+      var props = {};
+      props["ref"] = new Mock();
+      componentWithSpan.when(callsTo("get props")).alwaysReturn(props);
+
+      expect(() => mountComponent(descriptionWithSpan, mountRoot), isNot(throws));
     });
     
   });

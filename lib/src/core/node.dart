@@ -13,6 +13,8 @@ class Node {
   
   dynamic _oldProps;
   
+  final StreamController<bool> _needUpdate;
+  
   Component get component => _component;
   
   List<Node> get children {
@@ -26,6 +28,8 @@ class Node {
   bool get isDirty => _isDirty;
   
   bool get hasDirtyDescendant => _hasDirtyDescendant;
+  
+  Stream<bool> get needUpdate => _needUpdate.stream;
   
   void componentNeedUpdate(bool now) {
     this.isDirty = true;
@@ -41,6 +45,10 @@ class Node {
       this._isDirty = true;
       if (_parent != null && changed && !_hasDirtyDescendant) {
         _parent.hasDirtyDescendant = true;
+
+      }
+      if (changed && !_hasDirtyDescendant && _needUpdate != null) {
+        _needUpdate.add(true);
       }
     }
   }
@@ -55,6 +63,9 @@ class Node {
       if (_parent != null && changed) {
         _parent.hasDirtyDescendant = true;
       }
+      if (changed && _needUpdate != null) {
+        _needUpdate.add(true);
+      }
     }
   }
 
@@ -63,7 +74,7 @@ class Node {
    * 
    *   Node node = new Node(parent, description); 
    */
-  Node(this._parent, Component this._component) {
+  Node(this._parent, Component this._component, [this._needUpdate]) {
     this.isDirty = true;
     this._children = [];
     if (_component.needUpdate != null) {
@@ -149,7 +160,7 @@ class Node {
        * if factory is same, update child, else replace child 
        */
       if (_children[i].factory == newChildren[i].factory) {
-        children[i].apply(newChildren[i].props);
+        children[i].apply(newChildren[i].props, newChildren[i].children);
       } else {
         Node oldChild = children[i];
         _children[i] = new _NodeWithFactory(new Node(this, newChildren[i].createComponent()), newChildren[i].factory);
@@ -191,10 +202,11 @@ class Node {
    * 
    * if no props, apply null
    */
-  void apply([dynamic props]) {
+  void apply([dynamic props, List<ComponentDescription> children]) {
     this.component.willReceiveProps(props);
     this._oldProps = this.component.props;
     this.component.props = props;
+    this.component.children = children;
     this.isDirty = true;
   }
   
