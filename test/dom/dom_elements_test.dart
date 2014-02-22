@@ -82,7 +82,7 @@ main() {
       
       expect(svgCompoennt.openMarkup(), equals('<svg d="d">'));
     });
-
+    
   });
   
 }

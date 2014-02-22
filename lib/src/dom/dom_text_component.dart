@@ -8,6 +8,12 @@ class DomTextComponent extends Component {
   
   DomTextComponent(String props): super(props);
   
+  /**
+   * getter for escaped props to easy use for both, 
+   * browser and server side rendering
+   */
+  String get textEscaped => _htmlEscape.convert(props);
+  
 }
 
 ComponentDescriptionFactory _domTextComponentDescriptionFactory = 

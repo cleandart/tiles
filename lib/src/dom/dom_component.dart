@@ -6,18 +6,37 @@ const _CLOSESIGN = "/";
 
 class DomComponent extends Component {
   final String _tagName;
-  final bool _pair;
+  final bool pair;
   
-  Map props; 
+  Map _props;
   
-  bool get pair => _pair;
+  /**
+   * getter for props, which escape all values
+   */
+  Map get props {
+    Map props = {};
+    if(_props == null){
+      return props;
+    }
+    _props.forEach((key, value) => props[key] = _htmlEscape.convert(value.toString()));
+    return props;
+  }
+  
+  /** 
+   * setter for props
+   */
+  set props (Map props) {
+    _props = props;
+  }
+  
   
   final bool svg;
   
-  DomComponent([this.props, List<ComponentDescription> children, needUpdateController, this._tagName, pair, this.svg = false]):
-    this._pair = pair == null || pair,
-    super(null, children, needUpdateController) 
-    {}
+  DomComponent([this._props, List<ComponentDescription> children, needUpdateController, this._tagName, pair, this.svg = false]):
+      this.pair = pair == null || pair,
+      super(null, children, needUpdateController){
+    if (_props != null && !(_props is Map)) throw "Props should be map or string";
+  }
   
   /**
    * generate open markup from tagname and props
@@ -28,17 +47,17 @@ class DomComponent extends Component {
     StringBuffer result = new StringBuffer("$_OPENMARK$_tagName");
     
     if (props != null) {
-      result.write(htmlAttrs(props, this.svg));
+      result.write(htmlAttrs(this.svg));
     }
     
-    result.write("${_pair ? "" : " $_CLOSESIGN"}$_CLOSEMARK");
+    result.write("${pair ? "" : " $_CLOSESIGN"}$_CLOSEMARK");
     return result.toString();
   }
   
   /**
    * if component corespond with pair element, return close markup, else return null
    */
-  String closeMarkup() => _pair ? "$_OPENMARK$_CLOSESIGN$_tagName$_CLOSEMARK" : null;
+  String closeMarkup() => pair ? "$_OPENMARK$_CLOSESIGN$_tagName$_CLOSEMARK" : null;
   
   List<ComponentDescription> render() {
     return this.children;
@@ -49,10 +68,10 @@ class DomComponent extends Component {
    * 
    * Generate attributes in html syntas attr="value" for future use in DomComponent.
    */
-  String htmlAttrs(Map map, [bool svg = false]) {
+  String htmlAttrs([bool svg = false]) {
     StringBuffer result = new StringBuffer();
     
-    map.forEach((String key, dynamic value) {
+    props.forEach((String key, dynamic value) {
       if (!svg && _allowedAttrs.contains(key)) {
         result.write(' $key="$value"');
       } else if (svg && _allowedSvgAttributes.contains(key)) {
@@ -78,3 +97,5 @@ Set<String> _allowedSvgAttributes = new Set.from(["cx", "cy", "d", "fill", "fx",
   "gradientUnits", "offset", "points", "r", "rx", "ry",
   "spreadMethod", "stopColor", "stopOpacity", "stroke", "strokeLinecap", "strokeWidth", "transform",
   "version", "viewBox", "x1", "x2", "x", "y1", "y2", "y"]);
+
+var _htmlEscape = new HtmlEscape();

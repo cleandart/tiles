@@ -77,6 +77,16 @@ main() {
       expect(desc.children.last.props, equals(text));
     });
     
+    test("should offer escaped props by textEscaped getter", () {
+      component = new DomTextComponent("<script>&");
+      
+      expect(component.textEscaped, isNot(contains("<")));
+      expect(component.textEscaped, isNot(contains(">")));
+      expect(component.textEscaped, contains("&amp;"));
+      expect(component.textEscaped, isNot(contains("\"")));
+      expect(component.textEscaped, isNot(contains("'")));
+    });
+    
   });
 
 }

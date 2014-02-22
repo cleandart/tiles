@@ -10,25 +10,14 @@ part of tiles;
  */
 ComponentDescriptionFactory _registerDomComponent(String tagname, [bool pair, bool svg = false, ComponentFactory factory]) {
   
-  /** create factory which create DomComponent */
-  var _standardFactory = ([Map props, List<ComponentDescription> children]) => new DomComponent(props, children, null, tagname, pair, svg);
-  
   if (factory == null) {
-    factory = _standardFactory;
+    /** 
+     * create default factory which create DomComponent 
+     */
+    factory = ([Map props, List<ComponentDescription> children]) => new DomComponent(props, children, null, tagname, pair, svg);;
   }
-  
-  /**  
-   * return ComponentDescription similar to that, 
-   * which return registerComponent, 
-   * but with small difference in proccessing props, which in this case can be Map too.
-   */
-  return ([dynamic props, dynamic children]) {
-    props = _processProps(props);
 
-    children = _processChildren(children);
-
-    return new ComponentDescription(factory, props, children);
-  };
+  return registerComponent(factory);
 
 }
 
@@ -53,19 +42,6 @@ _processChildren(dynamic children) {
     });
     return  newChildren;
   }
-}
-
-_processProps(props) {
-  if (props == null) {
-    props = {};
-  }
-  
-  if (!(props is Map)) {
-    throw "props should be instance of Map, Map or null";
-  }
-  
-  return props;
-
 }
 
 /**
