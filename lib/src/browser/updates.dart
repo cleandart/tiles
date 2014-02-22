@@ -6,13 +6,7 @@ part of tiles_browser;
  * Find all root nodes, and updte each tree by updating root node.
  */
 _update(dynamic data) {
-  List<Node> rootNodes = [];
-  _nodeToElement.keys.forEach((Node node) {
-    if (node.parent == null) {
-      rootNodes.add(node);
-    }
-  });
-  rootNodes.forEach((Node node) {
+  _rootNodes.forEach((Node node) {
     _updateTree(node);
   });
 }
@@ -74,6 +68,8 @@ _findFirstDomDescendantAfter(Node parent, Node node) {
     }
     if (child.component is DomComponent && _nodeToElement[child] != null) {
       result = child;
+    } else if(!(child.component is DomComponent)){
+      result = _findFirstDomDescendantAfter(child, node);
     }
   }
   

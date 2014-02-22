@@ -284,6 +284,141 @@ main() {
       }));
     });
     
+    ComponentDescriptionMock prepareTestCase(){
+      /*
+       * Imagine following structure:
+       *
+       * Cmp1: [Cmp2: [div1, div2], Cmp3: [div3, div4]]
+       * 
+       * Now, Cmp1, Cmp2, Cmp3 all have the same mountRoot.
+       * 
+       * However, we need to ensure, that div3 is inserted after div2. What if Cmp2 is updated, Cmp3 is not and div2 ends after div4?
+       */
+      ComponentMock cmp1 = new ComponentMock();
+      cmp1.when(callsTo("get needUpdate"))
+        .alwaysReturn(controller.stream);
+      cmp1.when(callsTo("redraw"))
+        .alwaysCall(([bool what]) => controller.add(what));
+
+      ComponentDescriptionMock desc1 = new ComponentDescriptionMock();
+      desc1.when(callsTo("createComponent")).alwaysReturn(cmp1);
+      
+      
+      ComponentMock cmp2 = new ComponentMock();
+      ComponentDescriptionMock desc2 = new ComponentDescriptionMock();
+      desc2.when(callsTo("createComponent")).alwaysReturn(cmp2);
+
+      ComponentMock cmp3 = new ComponentMock();
+      ComponentDescriptionMock desc3 = new ComponentDescriptionMock();
+      desc3.when(callsTo("createComponent")).alwaysReturn(cmp3);
+
+      cmp1.when(callsTo("render")).alwaysReturn([desc2, desc3]);
+      cmp2.when(callsTo("render"))
+        .thenReturn([div({"id": "div1"}), div({"id": "div2"})])  /*div1, div2*/
+        .thenReturn([div({"id": "div1"}), div({"id": "div2"})])
+        .thenReturn([div({"id": "div1"}), div({"id": "div2"})])
+        .thenReturn([div({"id": "div1"}), span()]); // replace div2 by span
+      cmp3.when(callsTo("render"))
+        .thenReturn([div({"id": "div3"}), div({"id": "div4"})])
+        .thenReturn([div({"id": "div3.1"}), div({"id": "div4"})])
+        .thenReturn([span(), div()])
+        .thenReturn([span(), div()]);
+      
+      return desc1;
+    }
+    
+    test("should only update div attributes when all children are stil div", () {
+      description = prepareTestCase();
+      mountComponent(description, mountRoot);
+      
+      expect(mountRoot.children.length, equals(4));
+      Element div1 = mountRoot.children[0];
+      Element div2 = mountRoot.children[1];
+      Element div3 = mountRoot.children[2];
+      Element div4 = mountRoot.children[3];
+      
+      expect(div3.attributes['id'], equals("div3"));
+
+      /**
+       * update just id of div3 after first update
+       */ 
+      description.createComponent().redraw();
+      
+      controller.close().then(expectAsync((data) {
+        expect(mountRoot.children.length, equals(4));
+        
+        expect(mountRoot.children[0], equals(div1));
+        expect(mountRoot.children[1], equals(div2));
+        expect(mountRoot.children[2], equals(div3));
+        expect(mountRoot.children[3], equals(div4));
+
+        expect(div3.attributes['id'], equals("div3.1"));
+      }));
+    });
+
+    test("should place elements correctly when div3 changed to span", () {
+      description = prepareTestCase();
+      mountComponent(description, mountRoot);
+      
+      expect(mountRoot.children.length, equals(4));
+      Element div1 = mountRoot.children[0];
+      Element div2 = mountRoot.children[1];
+      Element div3 = mountRoot.children[2];
+      Element div4 = mountRoot.children[3];
+      
+      expect(div3.attributes['id'], equals("div3"));
+
+      /**
+       * update twice to replace div3 by span
+       */ 
+      description.createComponent().redraw();
+      description.createComponent().redraw();
+      
+      controller.close().then(expectAsync((data) {
+        expect(mountRoot.children.length, equals(4));
+        
+        expect(mountRoot.children[0], equals(div1));
+        expect(mountRoot.children[1], equals(div2));
+        expect(mountRoot.children[2], isNot(equals(div3)));
+        expect(mountRoot.children[2] is SpanElement, isTrue);
+        expect(mountRoot.children[2].attributes["id"], isNull);
+        expect(mountRoot.children[3], equals(div4));
+
+      }));
+    });
+    
+    test("should place elements correctly when div2 changed to span", () {
+      description = prepareTestCase();
+      mountComponent(description, mountRoot);
+      
+      expect(mountRoot.children.length, equals(4));
+      Element div1 = mountRoot.children[0];
+      Element div2 = mountRoot.children[1];
+      Element div3 = mountRoot.children[2];
+      Element div4 = mountRoot.children[3];
+      
+      expect(div3.attributes['id'], equals("div3"));
+
+      /**
+       * update twice to replace div3 by span
+       */ 
+      description.createComponent().redraw();
+      description.createComponent().redraw();
+      description.createComponent().redraw();
+      
+      controller.close().then(expectAsync((data) {
+        expect(mountRoot.children.length, equals(4));
+        
+        expect(mountRoot.children[0], equals(div1));
+        expect(mountRoot.children[1], isNot(equals(div2)));
+        expect(mountRoot.children[1] is SpanElement, isTrue);
+        expect(mountRoot.children[2], isNot(equals(div3)));
+        expect(mountRoot.children[2] is SpanElement, isTrue);
+        expect(mountRoot.children[3], equals(div4));
+
+      }));
+    });
+    
   });
 }
 

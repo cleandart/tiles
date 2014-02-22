@@ -20,6 +20,8 @@ mountComponent(ComponentDescription description, html.HtmlElement mountRoot) {
   Node node = new Node(null, description.createComponent(), nodeNeedUpdate);
   nodeNeedUpdate.stream.listen(_planRepaint);
   
+  _rootNodes.add(node);
+  
   _mountNode(node, mountRoot, true);
 }
 
@@ -106,6 +108,8 @@ _mountNode(Node node, html.HtmlElement mountRoot, [bool clear = false, Node next
  * For easy identifying place, where nodeChange should be applyed.
  */
 Map<Node, dynamic> _nodeToElement = {};
+
+List<Node> _rootNodes = [];
 
 /**
  * plan repaint for future by adding event to stream, 
