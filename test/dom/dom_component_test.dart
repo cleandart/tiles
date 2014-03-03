@@ -1,10 +1,8 @@
 library tiles_dom_component_test;
 
 import 'package:unittest/unittest.dart';
-import 'package:unittest/mock.dart';
-//import 'package:tiles/tiles.dart';
-import 'package:tiles/tiles_dom.dart';
-import 'mocks.dart';
+import 'package:tiles/tiles.dart';
+import '../mocks.dart';
 
 main() {
   
@@ -79,7 +77,7 @@ main() {
       expect(component.openMarkup(), equals('<tagname id="value" />'));
     });
     
-    test("render should return children from props", () {
+    test("render should return children", () {
       var children = [new ComponentDescriptionMock(), new ComponentDescriptionMock()];
 
       DomComponent component = new DomComponent(props, children);
@@ -96,6 +94,23 @@ main() {
       expect(component.openMarkup(), contains('d="true"'));
     });
     
+    test("should escape attrs", () {
+      DomComponent component = new DomComponent({"id": "<script> &allert('\"\"'); </script>"}, null, null, "tagname");
+      
+      String openMarkup = component.openMarkup();
+      expect(openMarkup.substring(1), isNot(contains("<")));
+      expect(openMarkup.substring(0, openMarkup.length-1), isNot(contains(">")));
+      expect(openMarkup, contains("&amp;"));
+      expect(openMarkup.substring(13, openMarkup.length-2), isNot(contains("\"")));
+      expect(openMarkup, isNot(contains("'")));
+
+    });
+    
+    test("should throw with not map props in constructor", () {
+      expect(() => new DomComponent("string props"), throws);
+    });
+
+
   });
   
 }

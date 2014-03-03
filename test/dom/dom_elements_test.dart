@@ -1,10 +1,9 @@
 library tiles_dom_elements_test;
 
-import 'package:tiles/tiles_dom.dart';
 import 'package:tiles/tiles.dart';
 import 'package:unittest/unittest.dart';
 //import 'package:unittest/mock.dart';
-import 'mocks.dart';
+import '../mocks.dart';
 //import 'package:tiles/tiles.dart';
 
 
@@ -83,7 +82,7 @@ main() {
       
       expect(svgCompoennt.openMarkup(), equals('<svg d="d">'));
     });
-
+    
   });
   
 }

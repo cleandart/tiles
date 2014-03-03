@@ -1,4 +1,4 @@
-part of tiles_dom;
+part of tiles;
 
 /**
  * specialized registerComponent method, which by tagname and pair flag 
@@ -10,58 +10,38 @@ part of tiles_dom;
  */
 ComponentDescriptionFactory _registerDomComponent(String tagname, [bool pair, bool svg = false, ComponentFactory factory]) {
   
-  /** create factory which create DomComponent */
-  var _standardFactory = ([Map props, List<ComponentDescription> children]) => new DomComponent(props, children, null, tagname, pair, svg);
-  
   if (factory == null) {
-    factory = _standardFactory;
+    /** 
+     * create default factory which create DomComponent 
+     */
+    factory = ([Map props, List<ComponentDescription> children]) => new DomComponent(props, children, null, tagname, pair, svg);;
   }
-  
-  /**  
-   * return ComponentDescription similar to that, 
-   * which return registerComponent, 
-   * but with small difference in proccessing props, which in this case can be Map too.
-   */
-  return ([dynamic props, List<dynamic> children]) {
-    props = _processProps(props);
 
-    children = _processChildren(children);
-
-    return new ComponentDescription(factory, props, children);
-  };
+  return registerComponent(factory);
 
 }
 
-_processChildren(List<dynamic> children) {
+_processChildren(dynamic children) {
   /**
    * iterage children to recognize string
    */
+  if (!(children is List) && children != null) {
+    children = [children];
+  }
+  
   if (children != null) {
     List newChildren = [];
     children.forEach((child) {
       if (child is ComponentDescription) {
         newChildren.add(child);
       } else if (child is String) {
-        newChildren.add(span(null, child));
+        newChildren.add(_domTextComponentDescriptionFactory(child));
       } else {
         throw "Children should contain only instance of ComponentDescription or String";
       }
     });
     return  newChildren;
   }
-}
-
-_processProps(props) {
-  if (props == null) {
-    props = {};
-  }
-  
-  if (!(props is Map)) {
-    throw "props should be instance of Map, Map or null";
-  }
-  
-  return props;
-
 }
 
 /**
@@ -149,7 +129,7 @@ ComponentDescriptionFactory a = _registerDomComponent("a"),
   section = _registerDomComponent("section"),
   select = _registerDomComponent("select"),
   small = _registerDomComponent("small"),
-  span = _spanDescriptionFactory,
+  span = _registerDomComponent("span"),
   strong = _registerDomComponent("strong"),
   style = _registerDomComponent("style"),
   sub = _registerDomComponent("sub"),
