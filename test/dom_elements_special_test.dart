@@ -53,7 +53,7 @@ main() {
       });
 
       test("should produce <span>content</span> as markup also if props was updated", () {
-        spanComponent.props = new DomProps({"content": "content"});
+        spanComponent.props = {"content": "content"};
         expect("${spanComponent.openMarkup()}${spanComponent.content()}${spanComponent.closeMarkup()}", equals('<span>content</span>'));
       });
     });
@@ -80,7 +80,7 @@ main() {
       });
       
       test('should remove value from props when setted by setter', () {
-        textareaComponent.props = new DomProps({value: value});
+        textareaComponent.props = {value: value};
         expect(textareaComponent.props[value], isNull);
       });
       

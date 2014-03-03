@@ -4,13 +4,14 @@ import 'package:unittest/unittest.dart';
 import 'package:tiles/tiles.dart';
 import 'mocks.dart';
 import 'dart:math';
+import 'package:unittest/mock.dart';
 
 main() {
   
   group("(NodeChange)", () {
     test("constructor", () {
-      Props oldProps = new PropsMock();
-      Props newProps = new PropsMock();
+      dynamic oldProps = new Mock();
+      dynamic newProps = new Mock();
       Node node = new NodeMock();
 
       var rand = new Random();

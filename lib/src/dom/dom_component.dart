@@ -8,13 +8,13 @@ class DomComponent extends Component {
   final String _tagName;
   final bool _pair;
   
-  DomProps props; 
+  Map props; 
   
   bool get pair => _pair;
   
   final bool svg;
   
-  DomComponent([DomProps this.props, List<ComponentDescription> children, needUpdateController, this._tagName, pair, this.svg = false]):
+  DomComponent([this.props, List<ComponentDescription> children, needUpdateController, this._tagName, pair, this.svg = false]):
     this._pair = pair == null || pair,
     super(null, children, needUpdateController) 
     {}
@@ -28,7 +28,7 @@ class DomComponent extends Component {
     StringBuffer result = new StringBuffer("$_OPENMARK$_tagName");
     
     if (props != null) {
-      result.write(props.htmlAttrs(this.svg));
+      result.write(htmlAttrs(props, this.svg));
     }
     
     result.write("${_pair ? "" : " $_CLOSESIGN"}$_CLOSEMARK");
@@ -44,5 +44,37 @@ class DomComponent extends Component {
     return this.children;
   }
   
+  /**
+   * Html attributes generator. 
+   * 
+   * Generate attributes in html syntas attr="value" for future use in DomComponent.
+   */
+  String htmlAttrs(Map map, [bool svg = false]) {
+    StringBuffer result = new StringBuffer();
+    
+    map.forEach((String key, dynamic value) {
+      if (!svg && _allowedAttrs.contains(key)) {
+        result.write(' $key="$value"');
+      } else if (svg && _allowedSvgAttributes.contains(key)) {
+        result.write(' $key="$value"');
+      }
+    });
+    
+    return result.toString();
+  }
 }
 
+
+Set<String> _allowedAttrs = new Set.from(["accept", "accessKey", "action", "allowFullScreen", "allowTransparency", "alt", "autoCapitalize",
+  "autoComplete", "autoFocus", "autoPlay", "cellPadding", "cellSpacing", "charSet", "checked",
+  "className", "colSpan", "content", "contentEditable", "contextMenu", "controls", "data", "dateTime",
+  "dir", "disabled", "draggable", "encType", "form", "frameBorder", "height", "hidden", "href", "htmlFor",
+  "httpEquiv", "icon", "id", "label", "lang", "list", "loop", "max", "maxLength", "method", "min", "multiple", "name",
+  "pattern", "placeholder", "poster", "preload", "radioGroup", "readOnly", "rel", "required", "role",
+  "rowSpan", "scrollLeft", "scrollTop", "selected", "size", "spellCheck", "src", "step", "style", "tabIndex",
+  "target", "title", "type", "value", "width", "wmode"]);
+
+Set<String> _allowedSvgAttributes = new Set.from(["cx", "cy", "d", "fill", "fx", "fy", "gradientTransform", 
+  "gradientUnits", "offset", "points", "r", "rx", "ry",
+  "spreadMethod", "stopColor", "stopOpacity", "stroke", "strokeLinecap", "strokeWidth", "transform",
+  "version", "viewBox", "x1", "x2", "x", "y1", "y2", "y"]);

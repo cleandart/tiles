@@ -32,7 +32,7 @@ main() {
       expect(linkComponent.openMarkup(), equals("<link />"));
     });
     
-    test("when get map instead of props, convert it to DomProps", () {
+    test("should accept map as props and save it to props", () {
       DomComponent elementComponent = element({"attr": "value"}).createComponent();
       
       expect(elementComponent.props["attr"], equals("value"));

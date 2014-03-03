@@ -55,7 +55,7 @@ main() {
       ComponentDescriptionMock description = new ComponentDescriptionMock();
 
       description.when(callsTo("createComponent")).alwaysReturn(new ComponentMock());
-      description.when(callsTo("get factory")).alwaysReturn(([Props props, children]) => new ComponentMock());
+      description.when(callsTo("get factory")).alwaysReturn(([dynamic props, children]) => new ComponentMock());
       
       ComponentMock component = new ComponentMock();
 
@@ -92,7 +92,7 @@ main() {
       ComponentDescriptionMock description = new ComponentDescriptionMock();
 
       description.when(callsTo("createComponent")).alwaysReturn(new ComponentMock());
-      description.when(callsTo("get factory")).alwaysReturn(([Props props, children]) => new ComponentMock());
+      description.when(callsTo("get factory")).alwaysReturn(([dynamic props, children]) => new ComponentMock());
       
       ComponentMock component = new ComponentMock();
 
@@ -110,7 +110,7 @@ main() {
       ComponentDescriptionMock description = new ComponentDescriptionMock();
 
       description.when(callsTo("createComponent")).alwaysReturn(new ComponentMock());
-      description.when(callsTo("get factory")).alwaysReturn(([Props props, children]) => new ComponentMock());
+      description.when(callsTo("get factory")).alwaysReturn(([dynamic props, children]) => new ComponentMock());
       
       ComponentMock component = new ComponentMock();
 
@@ -138,7 +138,7 @@ main() {
       ComponentDescriptionMock description = new ComponentDescriptionMock();
 
       description.when(callsTo("createComponent")).alwaysReturn(new ComponentMock());
-      description.when(callsTo("get factory")).alwaysReturn(([Props props, children]) => new ComponentMock());
+      description.when(callsTo("get factory")).alwaysReturn(([dynamic props, children]) => new ComponentMock());
       
       ComponentMock component = new ComponentMock();
 
@@ -169,9 +169,9 @@ main() {
        * return every time new factory
        */
       description.when(callsTo("get factory"))
-        .thenReturn(([Props props, children]) => new ComponentMock())
-        .thenReturn(([Props props, children]) => new ComponentMock())
-        .thenReturn(([Props props, children]) => new ComponentMock());
+        .thenReturn(([dynamic props, children]) => new ComponentMock())
+        .thenReturn(([dynamic props, children]) => new ComponentMock())
+        .thenReturn(([dynamic props, children]) => new ComponentMock());
       
       ComponentMock component = new ComponentMock();
 

@@ -9,10 +9,10 @@ import 'mocks.dart';
 main() {
   
   group("(DomComponent)", () {
-    DomPropsMock props;
+    Map props;
     
     setUp(() {
-      props = new DomPropsMock();
+      props = new Map();
     });
     
     test("constructor should create props equals that in constructor and pair component by default", () {
@@ -68,19 +68,15 @@ main() {
     });
     
     test("markup with attrs", () {
-      props.when(callsTo("htmlAttrs")).alwaysReturn(' attr="value"');
+      DomComponent component = new DomComponent({"id": "value"}, null, null, "tagname");
       
-      DomComponent component = new DomComponent(props, null, null, "tagname");
-      
-      expect(component.openMarkup(), equals('<tagname attr="value">'));
+      expect(component.openMarkup(), equals('<tagname id="value">'));
     });
     
     test("not pair markup with attrs", () {
-      props.when(callsTo("htmlAttrs")).alwaysReturn(' attr="value"');
+      DomComponent component = new DomComponent({"id": "value"}, null, null, "tagname", false);
       
-      DomComponent component = new DomComponent(props, null, null, "tagname", false);
-      
-      expect(component.openMarkup(), equals('<tagname attr="value" />'));
+      expect(component.openMarkup(), equals('<tagname id="value" />'));
     });
     
     test("render should return children from props", () {
@@ -92,12 +88,12 @@ main() {
     });
     
     test("with svg = true should return svg attrs instead of html one", () {
-      props.when(callsTo("htmlAttrs", true)).alwaysReturn(' svg="true"');
-      props.when(callsTo("htmlAttrs", false)).alwaysReturn(' svg="false"');
+      /**
+       * "d" as example of svg attr
+       */
+      DomComponent component = new DomComponent({"d": "true"}, null, null, null, null, true);
       
-      DomComponent component = new DomComponent(props, null, null, null, null, true);
-      
-      expect(component.openMarkup(), contains('svg="true"'));
+      expect(component.openMarkup(), contains('d="true"'));
     });
     
   });

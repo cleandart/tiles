@@ -11,7 +11,7 @@ part of tiles_dom;
 ComponentDescriptionFactory _registerDomComponent(String tagname, [bool pair, bool svg = false, ComponentFactory factory]) {
   
   /** create factory which create DomComponent */
-  var _standardFactory = ([DomProps props, List<ComponentDescription> children]) => new DomComponent(props, children, null, tagname, pair, svg);
+  var _standardFactory = ([Map props, List<ComponentDescription> children]) => new DomComponent(props, children, null, tagname, pair, svg);
   
   if (factory == null) {
     factory = _standardFactory;
@@ -52,19 +52,12 @@ _processChildren(List<dynamic> children) {
 }
 
 _processProps(props) {
-  /**
-   * if props are Map, then cover it by DomProps
-   */
-  if (props is Map) {
-    props = new DomProps(props);
-  }    
-
   if (props == null) {
-    props = new DomProps();
+    props = {};
   }
   
-  if (!(props is Props)) {
-    throw "props should be instance of DomProps, Map or null";
+  if (!(props is Map)) {
+    throw "props should be instance of Map, Map or null";
   }
   
   return props;

@@ -4,8 +4,8 @@ class ComponentDescription {
   final ComponentFactory _factory;
   ComponentFactory get factory => _factory;
   
-  final Props _props;
-  Props get props => _props;
+  final dynamic _props;
+  dynamic get props => _props;
   
   final List<ComponentDescription> _children;
   List<ComponentDescription> get children => _children;
@@ -13,7 +13,7 @@ class ComponentDescription {
   /**
    * default constructor which only set final vars.
    */
-  ComponentDescription (ComponentFactory this._factory, [Props  this._props, this._children]) {}
+  ComponentDescription (ComponentFactory this._factory, [dynamic  this._props, this._children]) {}
   
   /**
    * creates component by factory with props.

@@ -3,15 +3,15 @@ part of tiles;
 class NodeChange {
   final NodeChangeType _type;
   final Node _node;
-  final Props _oldProps;
-  final Props _newProps;
+  final dynamic _oldProps;
+  final dynamic _newProps;
 
   
   NodeChangeType get type => _type;
   Node get node => _node;
-  Props get oldProps => _oldProps;
-  Props get newProps => _newProps;
+  dynamic get oldProps => _oldProps;
+  dynamic get newProps => _newProps;
   
-  NodeChange(NodeChangeType this._type, Node this._node, [Props this._oldProps, Props this._newProps]);
+  NodeChange(NodeChangeType this._type, Node this._node, [dynamic this._oldProps, dynamic this._newProps]);
   
 }

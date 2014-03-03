@@ -3,6 +3,7 @@ library tiles_compoenent_description_test;
 import 'package:unittest/unittest.dart';
 import 'package:tiles/tiles.dart';
 import 'mocks.dart';
+import 'package:unittest/mock.dart';
 
 main() {
   group("(ComponentDescription)", () {
@@ -10,7 +11,7 @@ main() {
       
       Component component = new ComponentMock();
       ComponentFactory factory = ([props, children]) => null; 
-      Props props = new PropsMock();
+      dynamic props = new Mock();
       var children = [new ComponentDescriptionMock()];
       
       ComponentDescription description = new ComponentDescription(factory, props, children);
@@ -29,19 +30,19 @@ main() {
        */
       
       bool called = false;
-      Props testProps = null;
+      dynamic testProps = null;
       List<ComponentDescription> testChildren = null; 
       /**
        * factory allways return above component and set called to true
        */
-      ComponentFactory factory = ([Props props, List<ComponentDescription> children]) {
+      ComponentFactory factory = ([dynamic props, List<ComponentDescription> children]) {
         called = true;
         testChildren = children;
         testProps = props;
         return component;
       }; 
 
-      Props props = new PropsMock();
+      dynamic props = new Mock();
       List<ComponentDescription> children = [new ComponentDescriptionMock()];
       
       ComponentDescription description = new ComponentDescription(factory, props, children);
