@@ -107,12 +107,3 @@ _mountNode(Node node, html.HtmlElement mountRoot, [bool clear = false, Node next
 Map<Node, dynamic> _nodeToElement = {};
 
 List<Node> _rootNodes = [];
-
-/**
- * Init browser configuration to proper function of library.
- * 
- * It initialize _needUpdate streem and set callback on it.
- */
-initTilesBrowserConfiguration() {
-}
-

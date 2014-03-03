@@ -1,14 +1,26 @@
 part of tiles_browser;
 
 /**
+ * Init browser configuration to proper function of library.
+ * 
+ * It initialize request anmimation frame loop, 
+ * which controlls root nodes if don't have dirty descendats.
+ */
+initTilesBrowserConfiguration() {
+  html.window.animationFrame.then(_update);
+}
+
+/**
  * Performs update of dom.
  * 
  * Find all root nodes, and updte each tree by updating root node.
+ * At the end, request new animation frame
  */
-_update(dynamic data) {
+_update(num data) {
   _rootNodes.forEach((Node node) {
     _updateTree(node);
   });
+  html.window.animationFrame.then(_update);
 }
 
 /**

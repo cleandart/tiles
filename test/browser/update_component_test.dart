@@ -9,11 +9,6 @@ import '../mocks.dart';
 import 'dart:async';
 
 main() {
-  /**
-   * as now was dropped method of initialization of rerendering, 
-   * theese tests are commented because they will become actual 
-   * when functionality withrequestAnimationFrame will be added 
-   *
   group("(browser) (updateComponent)", () {
     Element mountRoot;
     
@@ -60,7 +55,7 @@ main() {
        */
       querySelector("body").append(mountRoot);
     });
-    
+
     test("should rerender after component called redraw", () {
       component.when(callsTo("render"))
         .thenReturn([span()])
@@ -70,7 +65,7 @@ main() {
       
       component.redraw();
       
-      controller.close().then(expectAsync((something) {
+      window.animationFrame.then(expectAsync((something) {
         expect(mountRoot.children.length, equals(1));
         expect(mountRoot.children.first is ImageElement, isTrue);
       }));
@@ -88,14 +83,14 @@ main() {
       mountComponent(description, mountRoot);
       
       
-      component.redraw();
-      
       expect(mountRoot.children.first.children.length, equals(1));
       expect(mountRoot.children.first.children.first is SpanElement, isTrue, reason: "div should contain span");
       
       var dd = mountRoot.childNodes.first;
 
-      controller.close().then(expectAsync((something) {
+      component.redraw();
+      
+      window.animationFrame.then(expectAsync((something) {
         expect(mountRoot.children.length, equals(2));
         expect(mountRoot.children.first, equals(dd));
         expect(mountRoot.children.first.children.length, equals(1));
@@ -118,7 +113,7 @@ main() {
       
       Element sp = mountRoot.children.first.children.last;
       
-      controller.close().then(expectAsync((something) {
+      window.animationFrame.then(expectAsync((something) {
         expect(mountRoot.children.first.children.last, equals(sp));
         expect(mountRoot.children.first.children.first is ImageElement, isTrue, reason: "span should be replaced by image");
       }));
@@ -139,7 +134,7 @@ main() {
       
       Element sp = mountRoot.children.first.children.last;
       
-      controller.close().then(expectAsync((something) {
+      window.animationFrame.then(expectAsync((something) {
         expect(mountRoot.children.first.children.last, equals(sp));
         expect(mountRoot.children.first.children[0] is DivElement, isTrue, reason: "span should be replaced by image");
         expect(mountRoot.children.first.children[1]is ImageElement, isTrue, reason: "span should be replaced by image");
@@ -186,7 +181,7 @@ main() {
       Element innerSpan = sp.children.first.children[0];
       Element innerImage = sp.children.first.children[2];
       
-      controller.close().then(expectAsync((something) {
+      window.animationFrame.then(expectAsync((something) {
         var children = mountRoot.children.first.children;
         expect(children[0] is DivElement, isTrue, reason: "span should be replaced by image");
         expect(children[1] is ImageElement, isTrue, reason: "span should be replaced by image");
@@ -219,7 +214,7 @@ main() {
       expect(mountRoot.children.first.attributes.containsKey("height"), isFalse, reason: "should not contain height");
       component.redraw();
       
-      controller.close().then(expectAsync((data) {
+      window.animationFrame.then(expectAsync((data) {
         expect(mountRoot.children.first.getAttribute("class"), equals(myOtherClass), reason: "class should change");
         expect(mountRoot.children.first.attributes.containsKey("id"), isFalse, reason: "id should be removed");
         expect(mountRoot.children.first.getAttribute("height"), equals(height.toString()), reason: "haight should be added");
@@ -240,7 +235,7 @@ main() {
 
       component.redraw();
       
-      controller.close().then(expectAsync((data) {
+      window.animationFrame.then(expectAsync((data) {
         expect(mountRoot.children.first.getAttribute("class"), equals(myClass), reason: "class should change");
         expect(mountRoot.children.first.getAttribute("height"), equals(height.toString()), reason: "haight should be added");
       }));
@@ -261,7 +256,7 @@ main() {
 
       component.redraw();
       
-      controller.close().then(expectAsync((data) {
+      window.animationFrame.then(expectAsync((data) {
         expect(mountRoot.children.first.attributes, isEmpty);
       }));
     });
@@ -284,7 +279,7 @@ main() {
       
       component.redraw();
       
-      controller.close().then(expectAsync((data) {
+      window.animationFrame.then(expectAsync((data) {
         expect(mountRoot.children.length, equals(0));
       }));
     });
@@ -349,7 +344,7 @@ main() {
        */ 
       description.createComponent().redraw();
       
-      controller.close().then(expectAsync((data) {
+      window.animationFrame.then(expectAsync((data) {
         expect(mountRoot.children.length, equals(4));
         
         expect(mountRoot.children[0], equals(div1));
@@ -377,18 +372,21 @@ main() {
        * update twice to replace div3 by span
        */ 
       description.createComponent().redraw();
-      description.createComponent().redraw();
-      
-      controller.close().then(expectAsync((data) {
-        expect(mountRoot.children.length, equals(4));
-        
-        expect(mountRoot.children[0], equals(div1));
-        expect(mountRoot.children[1], equals(div2));
-        expect(mountRoot.children[2], isNot(equals(div3)));
-        expect(mountRoot.children[2] is SpanElement, isTrue);
-        expect(mountRoot.children[2].attributes["id"], isNull);
-        expect(mountRoot.children[3], equals(div4));
 
+      window.animationFrame.then(expectAsync((data) {
+        description.createComponent().redraw();
+        
+        window.animationFrame.then(expectAsync((data) {
+          expect(mountRoot.children.length, equals(4));
+          
+          expect(mountRoot.children[0], equals(div1));
+          expect(mountRoot.children[1], equals(div2));
+          expect(mountRoot.children[2], isNot(equals(div3)));
+          expect(mountRoot.children[2] is SpanElement, isTrue);
+          expect(mountRoot.children[2].attributes["id"], isNull);
+          expect(mountRoot.children[3], equals(div4));
+  
+        }));
       }));
     });
     
@@ -408,23 +406,28 @@ main() {
        * update twice to replace div3 by span
        */ 
       description.createComponent().redraw();
-      description.createComponent().redraw();
-      description.createComponent().redraw();
-      
-      controller.close().then(expectAsync((data) {
-        expect(mountRoot.children.length, equals(4));
+      window.animationFrame.then(expectAsync((data) {
+        description.createComponent().redraw();
         
-        expect(mountRoot.children[0], equals(div1));
-        expect(mountRoot.children[1], isNot(equals(div2)));
-        expect(mountRoot.children[1] is SpanElement, isTrue);
-        expect(mountRoot.children[2], isNot(equals(div3)));
-        expect(mountRoot.children[2] is SpanElement, isTrue);
-        expect(mountRoot.children[3], equals(div4));
-
+        window.animationFrame.then(expectAsync((data) {
+          description.createComponent().redraw();
+          
+          window.animationFrame.then(expectAsync((data) {
+            expect(mountRoot.children.length, equals(4));
+            
+            expect(mountRoot.children[0], equals(div1));
+            expect(mountRoot.children[1], isNot(equals(div2)));
+            expect(mountRoot.children[1] is SpanElement, isTrue);
+            expect(mountRoot.children[2], isNot(equals(div3)));
+            expect(mountRoot.children[2] is SpanElement, isTrue);
+            expect(mountRoot.children[3], equals(div4));
+          }));
+        }));
       }));
     });
+    /*
+    */
 
   });
-  */    
 }
 
