@@ -35,18 +35,6 @@ main() {
       expect(component.pair, isTrue);
     });
     
-    test("without props should reutrn <tagname> as open markup and </tagname> as close one", () {
-      DomComponent component = new DomComponent(null, null, null, "tagname");
-      expect(component.openMarkup(), equals("<tagname>"));
-      expect(component.closeMarkup(), equals("</tagname>"));
-    });
-  
-    test("not pair without props should reutrn <tagname /> as open markup and null as close one", () {
-      DomComponent component = new DomComponent(null, null, null, "tagname", false);
-      expect(component.openMarkup(), equals("<tagname />"));
-      expect(component.closeMarkup(), isNull);
-    });
-    
     test("constructor without svg flag should create not svg component", () {
       DomComponent component = new DomComponent(null);
       
@@ -65,45 +53,12 @@ main() {
       expect(component.svg, isTrue);
     });
     
-    test("markup with attrs", () {
-      DomComponent component = new DomComponent({"id": "value"}, null, null, "tagname");
-      
-      expect(component.openMarkup(), equals('<tagname id="value">'));
-    });
-    
-    test("not pair markup with attrs", () {
-      DomComponent component = new DomComponent({"id": "value"}, null, null, "tagname", false);
-      
-      expect(component.openMarkup(), equals('<tagname id="value" />'));
-    });
-    
     test("render should return children", () {
       var children = [new ComponentDescriptionMock(), new ComponentDescriptionMock()];
 
       DomComponent component = new DomComponent(props, children);
       
       expect(component.render(), equals(children));
-    });
-    
-    test("with svg = true should return svg attrs instead of html one", () {
-      /**
-       * "d" as example of svg attr
-       */
-      DomComponent component = new DomComponent({"d": "true"}, null, null, null, null, true);
-      
-      expect(component.openMarkup(), contains('d="true"'));
-    });
-    
-    test("should escape attrs", () {
-      DomComponent component = new DomComponent({"id": "<script> &allert('\"\"'); </script>"}, null, null, "tagname");
-      
-      String openMarkup = component.openMarkup();
-      expect(openMarkup.substring(1), isNot(contains("<")));
-      expect(openMarkup.substring(0, openMarkup.length-1), isNot(contains(">")));
-      expect(openMarkup, contains("&amp;"));
-      expect(openMarkup.substring(13, openMarkup.length-2), isNot(contains("\"")));
-      expect(openMarkup, isNot(contains("'")));
-
     });
     
     test("should throw with not map props in constructor", () {

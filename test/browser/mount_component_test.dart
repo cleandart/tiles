@@ -6,7 +6,6 @@ import 'package:tiles/tiles.dart';
 import 'package:tiles/tiles_browser.dart';
 import 'dart:html';
 import '../mocks.dart';
-import 'dart:convert';
 
 main() {
   group("(browser) (mountComponent)", () {
@@ -109,7 +108,7 @@ main() {
 
       ImageElement image = mountRoot.children.first;
       expect(image is ImageElement, isTrue);
-      expect(image.attributes["src"], equals(_htmlEscape.convert(imageSource)));
+      expect(image.attributes["src"], equals(imageSource));
     });
     
     test("should skip not DomComponent Component", () {
@@ -172,5 +171,3 @@ main() {
     
   });
 }
-
-HtmlEscape _htmlEscape = new HtmlEscape();

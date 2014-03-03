@@ -1,7 +1,6 @@
 part of tiles;
 
 const _VALUE = "value";
-const _CONTENT = "content";
 
 class TextareaComponent extends DomComponent {
   
