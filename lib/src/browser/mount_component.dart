@@ -71,7 +71,7 @@ _mountNode(Node node, html.HtmlElement mountRoot, [bool clear = false, Node next
     });
     _nodeToElement[node] = componentElement;
     
-    node.children.forEach((node) => _mountNode(node, componentElement));
+    node.children.forEach((NodeWithFactory nodeWithFactory) => _mountNode(nodeWithFactory.node, componentElement));
     
     if (nextNode != null) {
       mountRoot.insertBefore(componentElement, _nodeToElement[nextNode]);
@@ -84,8 +84,8 @@ _mountNode(Node node, html.HtmlElement mountRoot, [bool clear = false, Node next
      * then just run recursion for children on the same element
      */
     _nodeToElement[node] = mountRoot;
-    node.children.forEach((node) {
-      _mountNode(node, mountRoot, false, nextNode); 
+    node.children.forEach((NodeWithFactory nodeWithFactory) {
+      _mountNode(nodeWithFactory.node, mountRoot, false, nextNode); 
     });
   }
   

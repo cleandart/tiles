@@ -62,7 +62,7 @@ _applyCreatedChange(NodeChange change) {
 _findFirstDomDescendantAfter(Node parent, Node node) {
   Node result;
   for(int i = parent.children.length - 1; i >= 0; --i) {
-    Node child = parent.children[i];
+    Node child = parent.children[i].node;
     if (child == node) {
       break;
     }
@@ -150,8 +150,8 @@ _removeNodeFromDom(Node node) {
     html.Element element = _nodeToElement[node];
     element.remove();
   } else {
-    for (Node child in node.children) {
-      _removeNodeFromDom(child);
+    for (NodeWithFactory child in node.children) {
+      _removeNodeFromDom(child.node);
     }
   }
 }
