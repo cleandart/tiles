@@ -13,13 +13,9 @@ class Node {
   
   dynamic _oldProps;
   
-  final StreamController<bool> _needUpdate;
-  
   bool get isDirty => _isDirty;
   
   bool get hasDirtyDescendant => _hasDirtyDescendant;
-  
-  Stream<bool> get needUpdate => _needUpdate.stream;
   
   void componentNeedUpdate(bool now) {
     this.isDirty = true;
@@ -37,9 +33,6 @@ class Node {
         parent.hasDirtyDescendant = true;
 
       }
-      if (changed && !_hasDirtyDescendant && _needUpdate != null) {
-        _needUpdate.add(true);
-      }
     }
   }
   
@@ -53,9 +46,6 @@ class Node {
       if (parent != null && changed) {
         parent.hasDirtyDescendant = true;
       }
-      if (changed && _needUpdate != null) {
-        _needUpdate.add(true);
-      }
     }
   }
 
@@ -64,7 +54,7 @@ class Node {
    * 
    *   Node node = new Node(parent, description); 
    */
-  Node(this.parent, Component this.component, [this._needUpdate]) {
+  Node(this.parent, Component this.component) {
     this.isDirty = true;
     this.children = [];
     if (component.needUpdate != null) {

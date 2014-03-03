@@ -9,6 +9,11 @@ import '../mocks.dart';
 import 'dart:async';
 
 main() {
+  /**
+   * as now was dropped method of initialization of rerendering, 
+   * theese tests are commented because they will become actual 
+   * when functionality withrequestAnimationFrame will be added 
+   *
   group("(browser) (updateComponent)", () {
     Element mountRoot;
     
@@ -418,7 +423,8 @@ main() {
 
       }));
     });
-    
+
   });
+  */    
 }
 

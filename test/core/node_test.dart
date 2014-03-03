@@ -218,34 +218,5 @@ main() {
       });
     });
     
-    test("should add to stream controller on isDirty set ", () {
-      StreamController controller = new StreamController();
-
-      Node node = new Node(null, new ComponentMock(), controller);
-      
-      node.update();
-      
-      node.isDirty = true;
-      
-      node.needUpdate.listen(expectAsync((dynamic data) {
-        expect(node.isDirty, isTrue);
-      }, count: 2));
-    });
-    
-    test("should add to stream controller on hasDirtyDescendant set", () {
-      StreamController controller = new StreamController();
-
-      Node node = new Node(null, new ComponentMock(), controller);
-      
-      node.update();
-      
-      node.hasDirtyDescendant = true;
-
-      node.needUpdate.listen(expectAsync((dynamic data) {
-        expect(node.isDirty, isFalse);
-        expect(node.hasDirtyDescendant, isTrue);
-      }, count: 2));
-    });
-    
   });
 }

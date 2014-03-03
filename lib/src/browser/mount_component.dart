@@ -15,10 +15,7 @@ typedef void _Ref(Component component);
  * in the component description into element 
  */
 mountComponent(ComponentDescription description, html.HtmlElement mountRoot) {
-  StreamController nodeNeedUpdate = new StreamController();
-  
-  Node node = new Node(null, description.createComponent(), nodeNeedUpdate);
-  nodeNeedUpdate.stream.listen(_planRepaint);
+  Node node = new Node(null, description.createComponent());
   
   _rootNodes.add(node);
   
@@ -112,31 +109,10 @@ Map<Node, dynamic> _nodeToElement = {};
 List<Node> _rootNodes = [];
 
 /**
- * plan repaint for future by adding event to stream, 
- * by which is this repaint planed asynchronously to be executed in own event loop.
- */
-_planRepaint(dynamic data) {
-  if (_needUpdate == null) {
-    throw "you should have initialized browser configuration at the moment";
-  }
-  _needUpdate.add(true);
-}
-
-/**
- * Stream used for planing of next repaint.
- */
-StreamController _needUpdate;
-
-/**
  * Init browser configuration to proper function of library.
  * 
  * It initialize _needUpdate streem and set callback on it.
  */
 initTilesBrowserConfiguration() {
-  if (_needUpdate != null) {
-    throw "you shouldn't call initTilesBrowserConfiguration twice";
-  }
-  _needUpdate = new StreamController();
-  _needUpdate.stream.listen(_update);
 }
 

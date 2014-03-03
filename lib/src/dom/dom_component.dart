@@ -18,9 +18,9 @@ class DomComponent extends Component {
   
   final bool svg;
   
-  DomComponent([this._props, List<ComponentDescription> children, needUpdateController, this.tagName, pair, this.svg = false]):
+  DomComponent([this._props, List<ComponentDescription> children, this.tagName, pair, this.svg = false]):
       this.pair = pair == null || pair,
-      super(null, children, needUpdateController){
+      super(null, children){
     if (_props != null && !(_props is Map)) throw "Props should be map or string";
     if (_props == null) {
       _props = {};

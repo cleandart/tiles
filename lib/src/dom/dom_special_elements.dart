@@ -14,7 +14,7 @@ class TextareaComponent extends DomComponent {
 
   TextareaComponent(Map props):
     this._content = props[_VALUE],
-    super(props, null, null, "textarea") 
+    super(props, null, "textarea") 
     {
     props.remove(_VALUE);
     }

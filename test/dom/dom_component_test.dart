@@ -26,7 +26,7 @@ main() {
     });
     
     test("constructor should create not pair element if pair argument is false", () {
-      DomComponent component = new DomComponent(props, null, null, null, false);
+      DomComponent component = new DomComponent(props, null, null, false);
       expect(component.pair, isFalse);
     });
 
@@ -48,7 +48,7 @@ main() {
     });
     
     test("should create svg component if in controller is svg = true", () {
-      DomComponent component = new DomComponent(null, null, null, null, null, true);
+      DomComponent component = new DomComponent(null, null, null, null, true);
       
       expect(component.svg, isTrue);
     });

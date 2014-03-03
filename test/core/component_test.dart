@@ -27,13 +27,6 @@ main() {
       expect(component.props, equals(props));
     });
     
-    test("constructor with stream", () {
-      StreamController controller = new StreamController();
-      component = new Component(props, null, controller);
-      
-      expect(component.needUpdate, equals(controller.stream));
-    });
-    
     test("constructor with children", () {
       component = new Component(null, children);
       
@@ -90,11 +83,13 @@ main() {
     
     test("redraw call needUpdateController add", () {
       StreamControllerMock controller = new StreamControllerMock();
-      component = new Component(props, null, controller);
+      component = new Component(props, null);
+      
+      component.needUpdate.listen(expectAsync((data) {
+        expect(data, equals(false));
+      }));
       
       component.redraw();
-      
-      controller.getLogs(callsTo("add")).verify(happenedOnce);
     });
     
     test("default redraw is not immediate", () {
