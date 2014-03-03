@@ -14,9 +14,9 @@ class DomComponent extends Component {
   
   final bool svg;
   
-  DomComponent(DomProps this.props, [needUpdateController, this._tagName, pair, this.svg = false]):
+  DomComponent([DomProps this.props, List<ComponentDescription> children, needUpdateController, this._tagName, pair, this.svg = false]):
     this._pair = pair == null || pair,
-    super(null, needUpdateController) 
+    super(null, children, needUpdateController) 
     {}
   
   /**
@@ -41,10 +41,7 @@ class DomComponent extends Component {
   String closeMarkup() => _pair ? "$_OPENMARK$_CLOSESIGN$_tagName$_CLOSEMARK" : null;
   
   List<ComponentDescription> render() {
-    if (props != null) {
-      return props.children;
-    }
-    return null;
+    return this.children;
   }
   
 }

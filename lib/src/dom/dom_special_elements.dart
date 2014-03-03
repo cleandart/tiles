@@ -7,9 +7,9 @@ class SpanComponent extends DomComponent {
   
   String _content;
   
-  SpanComponent(DomProps props):
+  SpanComponent(DomProps props, List<ComponentDescription> children):
     _content = props[_CONTENT],
-    super(props, null, "span") 
+    super(props, children, null, "span") 
     {
     props.remove(_CONTENT);
     }
@@ -24,7 +24,7 @@ class SpanComponent extends DomComponent {
 
 }
 
-ComponentFactory _spanFactory = ([DomProps props]) => new SpanComponent(props);
+ComponentFactory _spanFactory = ([DomProps props, List<ComponentDescription> children]) => new SpanComponent(props, children);
 
 ComponentDescriptionFactory _spanDescriptionFactory = ([dynamic props, dynamic children]) {
   /**
@@ -37,7 +37,8 @@ ComponentDescriptionFactory _spanDescriptionFactory = ([dynamic props, dynamic c
     children =  null;
   }
   
-  props = _putChildrenIntoProps(props, children);
+  props = _processProps(props); 
+  children = _processChildren(children);
   
   /**
    * if children was string, then now add content to props
@@ -46,7 +47,7 @@ ComponentDescriptionFactory _spanDescriptionFactory = ([dynamic props, dynamic c
     props[_CONTENT] = content;
   }
   
-  return new ComponentDescription(_spanFactory,  props);
+  return new ComponentDescription(_spanFactory,  props, children);
   
 };
 
@@ -62,7 +63,7 @@ class TextareaComponent extends DomComponent {
 
   TextareaComponent(DomProps props):
     this._content = props[_VALUE],
-    super(props, null, "textarea") 
+    super(props, null, null, "textarea") 
     {
     props.remove(_VALUE);
     }
@@ -72,4 +73,4 @@ class TextareaComponent extends DomComponent {
  
 }
 
-ComponentFactory _textareaFactory = ([DomProps props]) => new TextareaComponent(props);
+ComponentFactory _textareaFactory = ([DomProps props, children]) => new TextareaComponent(props);

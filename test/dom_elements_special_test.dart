@@ -32,7 +32,7 @@ main() {
       });
       
       test("should return standart children if it has standard children", () {
-        ComponentDescription child= new ComponentDescriptionMock();
+        ComponentDescription child = new ComponentDescriptionMock();
         var children = [child];
         spanComponent = span(null, children).createComponent();
         
@@ -42,7 +42,7 @@ main() {
       
       test("should be surrounding String if is in standart children", () {
         ComponentDescription divCompDesc = div(null, ["content"]);
-        spanComponent = divCompDesc.props.children.first.createComponent();
+        spanComponent = divCompDesc.children.first.createComponent();
         
         expect(spanComponent is SpanComponent, isTrue);
         expect(spanComponent.content(), equals("content"));
