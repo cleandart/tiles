@@ -64,7 +64,12 @@ _mountNode(Node node, html.HtmlElement mountRoot, [bool clear = false, Node next
     DomComponent component = node.component;
     html.Element componentElement = new html.Element.tag(component.tagName);
     component.props.forEach((key, value) {
-      componentElement.setAttribute(key, value.toString());
+      /**
+       * filter props by allowedAttrs and allowedSvgAttrs
+       */
+      if (_canAddAttribute(component, key)) {
+        componentElement.setAttribute(key, value.toString());
+      }
     });
     _nodeToElement[node] = componentElement;
     
@@ -107,3 +112,14 @@ _mountNode(Node node, html.HtmlElement mountRoot, [bool clear = false, Node next
 Map<Node, dynamic> _nodeToElement = {};
 
 List<Node> _rootNodes = [];
+
+/**
+ * Returns boolean which is true 
+ * if attribute with passed key can be added 
+ * to element of component from arguments.
+ */
+_canAddAttribute(DomComponent component, String key){
+  return (!component.svg && allowedAttrs.contains(key)) 
+      || (component.svg && allowedSvgAttributes.contains(key));
+  
+}

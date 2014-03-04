@@ -34,16 +34,16 @@ class DomComponent extends Component {
 }
 
 
-Set<String> _allowedAttrs = new Set.from(["accept", "accessKey", "action", "allowFullScreen", "allowTransparency", "alt", "autoCapitalize",
+final Set<String> allowedAttrs = new Set.from(["accept", "accessKey", "action", "allowFullScreen", "allowTransparency", "alt", "autoCapitalize",
   "autoComplete", "autoFocus", "autoPlay", "cellPadding", "cellSpacing", "charSet", "checked",
-  "className", "colSpan", "content", "contentEditable", "contextMenu", "controls", "data", "dateTime",
+  "class", "colSpan", "content", "contentEditable", "contextMenu", "controls", "data", "dateTime",
   "dir", "disabled", "draggable", "encType", "form", "frameBorder", "height", "hidden", "href", "htmlFor",
   "httpEquiv", "icon", "id", "label", "lang", "list", "loop", "max", "maxLength", "method", "min", "multiple", "name",
   "pattern", "placeholder", "poster", "preload", "radioGroup", "readOnly", "rel", "required", "role",
   "rowSpan", "scrollLeft", "scrollTop", "selected", "size", "spellCheck", "src", "step", "style", "tabIndex",
   "target", "title", "type", "value", "width", "wmode"]);
 
-Set<String> _allowedSvgAttributes = new Set.from(["cx", "cy", "d", "fill", "fx", "fy", "gradientTransform", 
+final Set<String> allowedSvgAttributes = new Set.from(["cx", "cy", "d", "fill", "fx", "fy", "gradientTransform", 
   "gradientUnits", "offset", "points", "r", "rx", "ry",
   "spreadMethod", "stopColor", "stopOpacity", "stroke", "strokeLinecap", "strokeWidth", "transform",
   "version", "viewBox", "x1", "x2", "x", "y1", "y2", "y"]);

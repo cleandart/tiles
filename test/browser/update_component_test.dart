@@ -221,6 +221,82 @@ main() {
       }));
     });
     
+    test("should filter added attributes on update", () {
+      /**
+       * one html attribute, one svg and one non of them
+       */
+      component.when(callsTo("render"))
+        .thenReturn([span({})])
+        .thenReturn([span({"class": "class", "text": "text", "crap": "crap"})]);
+
+      mountComponent(description, mountRoot);
+      
+      component.redraw();
+      
+      window.animationFrame.then(expectAsync((data) {
+        expect(mountRoot.children.first.attributes.containsKey("crap"), isFalse);
+        expect(mountRoot.children.first.attributes.containsKey("class"), isTrue);
+        expect(mountRoot.children.first.attributes.containsKey("text"), isFalse);
+      }));
+    });
+    
+    test("should filter changed attributes on update", () {
+      /**
+       * one html attribute, one svg and one non of them
+       */
+      component.when(callsTo("render"))
+        .thenReturn([span({"id": "id", "d": "d", "crap": "crap"})])
+        .thenReturn([span({"id": "id2", "d": "d2", "crap": "crap2"})]);
+
+      mountComponent(description, mountRoot);
+      
+      component.redraw();
+      
+      window.animationFrame.then(expectAsync((data) {
+        expect(mountRoot.children.first.attributes.containsKey("crap"), isFalse);
+        expect(mountRoot.children.first.attributes.containsKey("id"), isTrue);
+        expect(mountRoot.children.first.attributes.containsKey("d"), isFalse);
+      }));
+    });
+    
+    test("should filter added attributes on update in svg component", () {
+      /**
+       * one html attribute, one svg and one non of them
+       */
+      component.when(callsTo("render"))
+        .thenReturn([svg({})])
+        .thenReturn([svg({"id": "id2", "d": "d2", "crap": "crap"})]);
+
+      mountComponent(description, mountRoot);
+      
+      component.redraw();
+      
+      window.animationFrame.then(expectAsync((data) {
+        expect(mountRoot.children.first.attributes.containsKey("crap"), isFalse);
+        expect(mountRoot.children.first.attributes.containsKey("id"), isFalse);
+        expect(mountRoot.children.first.attributes.containsKey("d"), isTrue);
+      }));
+    });
+    
+    test("should filter changed attributes on update in svg component", () {
+      /**
+       * one html attribute, one svg and one non of them
+       */
+      component.when(callsTo("render"))
+        .thenReturn([svg({"id": "id", "d": "d", "crap": "crap"})])
+        .thenReturn([svg({"id": "id2", "d": "d2", "crap": "crap2"})]);
+
+      mountComponent(description, mountRoot);
+      
+      component.redraw();
+      
+      window.animationFrame.then(expectAsync((data) {
+        expect(mountRoot.children.first.attributes.containsKey("crap"), isFalse);
+        expect(mountRoot.children.first.attributes.containsKey("id"), isFalse);
+        expect(mountRoot.children.first.attributes.containsKey("d"), isTrue);
+      }));
+    });
+    
     test("should add props if prev props was null", () {
       String myClass = "myclass";
       int height = 12; 

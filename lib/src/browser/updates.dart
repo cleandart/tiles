@@ -109,6 +109,7 @@ _applyUpdatedChange(NodeChange change) {
     html.Element element = _nodeToElement[change.node];
     Map oldProps = change.oldProps;
     Map newProps = change.newProps;
+    DomComponent component = change.node.component;
     
     /**
      * change or remove old attributes
@@ -122,7 +123,12 @@ _applyUpdatedChange(NodeChange change) {
         if (!newProps.containsKey(key)) {
           element.attributes.remove(key);
         } else if (newProps[key] != value) {
-          element.setAttribute(key, newProps[key].toString());
+          /**
+           * filter attrs
+           */
+          if (_canAddAttribute(component, key)) {
+            element.setAttribute(key, newProps[key].toString());
+          }
         }
       });
     }
@@ -133,7 +139,12 @@ _applyUpdatedChange(NodeChange change) {
     if (newProps != null) {
       newProps.forEach((String key, dynamic value) {
         if (oldProps == null || !oldProps.containsKey(key)) {
-          element.setAttribute(key, value.toString());
+          /**
+           * filter attrs
+           */
+          if (_canAddAttribute(component, key)) {
+            element.setAttribute(key, value.toString());
+          }
         }
       });
     }
