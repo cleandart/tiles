@@ -360,7 +360,7 @@ main() {
       }));
     });
     
-    ComponentDescriptionMock prepareTestCase(){
+    ComponentDescriptionMock prepareTestCase() {
       /*
        * Imagine following structure:
        *
@@ -501,8 +501,35 @@ main() {
         }));
       }));
     });
-    /*
-    */
+    
+    test("should remove relations between component(node) and element", () {
+      Component spanComponent = span().createComponent();
+      ComponentDescriptionMock spanDescription = new ComponentDescriptionMock();
+      spanDescription.when(callsTo("createComponent")).alwaysReturn(spanComponent);
+      
+      Component imgComponent = img().createComponent();
+      ComponentDescriptionMock imgDescription = new ComponentDescriptionMock();
+      imgDescription.when(callsTo("createComponent")).alwaysReturn(imgComponent);
+      
+      component.when(callsTo("render"))
+        .thenReturn([spanDescription])
+        .thenReturn([]);      
+      
+      mountComponent(description, mountRoot);
+      
+      expect(mountRoot.firstChild is SpanElement, isTrue);
+      expect(getElementForComponent(spanComponent), equals(mountRoot.firstChild));
+
+      Element spanElement = mountRoot.firstChild;
+      
+      component.redraw();
+      
+      window.animationFrame.then(expectAsync((data) {
+        expect(mountRoot.firstChild, isNull);
+        expect(getElementForComponent(spanComponent), isNull);
+      }));
+      
+    });
 
   });
 }

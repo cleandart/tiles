@@ -80,7 +80,7 @@ _findFirstDomDescendantAfter(Node parent, Node node) {
     }
     if (child.component is DomComponent && _nodeToElement[child] != null) {
       result = child;
-    } else if(!(child.component is DomComponent)){
+    } else if (!(child.component is DomComponent)) {
       result = _findFirstDomDescendantAfter(child, node);
     }
   }
@@ -172,6 +172,7 @@ _removeNodeFromDom(Node node) {
   if (node.component is DomComponent) {
     html.Element element = _nodeToElement[node];
     element.remove();
+    _deleteRelations(node, element);
   } else {
     for (NodeWithFactory child in node.children) {
       _removeNodeFromDom(child.node);
