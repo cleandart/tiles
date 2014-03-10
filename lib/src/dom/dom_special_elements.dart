@@ -1,7 +1,6 @@
 part of tiles;
 
 const _VALUE = "value";
-const _CONTENT = "content";
 
 class TextareaComponent extends DomComponent {
   
@@ -15,7 +14,7 @@ class TextareaComponent extends DomComponent {
 
   TextareaComponent(Map props):
     this._content = props[_VALUE],
-    super(props, null, null, "textarea") 
+    super(props, null, "textarea") 
     {
     props.remove(_VALUE);
     }

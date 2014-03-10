@@ -17,7 +17,7 @@ main() {
       String value = "value";
       
       setUp(() {
-        textareaComponent = textarea({value: value, "type": "attrValue"}).createComponent();
+        textareaComponent = textarea({"value": value, "type": "attrValue"}).createComponent();
       });
       
       test("should be DomComponent", () {
@@ -38,8 +38,8 @@ main() {
       });
       
       test('should return <textarea type="attrValue">value</textarea> as .openMarkup() .content() .closeMarkup', () {
-        expect("${textareaComponent.openMarkup()}${textareaComponent.content()}${textareaComponent.closeMarkup()}", 
-            equals('<textarea type="attrValue">value</textarea>'));
+        expect(textareaComponent.content(), equals("value"));
+        expect(textareaComponent.props.containsKey("value"), isFalse);
       });
       
     });

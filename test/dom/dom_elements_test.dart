@@ -25,12 +25,6 @@ main() {
       expect(notPairElementComponent.pair, equals(false));
     });
     
-    test("link markup", () {
-      DomComponent linkComponent = link().createComponent();
-      
-      expect(linkComponent.openMarkup(), equals("<link />"));
-    });
-    
     test("should accept map as props and save it to props", () {
       DomComponent elementComponent = element({"attr": "value"}).createComponent();
       
@@ -56,7 +50,7 @@ main() {
       
       DomComponent innerSpan = aaa.render()[0].createComponent().render()[0].createComponent(); 
       
-      expect(innerSpan.openMarkup(), contains("span"));
+      expect(innerSpan.tagName, equals("span"));
     });
     
     test("div should not produce svg component", () {
@@ -69,18 +63,6 @@ main() {
       DomComponent svgComponent = svg().createComponent();
       
       expect(svgComponent.svg, isTrue);
-    });
-    
-    test ("div should show id attribute and not d atribute", () {
-      DomComponent divCompoennt = div({"id": "id", "d": "d"}).createComponent();
-      
-      expect(divCompoennt.openMarkup(), equals('<div id="id">'));
-    });
-
-    test ("svg should show d attribute and not id atribute", () {
-      DomComponent svgCompoennt = svg({"id": "id", "d": "d"}).createComponent();
-      
-      expect(svgCompoennt.openMarkup(), equals('<svg d="d">'));
     });
     
   });

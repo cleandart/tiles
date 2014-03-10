@@ -1,6 +1,5 @@
 library tiles;
 import 'dart:async';
-import 'dart:convert';
 
 part 'src/core/component.dart';
 part 'src/core/component_description.dart';

@@ -1,23 +1,20 @@
 part of tiles;
 
 class ComponentDescription {
-  final ComponentFactory _factory;
-  ComponentFactory get factory => _factory;
+  final ComponentFactory factory;
   
-  final dynamic _props;
-  dynamic get props => _props;
+  final dynamic props;
   
-  final List<ComponentDescription> _children;
-  List<ComponentDescription> get children => _children;
+  final List<ComponentDescription> children;
   
   /**
    * default constructor which only set final vars.
    */
-  ComponentDescription (ComponentFactory this._factory, [dynamic  this._props, this._children]) {}
+  ComponentDescription (ComponentFactory this.factory, [dynamic  this.props, this.children]) {}
   
   /**
    * creates component by factory with props.
    */
-  Component createComponent() => this._factory(this.props, this.children);
+  Component createComponent() => this.factory(this.props, this.children);
   
 }

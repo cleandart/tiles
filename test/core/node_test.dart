@@ -4,6 +4,7 @@ import 'package:unittest/unittest.dart';
 import 'package:unittest/mock.dart';
 import 'package:tiles/tiles.dart';
 import '../mocks.dart';
+import 'dart:async';
 
 
 main() {
@@ -119,7 +120,7 @@ main() {
       Node node = new Node(null, component);
       node.update();
       
-      node.children.first.isDirty = true;
+      node.children.first.node.isDirty = true;
       
       expect(node.hasDirtyDescendant, isTrue);
       
@@ -129,7 +130,7 @@ main() {
       
       expect(changes.isEmpty, isFalse);
       expect(changes.length, equals(1));
-      expect(changes.first.node, equals(node.children.first));
+      expect(changes.first.node, equals(node.children.first.node));
       expect(changes.first.type, equals(NodeChangeType.UPDATED));
 
     });
@@ -147,7 +148,7 @@ main() {
       Node node = new Node(null, component);
       node.update();
       
-      Node oldNode = node.children.first;
+      Node oldNode = node.children.first.node;
       
       node.apply();
       
@@ -155,7 +156,7 @@ main() {
       expect(changes.isEmpty, isFalse);
       expect(changes.length, equals(2)); // both, node and it's child is updated
       
-      expect(node.children.first, equals(oldNode));
+      expect(node.children.first.node, equals(oldNode));
       
     });
     
@@ -189,7 +190,7 @@ main() {
       /**
        * save first child to oldChild
        */
-      Node oldChild = node.children.first;
+      Node oldChild = node.children.first.node;
       
       node.apply();
 
@@ -199,6 +200,22 @@ main() {
        * unique factory, node.update always replace child.
        */
       expect(node.children.first, isNot(oldChild));
+    });
+    
+    test("should listen to components need update stream and set self as dirty if component need update", () {
+      StreamController<bool> controller = new StreamController();
+      ComponentMock component = new ComponentMock();
+      component.when(callsTo("get needUpdate")).alwaysReturn(controller.stream);
+      
+      Node node = new Node(null, component);
+      node.update();
+      
+      expect(node.isDirty, isFalse);
+      
+      controller.add(true);
+      controller.close().then((a) {
+        expect(node.isDirty, isTrue);
+      });
     });
     
   });

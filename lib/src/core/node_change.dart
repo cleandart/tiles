@@ -1,17 +1,12 @@
 part of tiles;
 
 class NodeChange {
-  final NodeChangeType _type;
-  final Node _node;
-  final dynamic _oldProps;
-  final dynamic _newProps;
+  final NodeChangeType type;
+  final Node node;
+  final dynamic oldProps;
+  final dynamic newProps;
 
   
-  NodeChangeType get type => _type;
-  Node get node => _node;
-  dynamic get oldProps => _oldProps;
-  dynamic get newProps => _newProps;
-  
-  NodeChange(NodeChangeType this._type, Node this._node, [dynamic this._oldProps, dynamic this._newProps]);
+  NodeChange(NodeChangeType this.type, Node this.node, [dynamic this.oldProps, dynamic this.newProps]);
   
 }

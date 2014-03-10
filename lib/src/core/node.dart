@@ -1,11 +1,11 @@
 part of tiles;
 
 class Node {
-  final Component _component;
+  final Component component;
   
-  List<_NodeWithFactory> _children;
+  List<NodeWithFactory> children;
   
-  final Node _parent;
+  final Node parent;
   
   bool _isDirty = false;
   
@@ -13,19 +13,13 @@ class Node {
   
   dynamic _oldProps;
   
-  Component get component => _component;
-  
-  List<Node> get children {
-    List<Node> children = new List<Node>();
-    _children.forEach((childWithFactory) => children.add(childWithFactory.node));
-    return children;
-  }
-  
-  Node get parent => _parent;
-  
   bool get isDirty => _isDirty;
   
   bool get hasDirtyDescendant => _hasDirtyDescendant;
+  
+  void componentNeedUpdate(bool now) {
+    this.isDirty = true;
+  }
   
   /**
    * mark this instance as dirty and if status was changed, 
@@ -35,8 +29,9 @@ class Node {
     if (value) {
       bool changed = !_isDirty;
       this._isDirty = true;
-      if (_parent != null && changed && !_hasDirtyDescendant) {
-        _parent.hasDirtyDescendant = true;
+      if (parent != null && changed && !_hasDirtyDescendant) {
+        parent.hasDirtyDescendant = true;
+
       }
     }
   }
@@ -48,8 +43,8 @@ class Node {
     if (value) {
       bool changed = !_hasDirtyDescendant;
       _hasDirtyDescendant = true;
-      if (_parent != null && changed) {
-        _parent.hasDirtyDescendant = true;
+      if (parent != null && changed) {
+        parent.hasDirtyDescendant = true;
       }
     }
   }
@@ -59,9 +54,12 @@ class Node {
    * 
    *   Node node = new Node(parent, description); 
    */
-  Node(this._parent, Component this._component) {
+  Node(this.parent, Component this.component) {
     this.isDirty = true;
-    this._children = [];
+    this.children = [];
+    if (component.needUpdate != null) {
+      component.needUpdate.listen(componentNeedUpdate);
+    }
   }
   
 //  Node(...)
@@ -92,7 +90,7 @@ class Node {
     /**
      * and in every case, add everything from children.
      */
-    children.forEach((child) => result.addAll(child.update()));
+    children.forEach((child) => result.addAll(child.node.update()));
 
     /**
      * tag this node as clean without dirty descendants
@@ -141,18 +139,18 @@ class Node {
       /** 
        * if factory is same, update child, else replace child 
        */
-      if (_children[i].factory == newChildren[i].factory) {
-        children[i].apply(newChildren[i].props);
+      if (children[i].factory == newChildren[i].factory) {
+        children[i].node.apply(newChildren[i].props, newChildren[i].children);
       } else {
-        Node oldChild = children[i];
-        _children[i] = new _NodeWithFactory(new Node(this, newChildren[i].createComponent()), newChildren[i].factory);
+        Node oldChild = children[i].node;
+        children[i] = new NodeWithFactory(new Node(this, newChildren[i].createComponent()), newChildren[i].factory);
         result.add(new NodeChange(NodeChangeType.DELETED, oldChild));
-        result.add(new NodeChange(NodeChangeType.CREATED, children[i]));
+        result.add(new NodeChange(NodeChangeType.CREATED, children[i].node));
       }
       /** 
        * add child.update() changes to result 
        */
-      result.addAll(children[i].update());
+      result.addAll(children[i].node.update());
     }
 
     /**
@@ -161,14 +159,14 @@ class Node {
      */
     if (children.length < newChildren.length) {
       for(int i = children.length; i < newChildren.length; ++i) {
-        _NodeWithFactory child = new _NodeWithFactory(new Node(this,  newChildren[i].createComponent()), newChildren[i].factory);
-        _children.add(child);
+        NodeWithFactory child = new NodeWithFactory(new Node(this,  newChildren[i].createComponent()), newChildren[i].factory);
+        children.add(child);
         result.add(new NodeChange(NodeChangeType.CREATED, child.node));
         result.addAll(child.node.update());
       }
     } else if (children.length > newChildren.length) {
       for(int i = 0; i < children.length - newChildren.length; ++i) {
-        _NodeWithFactory removed = _children.removeLast();
+        NodeWithFactory removed = children.removeLast();
         result.add(new NodeChange(NodeChangeType.DELETED, removed.node));
       }
     }
@@ -184,18 +182,19 @@ class Node {
    * 
    * if no props, apply null
    */
-  void apply([dynamic props]) {
+  void apply([dynamic props, List<ComponentDescription> children]) {
     this.component.willReceiveProps(props);
     this._oldProps = this.component.props;
     this.component.props = props;
+    this.component.children = children;
     this.isDirty = true;
   }
   
 }
 
-class _NodeWithFactory {
+class NodeWithFactory {
   final Node node; 
   final ComponentFactory factory;
   
-  _NodeWithFactory(this.node, this.factory);
+  NodeWithFactory(this.node, this.factory);
 }

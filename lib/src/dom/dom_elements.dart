@@ -14,7 +14,7 @@ ComponentDescriptionFactory _registerDomComponent(String tagname, [bool pair, bo
     /** 
      * create default factory which create DomComponent 
      */
-    factory = ([Map props, List<ComponentDescription> children]) => new DomComponent(props, children, null, tagname, pair, svg);;
+    factory = ([Map props, List<ComponentDescription> children]) => new DomComponent(props, children, tagname, pair, svg);;
   }
 
   return registerComponent(factory);
