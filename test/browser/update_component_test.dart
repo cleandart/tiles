@@ -221,6 +221,82 @@ main() {
       }));
     });
     
+    test("should filter added attributes on update", () {
+      /**
+       * one html attribute, one svg and one non of them
+       */
+      component.when(callsTo("render"))
+        .thenReturn([span({})])
+        .thenReturn([span({"class": "class", "text": "text", "crap": "crap"})]);
+
+      mountComponent(description, mountRoot);
+      
+      component.redraw();
+      
+      window.animationFrame.then(expectAsync((data) {
+        expect(mountRoot.children.first.attributes.containsKey("crap"), isFalse);
+        expect(mountRoot.children.first.attributes.containsKey("class"), isTrue);
+        expect(mountRoot.children.first.attributes.containsKey("text"), isFalse);
+      }));
+    });
+    
+    test("should filter changed attributes on update", () {
+      /**
+       * one html attribute, one svg and one non of them
+       */
+      component.when(callsTo("render"))
+        .thenReturn([span({"id": "id", "d": "d", "crap": "crap"})])
+        .thenReturn([span({"id": "id2", "d": "d2", "crap": "crap2"})]);
+
+      mountComponent(description, mountRoot);
+      
+      component.redraw();
+      
+      window.animationFrame.then(expectAsync((data) {
+        expect(mountRoot.children.first.attributes.containsKey("crap"), isFalse);
+        expect(mountRoot.children.first.attributes.containsKey("id"), isTrue);
+        expect(mountRoot.children.first.attributes.containsKey("d"), isFalse);
+      }));
+    });
+    
+    test("should filter added attributes on update in svg component", () {
+      /**
+       * one html attribute, one svg and one non of them
+       */
+      component.when(callsTo("render"))
+        .thenReturn([svg({})])
+        .thenReturn([svg({"id": "id2", "d": "d2", "crap": "crap"})]);
+
+      mountComponent(description, mountRoot);
+      
+      component.redraw();
+      
+      window.animationFrame.then(expectAsync((data) {
+        expect(mountRoot.children.first.attributes.containsKey("crap"), isFalse);
+        expect(mountRoot.children.first.attributes.containsKey("id"), isFalse);
+        expect(mountRoot.children.first.attributes.containsKey("d"), isTrue);
+      }));
+    });
+    
+    test("should filter changed attributes on update in svg component", () {
+      /**
+       * one html attribute, one svg and one non of them
+       */
+      component.when(callsTo("render"))
+        .thenReturn([svg({"id": "id", "d": "d", "crap": "crap"})])
+        .thenReturn([svg({"id": "id2", "d": "d2", "crap": "crap2"})]);
+
+      mountComponent(description, mountRoot);
+      
+      component.redraw();
+      
+      window.animationFrame.then(expectAsync((data) {
+        expect(mountRoot.children.first.attributes.containsKey("crap"), isFalse);
+        expect(mountRoot.children.first.attributes.containsKey("id"), isFalse);
+        expect(mountRoot.children.first.attributes.containsKey("d"), isTrue);
+      }));
+    });
+    
     test("should add props if prev props was null", () {
       String myClass = "myclass";
       int height = 12; 
@@ -284,7 +360,7 @@ main() {
       }));
     });
     
-    ComponentDescriptionMock prepareTestCase(){
+    ComponentDescriptionMock prepareTestCase() {
       /*
        * Imagine following structure:
        *
@@ -425,8 +501,35 @@ main() {
         }));
       }));
     });
-    /*
-    */
+    
+    test("should remove relations between component(node) and element", () {
+      Component spanComponent = span().createComponent();
+      ComponentDescriptionMock spanDescription = new ComponentDescriptionMock();
+      spanDescription.when(callsTo("createComponent")).alwaysReturn(spanComponent);
+      
+      Component imgComponent = img().createComponent();
+      ComponentDescriptionMock imgDescription = new ComponentDescriptionMock();
+      imgDescription.when(callsTo("createComponent")).alwaysReturn(imgComponent);
+      
+      component.when(callsTo("render"))
+        .thenReturn([spanDescription])
+        .thenReturn([]);      
+      
+      mountComponent(description, mountRoot);
+      
+      expect(mountRoot.firstChild is SpanElement, isTrue);
+      expect(getElementForComponent(spanComponent), equals(mountRoot.firstChild));
+
+      Element spanElement = mountRoot.firstChild;
+      
+      component.redraw();
+      
+      window.animationFrame.then(expectAsync((data) {
+        expect(mountRoot.firstChild, isNull);
+        expect(getElementForComponent(spanComponent), isNull);
+      }));
+      
+    });
 
   });
 }

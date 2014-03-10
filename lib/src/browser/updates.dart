@@ -80,7 +80,7 @@ _findFirstDomDescendantAfter(Node parent, Node node) {
     }
     if (child.component is DomComponent && _nodeToElement[child] != null) {
       result = child;
-    } else if(!(child.component is DomComponent)){
+    } else if (!(child.component is DomComponent)) {
       result = _findFirstDomDescendantAfter(child, node);
     }
   }
@@ -109,6 +109,7 @@ _applyUpdatedChange(NodeChange change) {
     html.Element element = _nodeToElement[change.node];
     Map oldProps = change.oldProps;
     Map newProps = change.newProps;
+    DomComponent component = change.node.component;
     
     /**
      * change or remove old attributes
@@ -122,7 +123,12 @@ _applyUpdatedChange(NodeChange change) {
         if (!newProps.containsKey(key)) {
           element.attributes.remove(key);
         } else if (newProps[key] != value) {
-          element.setAttribute(key, newProps[key].toString());
+          /**
+           * filter attrs
+           */
+          if (_canAddAttribute(component, key)) {
+            element.setAttribute(key, newProps[key].toString());
+          }
         }
       });
     }
@@ -133,7 +139,12 @@ _applyUpdatedChange(NodeChange change) {
     if (newProps != null) {
       newProps.forEach((String key, dynamic value) {
         if (oldProps == null || !oldProps.containsKey(key)) {
-          element.setAttribute(key, value.toString());
+          /**
+           * filter attrs
+           */
+          if (_canAddAttribute(component, key)) {
+            element.setAttribute(key, value.toString());
+          }
         }
       });
     }
@@ -161,6 +172,7 @@ _removeNodeFromDom(Node node) {
   if (node.component is DomComponent) {
     html.Element element = _nodeToElement[node];
     element.remove();
+    _deleteRelations(node, element);
   } else {
     for (NodeWithFactory child in node.children) {
       _removeNodeFromDom(child.node);

@@ -3,6 +3,15 @@ part of tiles_browser;
 const _REF = "ref";
 
 /**
+ * Map needed when doing updates on dom. 
+ * 
+ * For easy identifying place, where nodeChange should be applyed.
+ */
+final Map<Node, html.Node> _nodeToElement = {};
+
+final List<Node> _rootNodes = [];
+
+/**
  * definition of type for reference in props, 
  * to easyli check that ref is function with one Component argument
  */
@@ -45,7 +54,7 @@ _mountNode(Node node, html.HtmlElement mountRoot, [bool clear = false, Node next
      * if node contains text, write text and end recursion
      */
     html.Text text = new html.Text(node.component.props);
-    _nodeToElement[node] = text;
+    _saveRelations(node, text);
     if (nextNode != null) {
       mountRoot.insertBefore(text, _nodeToElement[nextNode]);
     } else {
@@ -63,11 +72,18 @@ _mountNode(Node node, html.HtmlElement mountRoot, [bool clear = false, Node next
   
     DomComponent component = node.component;
     html.Element componentElement = new html.Element.tag(component.tagName);
-    component.props.forEach((key, value) {
-      componentElement.setAttribute(key, value.toString());
-    });
-    _nodeToElement[node] = componentElement;
+    _saveRelations(node, componentElement);
     
+    component.props.forEach((String key, value) {
+      /**
+       * filter props by allowedAttrs and allowedSvgAttrs
+       */
+      if (_canAddAttribute(component, key)) {
+        componentElement.setAttribute(key, value.toString());
+      } else {
+        _processEvent(key, value, node);
+      }
+    });
     node.children.forEach((NodeWithFactory nodeWithFactory) => _mountNode(nodeWithFactory.node, componentElement));
     
     if (nextNode != null) {
@@ -100,10 +116,32 @@ _mountNode(Node node, html.HtmlElement mountRoot, [bool clear = false, Node next
 }
 
 /**
- * Map needed when doing updates on dom. 
- * 
- * For easy identifying place, where nodeChange should be applyed.
+ * Returns boolean which is true 
+ * if attribute with passed key can be added 
+ * to element of component from arguments.
  */
-Map<Node, dynamic> _nodeToElement = {};
+_canAddAttribute(DomComponent component, String key) {
+  return (!component.svg && allowedAttrs.contains(key)) 
+      || (component.svg && allowedSvgAttributes.contains(key));
+  
+}
 
-List<Node> _rootNodes = [];
+/**
+ * create relations for propper functionality of tiles_browser
+ */
+void _saveRelations(Node node, html.Node element) {
+  _nodeToElement[node] = element;
+  _componentToElement[node.component] = element;
+  _elementToNode[element] = node;
+}
+
+/**
+ * Remove relations between node and element.
+ */
+void _deleteRelations(Node node, html.Node element) {
+  _nodeToElement.remove(node);
+  _componentToElement.remove(node.component);
+  _elementToNode.remove(element);
+  
+}
+

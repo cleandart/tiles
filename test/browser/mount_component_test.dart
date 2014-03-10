@@ -169,5 +169,28 @@ main() {
       expect(() => mountComponent(descriptionWithSpan, mountRoot), isNot(throws));
     });
     
+    test("should add only allowed attributes", () {
+      var props = {"d": "d", "crap": "crap", "id": "id"};
+      
+      mountComponent(span(props), mountRoot);
+      
+      expect(mountRoot.children.first is SpanElement, isTrue);
+      expect(mountRoot.children.first.attributes.containsKey("id"), isTrue);
+      expect(mountRoot.children.first.attributes["id"], equals("id"));
+      expect(mountRoot.children.first.attributes.containsKey("d"), isFalse);
+      expect(mountRoot.children.first.attributes.containsKey("crap"), isFalse);
+    });
+    
+    test("should add only allowed svg attributes for svg element", () {
+      var props = {"d": "d", "crap": "crap", "id": "id"};
+      
+      mountComponent(svg(props), mountRoot);
+      
+      expect(mountRoot.children.first.attributes.containsKey("d"), isTrue);
+      expect(mountRoot.children.first.attributes["d"], equals("d"));
+      expect(mountRoot.children.first.attributes.containsKey("id"), isFalse);
+      expect(mountRoot.children.first.attributes.containsKey("crap"), isFalse);
+    });
+    
   });
 }
