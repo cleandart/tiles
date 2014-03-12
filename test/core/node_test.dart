@@ -219,4 +219,12 @@ main() {
     });
     
   });
+  
+  test("should accept ComponentDescription not in list from component.render()", () {
+    ComponentMock component = new ComponentMock();
+    component.when(callsTo("render")).alwaysReturn(new ComponentDescription(([dynamic props, children]) => new ComponentMock(), null, null));
+    
+    Node node = new Node(null, component);
+    node.update();
+  });
 }

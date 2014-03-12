@@ -4,5 +4,6 @@ import 'package:tiles/tiles.dart';
 import 'dart:async';
 
 part 'src/browser/mount_component.dart';
+part 'src/browser/unmount.dart';
 part 'src/browser/updates.dart';
 part 'src/browser/events.dart';

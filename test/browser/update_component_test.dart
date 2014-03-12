@@ -530,6 +530,27 @@ main() {
       }));
       
     });
+    
+    test("should change text inside of html when update of text component ", () {
+      String text1 = "hello",
+          text2 = "aloha";
+      component.when(callsTo("render"))
+        .thenReturn(div(null, text1))
+        .thenReturn(div(null, text2));
+      
+      mountComponent(description, mountRoot);
+      
+      Text text = mountRoot.firstChild.firstChild;
+      expect(text is Text, isTrue);
+      expect(text.text, equals(text1));
+      
+      component.redraw();
+      
+      window.animationFrame.then(expectAsync((data) {
+        expect(mountRoot.firstChild.firstChild, equals(text));
+        expect(text.text, equals(text2));
+      }));
+    });
 
   });
 }
