@@ -9,6 +9,7 @@ import 'package:webdriver/webdriver.dart';
 WebDriver driver;
 
 int _counter = 0;
+int _soloCounter = 0;
 
 Future<WebDriver> getWebDriver() {
     if (driver != null) {
@@ -18,14 +19,25 @@ Future<WebDriver> getWebDriver() {
     }
 }
 
-void seleniuTest(String name, Function testFunction){
+void seleniumTest(String name, Function testFunction) {
   ++ _counter;
   return test(name, testFunction);
 }
 
+void solo_seleniumTest(String name, Function testFunction) {
+  ++ _soloCounter;
+  return solo_test(name, testFunction);
+}
+
 void closeWebDriver() {
-  if (--_counter == 0) {
-    driver.close();
+  if (_soloCounter > 0) {
+    if (--_soloCounter == 0) {
+      driver.close();
+    }
+  } else {
+    if (--_counter == 0) {
+      driver.close();
+    }
   }
 }
 
@@ -44,7 +56,7 @@ String getTestPagePath(String directory, String application) {
   }
   var testPagePath = path.join(currentPath, testPath, seleniumTestPath, directory, application);
   testPagePath = path.absolute(testPagePath);
-  if(!FileSystemEntity.isFileSync(testPagePath)) {
+  if (!FileSystemEntity.isFileSync(testPagePath)) {
     throw new Exception('Could not find the test file at "$testPagePath".'
         ' Make sure you are running tests from the root of the project.');
   }
@@ -57,3 +69,4 @@ Future sleep(int miliseconds, [dynamic result]) {
   Timer timer = new Timer(duration, () => completer.complete(result) );
   return completer.future;
 }
+

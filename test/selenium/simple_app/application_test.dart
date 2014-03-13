@@ -3,7 +3,6 @@ library selenium_application_test;
 import 'package:webdriver/webdriver.dart';
 import 'package:unittest/unittest.dart';
 import '../test_utils.dart';
-import 'dart:async';
 
 void main() {
 //  useCompactVMConfiguration();
@@ -29,7 +28,7 @@ void main() {
   tearDown(closeWebDriver);
   
   group("webdriver", () {
-    seleniuTest('should be possible to write to input', () {
+    seleniumTest('should be possible to write to input', () {
       return driver.keyboard.sendKeys('abcdef')
           .then((_) => sleep(100)) //because of animation frame
           .then((_) => textInput.attributes['value'])
@@ -38,7 +37,7 @@ void main() {
           });
     });
   
-    seleniuTest('should fill span with value from input', () {
+    seleniumTest('should fill span with value from input', () {
       return driver.keyboard.sendKeys('abcdef')
           .then((_) => sleep(100)) //because of animation frame
           .then((_) => label.text)
@@ -47,7 +46,7 @@ void main() {
           });
     });
 
-    seleniuTest('should fill span with value from input writed by one char', () {
+    seleniumTest('should fill span with value from input writed by one char', () {
       return driver.keyboard.sendKeys(['a', 'b', 'c', 'd', 'e', 'f'])
           .then((_) => sleep(100)) //because of animation frame
           .then((_) => label.text)
@@ -55,12 +54,26 @@ void main() {
             expect(text, 'abcdef');
           });
     });
-    seleniuTest('should fill span with value from input with cursor move', () {
+    seleniumTest('should fill span with value from input with cursor move', () {
       return driver.keyboard.sendKeys(['a', 'e', 'f', Keys.LEFT, Keys.LEFT, 'b', 'c', 'd'])
           .then((_) => sleep(100)) //because of animation frame
           .then((_) => label.text)
           .then((text) {
             expect(text, 'abcdef');
+          });
+    });
+    
+    seleniumTest('should empty span on click on span', () {
+      return driver.keyboard.sendKeys(['a', 'e', 'f', Keys.LEFT, Keys.LEFT, 'b', 'c', 'd'])
+          .then((_) => driver.mouse.moveTo(element: label).click())
+          .then((_) => sleep(100))
+          .then((_) => label.text)
+          .then((text) {
+            expect(text, "");
+          })
+          .then((_) => textInput.attributes["value"])
+          .then((value) {
+            expect(value, "abcdef");
           });
     });
   });
