@@ -121,14 +121,29 @@ class Node {
     /**
      * get components descriptions from this.component.render
      */
-    List<ComponentDescription> newChildren = this.component.render();
-    
-    /** 
-     * if component don't render anything and return null instead of empty list,
-     * replace null with empty list. 
-     */
-    if (newChildren == null) {
+    List<ComponentDescription> newChildren;
+    var rawChildren = this.component.render();
+    if (rawChildren is ComponentDescription) {
+      /**
+       * if render returns componentDescription, construct newChildren list
+       */
+      newChildren = [rawChildren];
+    } else if (rawChildren is List<ComponentDescription>) {
+      /**
+       * if render returns List<componentDescription> set newChildren to it
+       */
+      newChildren = rawChildren;
+    } else if (newChildren == null) {
+      /** 
+       * if component don't render anything and return null instead of empty list,
+       * replace null with empty list. 
+       */
       newChildren = [];
+    } else {
+      /**
+       * if it returns something else, throw exception
+       */
+      throw "render should return ComponentDescription or List<ComponentDescription>";
     }
     
     /**

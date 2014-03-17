@@ -2,4 +2,7 @@ name: tiles
 version: 0.1.0
 author: Jakuub Uhrik <jakuub@mail.com>
 dev_dependencies:
+  browser: any
+  meta: any
   unittest: any
+  webdriver: any

@@ -148,6 +148,12 @@ _applyUpdatedChange(NodeChange change) {
         }
       });
     }
+  } else if (change.node.component is DomTextComponent) {
+    /**
+     * if component is dom text componetn, update text of the element
+     */
+    html.Text text = _nodeToElement[change.node];
+    text.text = change.node.component.props;
   }
 }
 

@@ -193,4 +193,46 @@ main() {
     });
     
   });
+
+  group("(browser) (unmountComponent)", () {
+    Element mountRoot;
+    setUp(() {
+      mountRoot = new DivElement();
+      querySelector("body").append(mountRoot);
+      
+      mountComponent(div(), mountRoot);
+      
+    });
+    test("should remove whole markup", () {
+      unmountComponent(mountRoot);
+      expect(mountRoot.children, isEmpty);
+    });
+    
+    test("should remove whole markup when custom componet was mounted", () {
+      ComponentMock component = new ComponentMock();
+      component.when(callsTo("render")).alwaysReturn([div()]);
+
+      ComponentDescriptionMock description= new ComponentDescriptionMock();
+      description.when(callsTo("createComponent")).alwaysReturn(component);
+      
+      mountComponent(description, mountRoot);
+      unmountComponent(mountRoot);
+      
+      expect(mountRoot.children, isEmpty);
+      
+    });
+    
+    test("should remove relation between component and element on unmount", () {
+      Component divComponent = new DomComponent(null, null, "div");
+      ComponentDescriptionMock divDescription= new ComponentDescriptionMock();
+      divDescription.when(callsTo("createComponent")).alwaysReturn(divComponent);
+      
+      
+      mountComponent(divDescription, mountRoot);
+      unmountComponent(mountRoot);
+      
+      expect(getElementForComponent(divComponent), isNull);
+      
+    });
+  });
 }
