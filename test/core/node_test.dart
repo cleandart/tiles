@@ -202,6 +202,42 @@ main() {
       expect(node.children.first, isNot(oldChild));
     });
     
+    test("update - when children was removed, remove it and create node change for it", () {
+      
+      ComponentDescriptionMock description = new ComponentDescriptionMock();
+
+      description.when(callsTo("createComponent")).alwaysReturn(new ComponentMock());
+      
+      description.when(callsTo("get factory"))
+        .alwaysReturn(([dynamic props, children]) => new ComponentMock());
+      
+      ComponentMock component = new ComponentMock();
+
+      component.when(callsTo("render"))
+        .thenReturn([description])
+        .thenReturn([]);
+      
+
+      Node node = new Node(null, component);
+      node.update();
+      expect(node.children.isEmpty, isFalse);
+      node.isDirty = true;
+      
+      List<NodeChange> updates = node.update();
+      /**
+       * expect there are 2 updates, first update of node and second of removing it's child
+       */
+      expect(updates.length, equals(2));
+      expect(updates.first.type, equals(NodeChangeType.UPDATED));
+      expect(updates.last.type, equals(NodeChangeType.DELETED));
+      
+      /**
+       * and that child was removed
+       */
+      expect(node.children.isEmpty, isTrue);
+      
+    });
+    
     test("should listen to components need update stream and set self as dirty if component need update", () {
       StreamController<bool> controller = new StreamController();
       ComponentMock component = new ComponentMock();

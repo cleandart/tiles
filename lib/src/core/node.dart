@@ -117,74 +117,12 @@ class Node {
      * create result as list with this as updated.
      */
     List<NodeChange> result = [new NodeChange(NodeChangeType.UPDATED, this, _oldProps, this.component.props)];
-
-    /**
-     * get components descriptions from this.component.render
-     */
-    List<ComponentDescription> newChildren;
-    var rawChildren = this.component.render();
-    if (rawChildren is ComponentDescription) {
-      /**
-       * if render returns componentDescription, construct newChildren list
-       */
-      newChildren = [rawChildren];
-    } else if (rawChildren is List<ComponentDescription>) {
-      /**
-       * if render returns List<componentDescription> set newChildren to it
-       */
-      newChildren = rawChildren;
-    } else if (newChildren == null) {
-      /** 
-       * if component don't render anything and return null instead of empty list,
-       * replace null with empty list. 
-       */
-      newChildren = [];
-    } else {
-      /**
-       * if it returns something else, throw exception
-       */
-      throw "render should return ComponentDescription or List<ComponentDescription>";
-    }
     
     /**
-     * for all children which are in both, children and newChildren, 
-     * update (or replace) it
+     * update children and add node changes to result
      */
-    for(int i = 0; i < children.length && i < newChildren.length; ++i) {
-      /** 
-       * if factory is same, update child, else replace child 
-       */
-      if (children[i].factory == newChildren[i].factory) {
-        children[i].node.apply(newChildren[i].props, newChildren[i].children);
-      } else {
-        Node oldChild = children[i].node;
-        children[i] = new NodeWithFactory(new Node(this, newChildren[i].createComponent()), newChildren[i].factory);
-        result.add(new NodeChange(NodeChangeType.DELETED, oldChild));
-        result.add(new NodeChange(NodeChangeType.CREATED, children[i].node));
-      }
-      /** 
-       * add child.update() changes to result 
-       */
-      result.addAll(children[i].node.update());
-    }
+    result.addAll(_updateChildren(this));
 
-    /**
-     * if new children is more then old, add new children at the end,
-     * if new children is less then old, remove old from last
-     */
-    if (children.length < newChildren.length) {
-      for(int i = children.length; i < newChildren.length; ++i) {
-        NodeWithFactory child = new NodeWithFactory(new Node(this,  newChildren[i].createComponent()), newChildren[i].factory);
-        children.add(child);
-        result.add(new NodeChange(NodeChangeType.CREATED, child.node));
-        result.addAll(child.node.update());
-      }
-    } else if (children.length > newChildren.length) {
-      for(int i = 0; i < children.length - newChildren.length; ++i) {
-        NodeWithFactory removed = children.removeLast();
-        result.add(new NodeChange(NodeChangeType.DELETED, removed.node));
-      }
-    }
     
     /**
      * return counted change-list

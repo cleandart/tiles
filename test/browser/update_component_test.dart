@@ -507,10 +507,6 @@ main() {
       ComponentDescriptionMock spanDescription = new ComponentDescriptionMock();
       spanDescription.when(callsTo("createComponent")).alwaysReturn(spanComponent);
       
-      Component imgComponent = img().createComponent();
-      ComponentDescriptionMock imgDescription = new ComponentDescriptionMock();
-      imgDescription.when(callsTo("createComponent")).alwaysReturn(imgComponent);
-      
       component.when(callsTo("render"))
         .thenReturn([spanDescription])
         .thenReturn([]);      
@@ -525,8 +521,8 @@ main() {
       component.redraw();
       
       window.animationFrame.then(expectAsync((data) {
-        expect(mountRoot.firstChild, isNull);
-        expect(getElementForComponent(spanComponent), isNull);
+        expect(mountRoot.firstChild, isNull, reason: "mountRoot should be empty");
+        expect(getElementForComponent(spanComponent), isNull, reason: "dependence should be removed");
       }));
       
     });
