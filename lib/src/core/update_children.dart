@@ -6,14 +6,14 @@ _updateChildren (Node node) {
   /**
    * get old children from node, next children descriptions from component and prepare next children map 
    */
-  Map<num, NodeWithFactory> oldChildren = _createChildrenMap(node.children);
+  Map<num, NodeChild> oldChildren = _createChildrenMap(node.children);
   Map<num, ComponentDescription> nextChildrenDescriptions = _createChildrenDescriptionMap(_getChildrenFromComponent(node.component));
-  Map<num, NodeWithFactory> nextChildren = {};
+  Map<num, NodeChild> nextChildren = {};
   
   for (num key in nextChildrenDescriptions.keys) {
     ComponentDescription description = nextChildrenDescriptions[key];
-    NodeWithFactory oldChild = oldChildren[key];
-    NodeWithFactory nextChild;
+    NodeChild oldChild = oldChildren[key];
+    NodeChild nextChild;
     
     /**
      * if factory is same, just apply new props
@@ -25,7 +25,7 @@ _updateChildren (Node node) {
       /**
        * else create new node and if necessery, remove old one
        */
-      nextChild = new NodeWithFactory(new Node(node, description.createComponent()), description.factory);
+      nextChild = new NodeChild(new Node(node, description.createComponent()), description.factory, description.key);
       result.add(new NodeChange(NodeChangeType.CREATED, nextChild.node));
 
       if (oldChild != null) {
@@ -47,7 +47,7 @@ _updateChildren (Node node) {
 
 }
 
-Map<num, NodeWithFactory> _createChildrenMap (List<NodeWithFactory> nodes) {
+Map<num, NodeChild> _createChildrenMap (List<NodeChild> nodes) {
   return nodes.asMap();
 }
 
@@ -55,9 +55,9 @@ Map<num, ComponentDescription> _createChildrenDescriptionMap (List<ComponentDesc
   return descriptions.asMap();
 }
 
-List<NodeWithFactory> _childrenMapToList(Map<num, NodeWithFactory> nextChildren) {
-  List<NodeWithFactory> result = [];
-  for (NodeWithFactory value in nextChildren.values) {
+List<NodeChild> _childrenMapToList(Map<num, NodeChild> nextChildren) {
+  List<NodeChild> result = [];
+  for (NodeChild value in nextChildren.values) {
     result.add(value);
   }
   return result;

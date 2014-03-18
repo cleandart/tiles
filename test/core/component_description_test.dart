@@ -69,8 +69,11 @@ main() {
     });
 
     test("should have key optionali added in constructor", () {
-      ComponentDescription description = new ComponentDescription(([props, children]) => null, null, null, "key");
-      expect(description.key, equals("key"));
+      var key = new Mock();
+      
+      ComponentDescription description = new ComponentDescription(([props, children]) => null, null, null, key);
+      
+      expect(description.key, equals(key));
     });
 
   });

@@ -180,7 +180,7 @@ _removeNodeFromDom(Node node) {
     element.remove();
     _deleteRelations(node, element);
   } else {
-    for (NodeWithFactory child in node.children) {
+    for (NodeChild child in node.children) {
       _removeNodeFromDom(child.node);
     }
   }

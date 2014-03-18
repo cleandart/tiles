@@ -3,7 +3,7 @@ part of tiles;
 class Node {
   final Component component;
   
-  List<NodeWithFactory> children;
+  List<NodeChild> children;
   
   final Node parent;
   
@@ -145,9 +145,10 @@ class Node {
   
 }
 
-class NodeWithFactory {
+class NodeChild {
   final Node node; 
   final ComponentFactory factory;
+  final dynamic key;
   
-  NodeWithFactory(this.node, this.factory);
+  NodeChild(this.node, this.factory, [this.key]);
 }

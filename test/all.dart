@@ -16,6 +16,7 @@ main () {
   nodeChange.main();
   component.main();
   registerComponent.main();
+  
   domComponent.main();
   domElements.main();
   domElementsSpecial.main();
