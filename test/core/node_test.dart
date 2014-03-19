@@ -49,195 +49,6 @@ main() {
       
     });
     
-    /**
-     * test node with component, which render always return description with same factory.
-     */
-    test("update - component will return description of one component, node should have one child", () {
-      ComponentDescriptionMock description = new ComponentDescriptionMock();
-
-      description.when(callsTo("createComponent")).alwaysReturn(new ComponentMock());
-      description.when(callsTo("get factory")).alwaysReturn(([dynamic props, children]) => new ComponentMock());
-      
-      ComponentMock component = new ComponentMock();
-
-      component.when(callsTo("render")).alwaysReturn([description]);
-      
-      Node node = new Node(null, component);
-      var changes = node.update();
-      
-      /**
-       * test if changes are as they should be - updated, created child and updated child.
-       */
-      expect(changes.length, equals(3));
-      expect(changes.first.type, equals(NodeChangeType.UPDATED));
-      expect(changes.first.node, equals(node));
-      expect(changes[1].type, equals(NodeChangeType.CREATED));
-      expect(changes[1].node, isNot(node));
-      expect(changes.last.type, equals(NodeChangeType.UPDATED));
-      expect(changes.last.node, equals(changes[1].node));
-      
-      /**
-       * try, if node has children as they should
-       */
-      expect(node.children.isNotEmpty, isTrue);
-      expect(node.children.length, equals(1));
-      
-      /**
-       * and then try another update
-       * as node is not dirty, and don't have dirty descendatns, 
-       * no change is generated 
-       */
-    });
-    
-    test("update - if no apply called, update will do no change", () {
-      ComponentDescriptionMock description = new ComponentDescriptionMock();
-
-      description.when(callsTo("createComponent")).alwaysReturn(new ComponentMock());
-      description.when(callsTo("get factory")).alwaysReturn(([dynamic props, children]) => new ComponentMock());
-      
-      ComponentMock component = new ComponentMock();
-
-      component.when(callsTo("render")).alwaysReturn([description]);
-      
-      Node node = new Node(null, component);
-      node.update();
-      
-      var changes = node.update();
-      expect(changes, isEmpty);
-      
-    });
-    
-    test("update - node with dirty child, update will return only change of updated child", () {
-      ComponentDescriptionMock description = new ComponentDescriptionMock();
-
-      description.when(callsTo("createComponent")).alwaysReturn(new ComponentMock());
-      description.when(callsTo("get factory")).alwaysReturn(([dynamic props, children]) => new ComponentMock());
-      
-      ComponentMock component = new ComponentMock();
-
-      component.when(callsTo("render")).alwaysReturn([description]);
-      
-      Node node = new Node(null, component);
-      node.update();
-      
-      node.children.first.node.isDirty = true;
-      
-      expect(node.hasDirtyDescendant, isTrue);
-      
-      var changes = node.update();
-
-      expect(node.hasDirtyDescendant, isFalse);
-      
-      expect(changes.isEmpty, isFalse);
-      expect(changes.length, equals(1));
-      expect(changes.first.node, equals(node.children.first.node));
-      expect(changes.first.type, equals(NodeChangeType.UPDATED));
-
-    });
-    
-    test("update - if factory is the same, child will be the same", () {
-      ComponentDescriptionMock description = new ComponentDescriptionMock();
-
-      description.when(callsTo("createComponent")).alwaysReturn(new ComponentMock());
-      description.when(callsTo("get factory")).alwaysReturn(([dynamic props, children]) => new ComponentMock());
-      
-      ComponentMock component = new ComponentMock();
-
-      component.when(callsTo("render")).alwaysReturn([description]);
-      
-      Node node = new Node(null, component);
-      node.update();
-      
-      Node oldNode = node.children.first.node;
-      
-      node.apply();
-      
-      var changes = node.update();
-      expect(changes.isEmpty, isFalse);
-      expect(changes.length, equals(2)); // both, node and it's child is updated
-      
-      expect(node.children.first.node, equals(oldNode));
-      
-    });
-    
-    test("update - when factory is different, child will be replaced", () {
-      
-      ComponentDescriptionMock description = new ComponentDescriptionMock();
-
-      description.when(callsTo("createComponent")).alwaysReturn(new ComponentMock());
-      
-      /**
-       * return every time new factory
-       */
-      description.when(callsTo("get factory"))
-        .thenReturn(([dynamic props, children]) => new ComponentMock())
-        .thenReturn(([dynamic props, children]) => new ComponentMock())
-        .thenReturn(([dynamic props, children]) => new ComponentMock());
-      
-      ComponentMock component = new ComponentMock();
-
-      component.when(callsTo("render")).alwaysReturn([description]);
-      
-
-      Node node = new Node(null, component);
-      node.update();
-      
-      /**
-       * node have some child
-       */
-      expect(node.children.isNotEmpty, isTrue);
-      
-      /**
-       * save first child to oldChild
-       */
-      Node oldChild = node.children.first.node;
-      
-      node.apply();
-
-      node.update();
-      /**
-       * because in RenderingAlwaysNewFactoryComponent is always created new, 
-       * unique factory, node.update always replace child.
-       */
-      expect(node.children.first, isNot(oldChild));
-    });
-    
-    test("update - when children was removed, remove it and create node change for it", () {
-      
-      ComponentDescriptionMock description = new ComponentDescriptionMock();
-
-      description.when(callsTo("createComponent")).alwaysReturn(new ComponentMock());
-      
-      description.when(callsTo("get factory"))
-        .alwaysReturn(([dynamic props, children]) => new ComponentMock());
-      
-      ComponentMock component = new ComponentMock();
-
-      component.when(callsTo("render"))
-        .thenReturn([description])
-        .thenReturn([]);
-      
-
-      Node node = new Node(null, component);
-      node.update();
-      expect(node.children.isEmpty, isFalse);
-      node.isDirty = true;
-      
-      List<NodeChange> updates = node.update();
-      /**
-       * expect there are 2 updates, first update of node and second of removing it's child
-       */
-      expect(updates.length, equals(2));
-      expect(updates.first.type, equals(NodeChangeType.UPDATED));
-      expect(updates.last.type, equals(NodeChangeType.DELETED));
-      
-      /**
-       * and that child was removed
-       */
-      expect(node.children.isEmpty, isTrue);
-      
-    });
-    
     test("should listen to components need update stream and set self as dirty if component need update", () {
       StreamController<bool> controller = new StreamController();
       ComponentMock component = new ComponentMock();
@@ -254,13 +65,14 @@ main() {
       });
     });
     
+    test("should accept ComponentDescription not in list from component.render()", () {
+      ComponentMock component = new ComponentMock();
+      component.when(callsTo("render")).alwaysReturn(new ComponentDescription(([dynamic props, children]) => new ComponentMock(), null, null));
+      
+      Node node = new Node(null, component);
+      node.update();
+    });
+
   });
   
-  test("should accept ComponentDescription not in list from component.render()", () {
-    ComponentMock component = new ComponentMock();
-    component.when(callsTo("render")).alwaysReturn(new ComponentDescription(([dynamic props, children]) => new ComponentMock(), null, null));
-    
-    Node node = new Node(null, component);
-    node.update();
-  });
 }

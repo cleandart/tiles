@@ -5,7 +5,7 @@ part 'src/core/component.dart';
 part 'src/core/component_description.dart';
 part 'src/core/node.dart';
 part 'src/core/node_change.dart';
-part 'src/core/update_children.dart';
+part 'src/core/node_update_children.dart';
 part 'src/core/register_component.dart';
 
 part 'src/utils/component_description_factory.dart';
