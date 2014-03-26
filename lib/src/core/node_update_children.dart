@@ -18,6 +18,7 @@ _updateChildren (Node node) {
     NodeChild nextChild;
     num oldOrder = oldChildrenOrder[key];
     num nextOrder = nextChildrenOrder[key];
+    bool justCreated = false;
     
     /**
      * if factory is same, just apply new props
@@ -34,13 +35,14 @@ _updateChildren (Node node) {
        */
       nextChild = new NodeChild(new Node(node, description.createComponent()), description.factory, description.key);
       result.add(new NodeChange(NodeChangeType.CREATED, nextChild.node));
+      justCreated = true;
 
       if (oldChild != null) {
         result.add(new NodeChange(NodeChangeType.DELETED, oldChild.node));
       }
     }
     nextChildren[key] = nextChild;
-    result.addAll(nextChild.node.update());
+    result.addAll(nextChild.node.update(!justCreated));
   }
   for (dynamic key in oldChildren.keys) {
     if (nextChildrenDescriptions[key] == null) {

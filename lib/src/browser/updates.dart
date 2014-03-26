@@ -31,7 +31,7 @@ _update(num data) {
 _updateTree(Node rootNode) {
   if (rootNode.isDirty || rootNode.hasDirtyDescendant) {
     List<NodeChange> changes = rootNode.update();
-    changes.forEach((NodeChange change) => _applyChange(change));
+    changes.reversed.forEach((NodeChange change) => _applyChange(change));
   }
 }
 
@@ -51,7 +51,8 @@ _applyChange(NodeChange change) {
     case NodeChangeType.DELETED: 
       _applyDeletedChange(change);
       break;
-    case NodeChangeType.MOVED: 
+    case NodeChangeType.MOVED:
+      _applyMovedChange(change);
       break;
   }
 }
@@ -164,6 +165,35 @@ _applyDeletedChange(NodeChange change) {
   _removeNodeFromDom(change.node);
 }
 
+/**
+ * Applies move changed by moving node on the correct position.
+ */
+_applyMovedChange(NodeChange change) {
+  Node node = change.node;
+  _moveNode(node);
+}
+
+/**
+ * Finds place of the node in the real DOM and move it there.
+ * 
+ * Find it's closest rendered sibling after it 
+ * and place self element before it. 
+ * 
+ * If it contain some custom component, 
+ * apply this method to it's children in reversed order.
+ */
+_moveNode(Node node) {
+  html.Element mountRoot = _nodeToElement[node.parent];
+  Node nextNode = _findFirstDomDescendantAfter(node.parent, node);
+  
+  if (node.component is DomComponent) {
+    html.Element element = _nodeToElement[node];
+    html.Element nextElement = _nodeToElement[nextNode];
+    mountRoot.insertBefore(element, nextElement);
+  } else {
+    node.children.reversed.forEach((NodeChild child) => _moveNode(child.node));
+  }
+}
 
 /** 
  * Remove node from DOM

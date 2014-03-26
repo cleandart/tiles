@@ -67,7 +67,7 @@ class Node {
   /**
    * Recognize if update this instance or children by _isDirty and _hasDirtyDescendants
    */
-  List<NodeChange> update() {
+  List<NodeChange> update([bool addOwnUpdate = true]) {
     /**
      * if nothing in this subtree is changed, return empty list
      */
@@ -84,7 +84,7 @@ class Node {
      * if node is dirty, add everything returned by _updateThis, 
      */
     if (_isDirty) {
-      result.addAll(_updateThis());
+      result.addAll(_updateThis(addOwnUpdate));
     }
 
     /**
@@ -112,11 +112,14 @@ class Node {
    * 
    * Returns changes on children 
    */
-  List<NodeChange> _updateThis() {
+  List<NodeChange> _updateThis([bool addOwnUpdate = true]) {
+    List<NodeChange> result = []; 
     /**
      * create result as list with this as updated.
      */
-    List<NodeChange> result = [new NodeChange(NodeChangeType.UPDATED, this, _oldProps, this.component.props)];
+    if (addOwnUpdate) {
+      result = [new NodeChange(NodeChangeType.UPDATED, this, _oldProps, this.component.props)];
+    }
     
     /**
      * update children and add node changes to result

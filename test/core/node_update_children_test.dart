@@ -64,13 +64,11 @@ main() {
         /**
          * test if changes are as they should be - updated, created child and updated child.
          */
-        expect(changes.length, equals(3));
+        expect(changes.length, equals(2));
         expect(changes.first.type, equals(NodeChangeType.UPDATED));
         expect(changes.first.node, equals(node));
         expect(changes[1].type, equals(NodeChangeType.CREATED));
         expect(changes[1].node, isNot(node));
-        expect(changes.last.type, equals(NodeChangeType.UPDATED));
-        expect(changes.last.node, equals(changes[1].node));
         
         /**
          * try, if node has children as they should
@@ -303,7 +301,7 @@ main() {
           num countOfCreate = countChangeTypes(changes, NodeChangeType.CREATED);
           num countOfDelete = countChangeTypes(changes, NodeChangeType.DELETED);
           
-          expect(changes.length, equals(6), reason: "there should be 6 changes");
+          expect(changes.length, equals(5), reason: "there should be 6 changes");
           expect(countOfMove, equals(1), reason: "1 of 6 updates should be move");
           expect(countOfCreate, equals(1));
           expect(countOfDelete, equals(1));
@@ -340,7 +338,7 @@ main() {
           print(changes.length);
 
           expect(countChangeTypes(changes, NodeChangeType.MOVED), equals(2));
-          expect(countChangeTypes(changes, NodeChangeType.UPDATED), equals(9));
+          expect(countChangeTypes(changes, NodeChangeType.UPDATED), equals(7));
           expect(countChangeTypes(changes, NodeChangeType.CREATED), equals(2));
           expect(countChangeTypes(changes, NodeChangeType.DELETED), equals(2));
           

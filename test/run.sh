@@ -168,12 +168,45 @@ test_selenium () {
 	fi
 }
 
-install_dependences;
 
-test_core;
-test_browser;
+if [ $# -eq 0 ]
+then
+	install_dependences;
 
-test_selenium;
+	test_core;
+	test_browser;
+	test_selenium;
+else
+	opts=`getopt dbs "$@" 2> /dev/null`
+	if [ $? -ne 0 ] 
+	then
+		echo >&2 \
+		"$(red)usage: $0 [-d] [-b] [-s]$(white)"
+		exit 1;
+	fi
+
+	set -- $opts
+	[ $# -lt 1 ] && exit 1
+
+	install_dependences;
+
+	while [ $# -gt 0 ]
+	do
+	case "$1" in
+		-d)	test_core; break;;
+		-b)	test_browser; break;;
+		-s)	test_selenium; break;;
+		--)	shift; break;;
+		-*)
+			echo >&2 \
+			"usage: $0 [-d] [-b] [-s]"
+			exit 1;;
+		*)	break;;		# terminate while loop
+	esac
+	shift
+	done
+fi
+
 
 if [ $FAIL -ne 0 ]
 then
