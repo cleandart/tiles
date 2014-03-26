@@ -1,13 +1,27 @@
 part of tiles_browser;
 
 /**
+ * Flag that browser configuration was initialized,
+ *  
+ * to libraty by able to throw exception 
+ * on duplicated initialization of browser configuration. 
+ */
+bool _browserConfigurationInitialized = false;
+
+/**
  * Init browser configuration to proper function of library.
  * 
  * It initialize request anmimation frame loop, 
  * which controlls root nodes if don't have dirty descendats.
  */
 initTilesBrowserConfiguration() {
-  html.window.animationFrame.then(_update);
+  if (!_browserConfigurationInitialized) {
+    html.window.animationFrame.then(_update);
+    _browserConfigurationInitialized = true;
+  } else {
+    throw "Browser configuration should not be initialized twice";
+  }
+  
 }
 
 /**
@@ -183,10 +197,10 @@ _applyMovedChange(NodeChange change) {
  * apply this method to it's children in reversed order.
  */
 _moveNode(Node node) {
-  html.Element mountRoot = _nodeToElement[node.parent];
-  Node nextNode = _findFirstDomDescendantAfter(node.parent, node);
-  
   if (node.component is DomComponent) {
+    html.Element mountRoot = _nodeToElement[node.parent];
+    Node nextNode = _findFirstDomDescendantAfter(node.parent, node);
+    
     html.Element element = _nodeToElement[node];
     html.Element nextElement = _nodeToElement[nextNode];
     mountRoot.insertBefore(element, nextElement);
