@@ -5,5 +5,13 @@ analyze:
 	for i in `ls lib/*.dart`; do dartanalyzer $$i; done
 
 test: analyze
-	dart test/all.dart;
+	bash test/run.sh;
 
+testcore: 
+	bash test/run.sh -d
+
+testbrowser: 
+	bash test/run.sh -b
+
+testselenium: 
+	bash test/run.sh -s

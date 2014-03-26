@@ -62,6 +62,19 @@ main() {
       ComponentDescription description = new ComponentDescription(([props, children]) => null);
       expect(() {description.children = null;}, throws);
     });
+    
+    test("should have no key by default", () {
+      ComponentDescription description = new ComponentDescription(([props, children]) => null);
+      expect(description.key, isNull);
+    });
+
+    test("should have key optionali added in constructor", () {
+      var key = new Mock();
+      
+      ComponentDescription description = new ComponentDescription(([props, children]) => null, null, null, key);
+      
+      expect(description.key, equals(key));
+    });
 
   });
   

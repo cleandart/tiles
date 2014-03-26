@@ -1,13 +1,27 @@
 part of tiles_browser;
 
 /**
+ * Flag that browser configuration was initialized,
+ *  
+ * to libraty by able to throw exception 
+ * on duplicated initialization of browser configuration. 
+ */
+bool _browserConfigurationInitialized = false;
+
+/**
  * Init browser configuration to proper function of library.
  * 
  * It initialize request anmimation frame loop, 
  * which controlls root nodes if don't have dirty descendats.
  */
 initTilesBrowserConfiguration() {
-  html.window.animationFrame.then(_update);
+  if (!_browserConfigurationInitialized) {
+    html.window.animationFrame.then(_update);
+    _browserConfigurationInitialized = true;
+  } else {
+    throw "Browser configuration should not be initialized twice";
+  }
+  
 }
 
 /**
@@ -31,7 +45,7 @@ _update(num data) {
 _updateTree(Node rootNode) {
   if (rootNode.isDirty || rootNode.hasDirtyDescendant) {
     List<NodeChange> changes = rootNode.update();
-    changes.forEach((NodeChange change) => _applyChange(change));
+    changes.reversed.forEach((NodeChange change) => _applyChange(change));
   }
 }
 
@@ -51,7 +65,8 @@ _applyChange(NodeChange change) {
     case NodeChangeType.DELETED: 
       _applyDeletedChange(change);
       break;
-    case NodeChangeType.MOVED: 
+    case NodeChangeType.MOVED:
+      _applyMovedChange(change);
       break;
   }
 }
@@ -148,6 +163,12 @@ _applyUpdatedChange(NodeChange change) {
         }
       });
     }
+  } else if (change.node.component is DomTextComponent) {
+    /**
+     * if component is dom text componetn, update text of the element
+     */
+    html.Text text = _nodeToElement[change.node];
+    text.text = change.node.component.props;
   }
 }
 
@@ -158,6 +179,35 @@ _applyDeletedChange(NodeChange change) {
   _removeNodeFromDom(change.node);
 }
 
+/**
+ * Applies move changed by moving node on the correct position.
+ */
+_applyMovedChange(NodeChange change) {
+  Node node = change.node;
+  _moveNode(node);
+}
+
+/**
+ * Finds place of the node in the real DOM and move it there.
+ * 
+ * Find it's closest rendered sibling after it 
+ * and place self element before it. 
+ * 
+ * If it contain some custom component, 
+ * apply this method to it's children in reversed order.
+ */
+_moveNode(Node node) {
+  if (node.component is DomComponent) {
+    html.Element mountRoot = _nodeToElement[node.parent];
+    Node nextNode = _findFirstDomDescendantAfter(node.parent, node);
+    
+    html.Element element = _nodeToElement[node];
+    html.Element nextElement = _nodeToElement[nextNode];
+    mountRoot.insertBefore(element, nextElement);
+  } else {
+    node.children.reversed.forEach((NodeChild child) => _moveNode(child.node));
+  }
+}
 
 /** 
  * Remove node from DOM
@@ -174,7 +224,7 @@ _removeNodeFromDom(Node node) {
     element.remove();
     _deleteRelations(node, element);
   } else {
-    for (NodeWithFactory child in node.children) {
+    for (NodeChild child in node.children) {
       _removeNodeFromDom(child.node);
     }
   }

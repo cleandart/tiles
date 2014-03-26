@@ -3,7 +3,7 @@ part of tiles;
 class Node {
   final Component component;
   
-  List<NodeWithFactory> children;
+  List<NodeChild> children;
   
   final Node parent;
   
@@ -67,7 +67,7 @@ class Node {
   /**
    * Recognize if update this instance or children by _isDirty and _hasDirtyDescendants
    */
-  List<NodeChange> update() {
+  List<NodeChange> update([bool addOwnUpdate = true]) {
     /**
      * if nothing in this subtree is changed, return empty list
      */
@@ -84,7 +84,7 @@ class Node {
      * if node is dirty, add everything returned by _updateThis, 
      */
     if (_isDirty) {
-      result.addAll(_updateThis());
+      result.addAll(_updateThis(addOwnUpdate));
     }
 
     /**
@@ -112,64 +112,20 @@ class Node {
    * 
    * Returns changes on children 
    */
-  List<NodeChange> _updateThis() {
+  List<NodeChange> _updateThis([bool addOwnUpdate = true]) {
+    List<NodeChange> result = []; 
     /**
      * create result as list with this as updated.
      */
-    List<NodeChange> result = [new NodeChange(NodeChangeType.UPDATED, this, _oldProps, this.component.props)];
-
-    /**
-     * get components descriptions from this.component.render
-     */
-    List<ComponentDescription> newChildren = this.component.render();
-    
-    /** 
-     * if component don't render anything and return null instead of empty list,
-     * replace null with empty list. 
-     */
-    if (newChildren == null) {
-      newChildren = [];
+    if (addOwnUpdate) {
+      result = [new NodeChange(NodeChangeType.UPDATED, this, _oldProps, this.component.props)];
     }
     
     /**
-     * for all children which are in both, children and newChildren, 
-     * update (or replace) it
+     * update children and add node changes to result
      */
-    for(int i = 0; i < children.length && i < newChildren.length; ++i) {
-      /** 
-       * if factory is same, update child, else replace child 
-       */
-      if (children[i].factory == newChildren[i].factory) {
-        children[i].node.apply(newChildren[i].props, newChildren[i].children);
-      } else {
-        Node oldChild = children[i].node;
-        children[i] = new NodeWithFactory(new Node(this, newChildren[i].createComponent()), newChildren[i].factory);
-        result.add(new NodeChange(NodeChangeType.DELETED, oldChild));
-        result.add(new NodeChange(NodeChangeType.CREATED, children[i].node));
-      }
-      /** 
-       * add child.update() changes to result 
-       */
-      result.addAll(children[i].node.update());
-    }
+    result.addAll(_updateChildren(this));
 
-    /**
-     * if new children is more then old, add new children at the end,
-     * if new children is less then old, remove old from last
-     */
-    if (children.length < newChildren.length) {
-      for(int i = children.length; i < newChildren.length; ++i) {
-        NodeWithFactory child = new NodeWithFactory(new Node(this,  newChildren[i].createComponent()), newChildren[i].factory);
-        children.add(child);
-        result.add(new NodeChange(NodeChangeType.CREATED, child.node));
-        result.addAll(child.node.update());
-      }
-    } else if (children.length > newChildren.length) {
-      for(int i = 0; i < children.length - newChildren.length; ++i) {
-        NodeWithFactory removed = children.removeLast();
-        result.add(new NodeChange(NodeChangeType.DELETED, removed.node));
-      }
-    }
     
     /**
      * return counted change-list
@@ -192,9 +148,10 @@ class Node {
   
 }
 
-class NodeWithFactory {
+class NodeChild {
   final Node node; 
   final ComponentFactory factory;
+  final dynamic key;
   
-  NodeWithFactory(this.node, this.factory);
+  NodeChild(this.node, this.factory, [this.key]);
 }

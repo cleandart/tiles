@@ -2,3 +2,5 @@
 packages
 .project
 pubspec.lock
+content_shell
+selenium-server-standalone-2.40.0.jar
