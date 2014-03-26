@@ -2,8 +2,8 @@ part of tiles_browser;
 
 /**
  * Init browser configuration to proper function of library.
- * 
- * It initialize request anmimation frame loop, 
+ *
+ * It initialize request anmimation frame loop,
  * which controlls root nodes if don't have dirty descendats.
  */
 initTilesBrowserConfiguration() {
@@ -12,7 +12,7 @@ initTilesBrowserConfiguration() {
 
 /**
  * Performs update of dom.
- * 
+ *
  * Find all root nodes, and updte each tree by updating root node.
  * At the end, request new animation frame
  */
@@ -25,11 +25,12 @@ _update(num data) {
 
 /**
  * Perform update for node tree starting from root node.
- * 
- * Performs update on root node and apply this changes to dom.  
+ *
+ * Performs update on root node and apply this changes to dom.
  */
 _updateTree(Node rootNode) {
   if (rootNode.isDirty || rootNode.hasDirtyDescendant) {
+    print('updating');
     List<NodeChange> changes = rootNode.update();
     changes.forEach((NodeChange change) => _applyChange(change));
   }
@@ -37,7 +38,7 @@ _updateTree(Node rootNode) {
 
 /**
  * Apply one change to the dom.
- * 
+ *
  * Distinguish type of change and call adequate method
  */
 _applyChange(NodeChange change) {
@@ -48,16 +49,16 @@ _applyChange(NodeChange change) {
     case NodeChangeType.UPDATED:
       _applyUpdatedChange(change);
       break;
-    case NodeChangeType.DELETED: 
+    case NodeChangeType.DELETED:
       _applyDeletedChange(change);
       break;
-    case NodeChangeType.MOVED: 
+    case NodeChangeType.MOVED:
       break;
   }
 }
 
 /**
- * Apply change with type NodeChange.CREATED 
+ * Apply change with type NodeChange.CREATED
  * and place node from change to correct place in DOM
  */
 _applyCreatedChange(NodeChange change) {
@@ -68,7 +69,7 @@ _applyCreatedChange(NodeChange change) {
 }
 
 /**
- * Finds first descendant of parent after node 
+ * Finds first descendant of parent after node
  * which is dom component allready rendered in DOM
  */
 _findFirstDomDescendantAfter(Node parent, Node node) {
@@ -84,15 +85,15 @@ _findFirstDomDescendantAfter(Node parent, Node node) {
       result = _findFirstDomDescendantAfter(child, node);
     }
   }
-  
+
   if (result != null) {
     return result;
   }
-  
+
   if (parent.component is DomComponent) {
     return null;
   }
-  
+
   if (parent.parent != null) {
     return _findFirstDomDescendantAfter(parent.parent, parent);
   }
@@ -100,17 +101,20 @@ _findFirstDomDescendantAfter(Node parent, Node node) {
 
 /**
  * Applies changes to updated component.
- * 
- * If it is DOM component, update attributes of element 
- * associated to node of this component. 
+ *
+ * If it is DOM component, update attributes of element
+ * associated to node of this component.
  */
 _applyUpdatedChange(NodeChange change) {
-  if (change.node.component is DomComponent) {
+  if (change.node.component is DomTextComponent) {
+    html.Text element = _nodeToElement[change.node];
+    element.text = change.newProps;
+  } else if (change.node.component is DomComponent) {
     html.Element element = _nodeToElement[change.node];
     Map oldProps = change.oldProps;
     Map newProps = change.newProps;
     DomComponent component = change.node.component;
-    
+
     /**
      * change or remove old attributes
      */
@@ -119,7 +123,7 @@ _applyUpdatedChange(NodeChange change) {
         if (newProps == null) {
           return;
         }
-        
+
         if (!newProps.containsKey(key)) {
           element.attributes.remove(key);
         } else if (newProps[key] != value) {
@@ -132,7 +136,7 @@ _applyUpdatedChange(NodeChange change) {
         }
       });
     }
-    
+
     /**
      * add new attributes
      */
@@ -148,25 +152,27 @@ _applyUpdatedChange(NodeChange change) {
         }
       });
     }
+  } else {
+     //do nothing
   }
 }
 
-/** 
- * Applies delete change by removing node from DOM. 
+/**
+ * Applies delete change by removing node from DOM.
  */
 _applyDeletedChange(NodeChange change) {
   _removeNodeFromDom(change.node);
 }
 
 
-/** 
+/**
  * Remove node from DOM
- * 
- * If node not containd DomComponent, 
+ *
+ * If node not containd DomComponent,
  * remove children nodes recursively.
- * 
- * If contain DomComponent, remove only this, 
- * because all children of element will be deleted too. 
+ *
+ * If contain DomComponent, remove only this,
+ * because all children of element will be deleted too.
  */
 _removeNodeFromDom(Node node) {
   if (node.component is DomComponent) {
