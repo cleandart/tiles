@@ -63,7 +63,44 @@ class Node {
     }
   }
 
-//  Node(...)
+
+
+  myUpdate(List<NodeChange> collector){
+    if (!_isDirty && !_hasDirtyDescendant) {
+      return;
+    }
+    if (_isDirty) {
+      new NodeChange(NodeChangeType.UPDATED, this, _oldProps, this.component.props);
+      List<ComponentDescription> newChildren = this.component.render();
+      for(int i = 0; i < max(newChildren.length, children.length); ++i) {
+        NodeWithFactory child = new NodeWithFactory(new Node(this, newChildren[i].createComponent()), newChildren[i].factory);
+        if (i > newChildren.length) {
+          collector.add(new NodeChange(NodeChangeType.CREATED, children[i].node));
+          children.removeAt(i);
+          continue;
+        }
+        if (i > children.length) {
+          collector.add(new NodeChange(NodeChangeType.DELETED, child.node));
+          children.add(child);
+          continue;
+        }
+        if (children[i].factory == newChildren[i].factory) {
+          children[i].node.apply(newChildren[i].props, newChildren[i].children);
+        } else {
+          collector.add(new NodeChange(NodeChangeType.DELETED, children[i].node));
+          collector.add(new NodeChange(NodeChangeType.CREATED, child.node));
+          children[i] = child;
+        }
+      }
+    }
+
+    this.children.forEach((child){
+      child.node.myUpdate(collector);
+    });
+
+    this._isDirty = this._hasDirtyDescendant = false;
+
+  }
 
   /**
    * Recognize if update this instance or children by _isDirty and _hasDirtyDescendants
@@ -151,7 +188,6 @@ class Node {
 //
 //        }
 //        print('the same: ${children[i].node.component}');
-        print('apply on children');
         children[i].node.apply(newChildren[i].props, newChildren[i].children);
       } else {
         Node oldChild = children[i].node;

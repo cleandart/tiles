@@ -1,5 +1,6 @@
 library tiles;
 import 'dart:async';
+import 'dart:math';
 
 part 'src/core/component.dart';
 part 'src/core/component_description.dart';
