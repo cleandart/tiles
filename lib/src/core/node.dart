@@ -65,12 +65,13 @@ class Node {
 
 
 
-  myUpdate(List<NodeChange> collector){
-    if (!_isDirty && !_hasDirtyDescendant) {
+  myUpdate(List<NodeChange> collector, {forceDirty: false}){
+    if (!forceDirty && !_isDirty && !_hasDirtyDescendant) {
       return;
     }
-    if (_isDirty) {
-      new NodeChange(NodeChangeType.UPDATED, this, _oldProps, this.component.props);
+    if (_isDirty || forceDirty) {
+      forceDirty = true;
+      collector.add(new NodeChange(NodeChangeType.UPDATED, this, _oldProps, this.component.props));
       List<ComponentDescription> newChildren = this.component.render();
       for(int i = 0; i < max(newChildren.length, children.length); ++i) {
         NodeWithFactory child = new NodeWithFactory(new Node(this, newChildren[i].createComponent()), newChildren[i].factory);
@@ -85,6 +86,7 @@ class Node {
           continue;
         }
         if (children[i].factory == newChildren[i].factory) {
+          //apply should not be used here - we do not want to mark the component dirty
           children[i].node.apply(newChildren[i].props, newChildren[i].children);
         } else {
           collector.add(new NodeChange(NodeChangeType.DELETED, children[i].node));
@@ -95,7 +97,7 @@ class Node {
     }
 
     this.children.forEach((child){
-      child.node.myUpdate(collector);
+      child.node.myUpdate(collector, forceDirty: forceDirty);
     });
 
     this._isDirty = this._hasDirtyDescendant = false;
