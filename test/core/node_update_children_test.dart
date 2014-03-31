@@ -19,6 +19,7 @@ main() {
     ComponentMock component;
     Node node;
     List<NodeChange> changes;
+    ComponentFactory factory = ([props, children]) => new Component(props);
     
     ComponentDescriptionMock createDefaultDescription() {
       ComponentDescriptionMock description = new ComponentDescriptionMock();
@@ -42,8 +43,16 @@ main() {
       component = new ComponentMock();
     }
     
+    eraseDescription() {
+      description = new ComponentDescriptionMock();
+      description.when(callsTo("createComponent")).alwaysReturn(new ComponentMock());
+      
+      component = new ComponentMock();
+      component.when(callsTo("render")).alwaysReturn([description]);
+    }
+    
     void createNode() {
-      node = new Node(null, component);
+      node = new Node(null, component, factory);
       changes = node.update();
       
     }
@@ -94,7 +103,7 @@ main() {
       test("update - node with dirty child, update will return only change of updated child", () {
         createNode();
         
-        node.children.first.node.isDirty = true;
+        node.children.first.isDirty = true;
         
         expect(node.hasDirtyDescendant, isTrue);
         
@@ -104,7 +113,7 @@ main() {
         
         expect(changes.isEmpty, isFalse);
         expect(changes.length, equals(1));
-        expect(changes.first.node, equals(node.children.first.node));
+        expect(changes.first.node, equals(node.children.first));
         expect(changes.first.type, equals(NodeChangeType.UPDATED));
   
       });
@@ -115,7 +124,7 @@ main() {
       test("update - if factory is the same, child will be the same", () {
         createNode();
         
-        Node oldNode = node.children.first.node;
+        Node oldNode = node.children.first;
         
         node.apply();
         
@@ -123,19 +132,23 @@ main() {
         expect(changes.isEmpty, isFalse);
         expect(changes.length, equals(2)); // both, node and it's child is updated
         
-        expect(node.children.first.node, equals(oldNode));
+        expect(node.children.first, equals(oldNode));
         
       });
       
       test("update - when factory is different, child will be replaced", () {
+        eraseDescription();        
         /**
          * return every time new factory
          */
+        ComponentFactory factory1 = ([dynamic props, children]) => new ComponentMock(); 
+        ComponentFactory factory2 = ([dynamic props, children]) => new ComponentMock(); 
+        ComponentFactory factory3 = ([dynamic props, children]) => new ComponentMock(); 
         description.when(callsTo("get factory"))
-          .thenReturn(([dynamic props, children]) => new ComponentMock())
-          .thenReturn(([dynamic props, children]) => new ComponentMock())
-          .thenReturn(([dynamic props, children]) => new ComponentMock());
-        
+          .thenReturn(factory1)
+          .thenReturn(factory2)
+          .thenReturn(factory3);
+
         createNode();
         
         /**
@@ -146,7 +159,7 @@ main() {
         /**
          * save first child to oldChild
          */
-        Node oldChild = node.children.first.node;
+        Node oldChild = node.children.first;
         
         node.apply();
   
@@ -331,7 +344,7 @@ main() {
 
           createNode();
           
-          List<NodeChild> children = node.children;
+          List<Node> children = node.children;
           
           updateNode();
           

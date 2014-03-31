@@ -13,8 +13,8 @@ unmountComponent(html.Element mountRoot) {
 }
 
 _unmountNode(Node node) {
-  node.children.forEach((NodeChild child) {
-    _unmountNode(child.node);
+  node.children.forEach((Node child) {
+    _unmountNode(child);
   });
   _deleteRelations(node, _nodeToElement[node]);
 }

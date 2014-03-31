@@ -3,9 +3,13 @@ part of tiles;
 class Node {
   final Component component;
   
-  List<NodeChild> children;
+  List<Node> children;
   
   final Node parent;
+  
+  final dynamic key;
+  
+  final ComponentFactory factory;
   
   bool _isDirty = false;
   
@@ -54,12 +58,16 @@ class Node {
    * 
    *   Node node = new Node(parent, description); 
    */
-  Node(this.parent, Component this.component) {
+  Node(this.parent, Component this.component, this.factory, [this.key]) {
     this.isDirty = true;
     this.children = [];
     if (component.needUpdate != null) {
       component.needUpdate.listen(componentNeedUpdate);
     }
+  }
+  
+  factory Node.fromDescription(Node parent, ComponentDescription description){
+    return new Node(parent, description.createComponent(), description.factory, description.key); 
   }
   
 //  Node(...)
@@ -89,7 +97,7 @@ class Node {
       /**
        * and in every case, add everything from children.
        */
-      children.forEach((child) => result.addAll(child.node.update()));
+      children.forEach((child) => result.addAll(child.update()));
     }
 
     /**
@@ -148,6 +156,7 @@ class Node {
   
 }
 
+/*
 class NodeChild {
   final Node node; 
   final ComponentFactory factory;
@@ -155,3 +164,4 @@ class NodeChild {
   
   NodeChild(this.node, this.factory, [this.key]);
 }
+*/

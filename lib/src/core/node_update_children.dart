@@ -6,16 +6,16 @@ _updateChildren (Node node) {
   /**
    * get old children from node, next children descriptions from component and prepare next children map 
    */
-  Map<dynamic, NodeChild> oldChildren = _createChildrenMap(node.children);
+  Map<dynamic, Node> oldChildren = _createChildrenMap(node.children);
   Map<dynamic, ComponentDescription> nextChildrenDescriptions = _createChildrenDescriptionMap(_getChildrenFromComponent(node.component));
-  Map<dynamic, NodeChild> nextChildren = {};
+  Map<dynamic, Node> nextChildren = {};
   Map<dynamic, num> oldChildrenOrder = _createOrderMap(oldChildren);
   Map<dynamic, num> nextChildrenOrder = _createOrderMap(nextChildrenDescriptions);
   
   for (dynamic key in nextChildrenDescriptions.keys) {
     ComponentDescription description = nextChildrenDescriptions[key];
-    NodeChild oldChild = oldChildren[key];
-    NodeChild nextChild;
+    Node oldChild = oldChildren[key];
+    Node nextChild;
     num oldOrder = oldChildrenOrder[key];
     num nextOrder = nextChildrenOrder[key];
     bool justCreated = false;
@@ -25,28 +25,28 @@ _updateChildren (Node node) {
      */
     if (oldChild != null && oldChild.factory == description.factory) {
       nextChild = oldChild;
-      nextChild.node.apply(description.props, description.children);
+      nextChild.apply(description.props, description.children);
       if (oldOrder != nextOrder) {
-        result.add(new NodeChange(NodeChangeType.MOVED, nextChild.node));
+        result.add(new NodeChange(NodeChangeType.MOVED, nextChild));
       }
     } else {
       /**
        * else create new node and if necessery, remove old one
        */
-      nextChild = new NodeChild(new Node(node, description.createComponent()), description.factory, description.key);
-      result.add(new NodeChange(NodeChangeType.CREATED, nextChild.node));
+      nextChild = new Node.fromDescription(node, description);
+      result.add(new NodeChange(NodeChangeType.CREATED, nextChild));
       justCreated = true;
 
       if (oldChild != null) {
-        result.add(new NodeChange(NodeChangeType.DELETED, oldChild.node));
+        result.add(new NodeChange(NodeChangeType.DELETED, oldChild));
       }
     }
     nextChildren[key] = nextChild;
-    result.addAll(nextChild.node.update(!justCreated));
+    result.addAll(nextChild.update(!justCreated));
   }
   for (dynamic key in oldChildren.keys) {
     if (nextChildrenDescriptions[key] == null) {
-      result.add(new NodeChange(NodeChangeType.DELETED, oldChildren[key].node));
+      result.add(new NodeChange(NodeChangeType.DELETED, oldChildren[key]));
     }
   }
   
@@ -56,10 +56,10 @@ _updateChildren (Node node) {
 
 }
 
-Map<dynamic, NodeChild> _createChildrenMap (List<NodeChild> nodes) {
+Map<dynamic, Node> _createChildrenMap (List<Node> nodes) {
   Map result = {};
   num index = 0;
-  for (NodeChild node in nodes) {
+  for (Node node in nodes) {
     if (node.key != null) {
       result[node.key] = node;
     } else {
@@ -93,9 +93,9 @@ Map<dynamic, num> _createOrderMap(Map map) {
   return result;
 }
 
-List<NodeChild> _childrenMapToList(Map<num, NodeChild> nextChildren) {
-  List<NodeChild> result = [];
-  for (NodeChild value in nextChildren.values) {
+List<Node> _childrenMapToList(Map<num, Node> nextChildren) {
+  List<Node> result = [];
+  for (Node value in nextChildren.values) {
     result.add(value);
   }
   return result;

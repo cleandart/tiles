@@ -89,7 +89,7 @@ _applyCreatedChange(NodeChange change) {
 _findFirstDomDescendantAfter(Node parent, Node node) {
   Node result;
   for(int i = parent.children.length - 1; i >= 0; --i) {
-    Node child = parent.children[i].node;
+    Node child = parent.children[i];
     if (child == node) {
       break;
     }
@@ -205,7 +205,7 @@ _moveNode(Node node) {
     html.Element nextElement = _nodeToElement[nextNode];
     mountRoot.insertBefore(element, nextElement);
   } else {
-    node.children.reversed.forEach((NodeChild child) => _moveNode(child.node));
+    node.children.reversed.forEach((Node child) => _moveNode(child));
   }
 }
 
@@ -224,8 +224,8 @@ _removeNodeFromDom(Node node) {
     element.remove();
     _deleteRelations(node, element);
   } else {
-    for (NodeChild child in node.children) {
-      _removeNodeFromDom(child.node);
+    for (Node child in node.children) {
+      _removeNodeFromDom(child);
     }
   }
 }

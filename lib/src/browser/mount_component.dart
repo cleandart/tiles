@@ -24,7 +24,7 @@ typedef void _Ref(Component component);
  * in the component description into element 
  */
 mountComponent(ComponentDescription description, html.HtmlElement mountRoot) {
-  Node node = new Node(null, description.createComponent());
+  Node node = new Node.fromDescription(null, description);
   
   _rootNodes.add(node);
 
@@ -79,7 +79,7 @@ _mountNode(Node node, html.HtmlElement mountRoot, [Node nextNode]) {
         _processEvent(key, value, node);
       }
     });
-    node.children.forEach((NodeChild nodeWithFactory) => _mountNode(nodeWithFactory.node, componentElement));
+    node.children.forEach((Node child) => _mountNode(child, componentElement));
     
     if (nextNode != null) {
       mountRoot.insertBefore(componentElement, _nodeToElement[nextNode]);
@@ -92,8 +92,8 @@ _mountNode(Node node, html.HtmlElement mountRoot, [Node nextNode]) {
      * then just run recursion for children on the same element
      */
     _nodeToElement[node] = mountRoot;
-    node.children.forEach((NodeChild nodeWithFactory) {
-      _mountNode(nodeWithFactory.node, mountRoot, nextNode); 
+    node.children.forEach((Node child) {
+      _mountNode(child, mountRoot, nextNode); 
     });
   }
   
