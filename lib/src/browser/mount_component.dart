@@ -27,8 +27,12 @@ mountComponent(ComponentDescription description, html.HtmlElement mountRoot) {
   Node node = new Node(null, description.createComponent());
   
   _rootNodes.add(node);
+
+  node.update();
   
-  _mountNode(node, mountRoot, true);
+  mountRoot.children.clear();
+
+  _mountNode(node, mountRoot);
 }
 
 /**
@@ -36,19 +40,10 @@ mountComponent(ComponentDescription description, html.HtmlElement mountRoot) {
  *  
  * That means, it render it's tree structure into element.
  */
-_mountNode(Node node, html.HtmlElement mountRoot, [bool clear = false, Node nextNode]) {
-  /**
-   * first if param clear is true, clear this html element
-   */
-  if (clear) {
-    mountRoot.children.clear();
-  }
-  
+_mountNode(Node node, html.HtmlElement mountRoot, [Node nextNode]) {
   /**
    * update to build full node tree structure 
    */
-  node.update();
-  
   if (node.component is DomTextComponent) {
     /**
      * if node contains text, write text and end recursion
@@ -98,7 +93,7 @@ _mountNode(Node node, html.HtmlElement mountRoot, [bool clear = false, Node next
      */
     _nodeToElement[node] = mountRoot;
     node.children.forEach((NodeChild nodeWithFactory) {
-      _mountNode(nodeWithFactory.node, mountRoot, false, nextNode); 
+      _mountNode(nodeWithFactory.node, mountRoot, nextNode); 
     });
   }
   

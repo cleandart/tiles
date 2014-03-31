@@ -85,12 +85,12 @@ class Node {
      */
     if (_isDirty) {
       result.addAll(_updateThis(addOwnUpdate));
+    } else {
+      /**
+       * and in every case, add everything from children.
+       */
+      children.forEach((child) => result.addAll(child.node.update()));
     }
-
-    /**
-     * and in every case, add everything from children.
-     */
-    children.forEach((child) => result.addAll(child.node.update()));
 
     /**
      * tag this node as clean without dirty descendants
