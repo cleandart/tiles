@@ -2,5 +2,15 @@
 packages
 .project
 pubspec.lock
+
+######################
+# testing suites
+######################
+# http://japhr.blogspot.sk/2013/11/auto-install-contentshell-from-ci-like.html
 content_shell
+
+# downloadable from http://docs.seleniumhq.org/download/
 selenium-server-standalone-2.40.0.jar
+
+# chromedriwer downloadable from http://chromedriver.storage.googleapis.com/index.html
+chromedriver
