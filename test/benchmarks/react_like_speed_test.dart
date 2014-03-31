@@ -90,7 +90,7 @@ void main() {
   }
   timeprint("virtual dom building starts");
   react.ComponentDescription h = Hello({"data": data}, []);
-  react.Node node = new react.Node(null, h.createComponent());
+  react.Node node = new react.Node.fromDescription(null, h);
   timeprint("after creating node");
   node.update();
   timeprint("virtual dom building ends");
