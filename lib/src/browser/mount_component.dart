@@ -92,6 +92,14 @@ _mountNode(Node node, html.HtmlElement mountRoot, [Node nextNode]) {
      * then just run recursion for children on the same element
      */
     _nodeToElement[node] = mountRoot;
+    allowedEvents.keys.forEach((eventType) {
+      try {
+        EventListener listener = node.component.props[eventType];
+        if (listener != null) {
+          _processEvent(eventType, listener, node);
+        }
+      } catch (e) {}
+    });
     node.children.forEach((Node child) {
       _mountNode(child, mountRoot, nextNode);
     });

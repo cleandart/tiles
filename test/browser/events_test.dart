@@ -114,6 +114,34 @@ main() {
 
       mountRoot.children.first.children.first.click();
     });
+    
+    test("should not propagate up when listener returns false", () {
+      mountComponent(span({
+          "onClick": expectAsync((DomComponent component, Event event) {
+          }, count: 0)
+        }, div({
+          "onClick": expectAsync((DomComponent component, Event event) {
+            return false;
+          }, count: 1)
+        })
+      ), mountRoot);
+
+      mountRoot.children.first.children.first.click();
+    });
+    
+    test("should listen to events on custom component also, if props has [onEvent] in props", () {
+      ComponentMock componentMock = new ComponentMock();
+      componentMock.when(callsTo("render")).alwaysReturn(div());
+      componentMock.when(callsTo("get props")).alwaysReturn({
+        "onClick": expectAsync((Component component, Event event) {
+        }, count: 1)
+      });
+      ComponentDescriptionFactory component = registerComponent(([props, children]) => componentMock);
+      mountComponent(component(), mountRoot);
+
+      mountRoot.children.first.click();
+
+    });
 
   });
 }

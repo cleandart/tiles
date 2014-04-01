@@ -68,7 +68,7 @@ final Map<String, String> allowedEvents = _createEventsMapFromList(["keyDown",
  * define a type, which shoul every event listener
  * in props of DomComponent match.
  */
-typedef void EventListener(Component component, html.Event event);
+typedef bool EventListener(Component component, html.Event event);
 
 /**
  * Process props key: value and if it is event listener,
@@ -110,13 +110,14 @@ _handleEventType(String what) {
 
     while (targetNode != null) {
 
-      if (targetNode.component is DomComponent) {
-        DomComponent component = targetNode.component;
-
-        if (component.props.containsKey(what)) {
-          EventListener listener = component.props[what];
-          listener(component, event);
-        }
+      EventListener listener;
+      
+      try {
+        listener = targetNode.component.props[what];
+      } catch (e) {}
+      
+      if (listener != null && listener(targetNode.component, event) == false) {
+        break;
       }
 
       targetNode = targetNode.parent;
