@@ -89,7 +89,7 @@ _applyCreatedChange(NodeChange change) {
  */
 _findFirstDomDescendantAfter(Node parent, Node node) {
   Node result;
-  for(int i = parent.children.length - 1; i >= 0; --i) {
+  for (int i = parent.children.length - 1; i >= 0; --i) {
     Node child = parent.children[i];
     if (child == node) {
       break;

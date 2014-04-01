@@ -2,20 +2,20 @@ part of tiles_browser;
 
 /**
  * Map used to listen event.target to Node instance.
- * 
- * When event is bubbled up to root node element, 
- * it is catched and then targetNode is identified by this map. 
+ *
+ * When event is bubbled up to root node element,
+ * it is catched and then targetNode is identified by this map.
  */
 final Map<html.Node, Node> _elementToNode = {};
 
 /**
- * needed to enable user of API to get element, 
+ * needed to enable user of API to get element,
  * which is component mapped to.
  */
 final Map<Component, html.Node> _componentToElement = {};
 
 /**
- * Returns html element, 
+ * Returns html element,
  * which was created by DomComponent passed as argument.
  */
 getElementForComponent(Component component) {
@@ -23,16 +23,16 @@ getElementForComponent(Component component) {
 }
 
 /**
- * Helper function which create map for events, 
+ * Helper function which create map for events,
  * which tell's for each tiles evnt which real event should be mapped to it.
- * 
+ *
  * As imput take's list like
  *     [
  *       "click",
  *       "mouseDown",
  *       /*..*/
  *     ]
- * 
+ *
  * It looks like
  *     {
  *       "onClick": "click",
@@ -53,7 +53,7 @@ Map<String, String> _createEventsMapFromList(List<String> events) {
 
 /**
  * Map of all supported events.
- * 
+ *
  * Created by _createEventsMapFromList
  */
 final Map<String, String> allowedEvents = _createEventsMapFromList(["keyDown",
@@ -65,13 +65,13 @@ final Map<String, String> allowedEvents = _createEventsMapFromList(["keyDown",
 ]);
 
 /**
- * define a type, which shoul every event listener 
+ * define a type, which shoul every event listener
  * in props of DomComponent match.
  */
 typedef void EventListener(Component component, html.Event event);
 
 /**
- * Process props key: value and if it is event listener, 
+ * Process props key: value and if it is event listener,
  * register listener on element of root node
  */
 _processEvent(String key, dynamic value, Node node) {
@@ -79,62 +79,62 @@ _processEvent(String key, dynamic value, Node node) {
     if (!(value is EventListener)) {
       throw "there can be only EventListener in $key attribute";
     }
-    
+
     /**
      * Find root node.
-     * 
-     * For now not very effective, 
-     * later it should be passed as argument. 
+     *
+     * For now not very effective,
+     * later it should be passed as argument.
      */
     var parent = node;
     while (parent.parent != null) {
       parent = parent.parent;
     }
-    
+
     html.Element masterRoot = _nodeToElement[parent];
-    
+
     _registerListener(masterRoot, key);
   }
 }
 
 /**
  * will create listener for html.Event, which handles event by
- *  
+ *
  * * detecting target node,
- * * bubbles up and process all event's listeners on the path 
+ * * bubbles up and process all event's listeners on the path
  * from target node to root node
  */
 _handleEventType(String what) {
   return (html.Event event) {
     Node targetNode = _elementToNode[event.target];
-    
+
     while (targetNode != null) {
-      
+
       if (targetNode.component is DomComponent) {
         DomComponent component = targetNode.component;
-        
+
         if (component.props.containsKey(what)) {
           EventListener listener = component.props[what];
           listener(component, event);
         }
       }
-      
+
       targetNode = targetNode.parent;
     }
   };
 }
 
 /**
- * register listening for specific event on element 
- * and "mark" this element that is listening for this event 
+ * register listening for specific event on element
+ * and "mark" this element that is listening for this event
  * to not register another listener
  */
 _registerListener(html.Element element, String event) {
-  Set registeredListeners = _registeredListeners[element]; 
+  Set registeredListeners = _registeredListeners[element];
   if (registeredListeners == null) {
     registeredListeners = _registeredListeners[element] = new Set();
   }
-  
+
   if (!registeredListeners.contains(event)) {
     element.on[allowedEvents[event]].listen(_handleEventType(event));
     registeredListeners.add(event);

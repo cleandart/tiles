@@ -9,6 +9,7 @@ for i in `find -name *.dart`; do
 
 	# https://www.dartlang.org/articles/style-guide/#do-use-a-space-after-flow-control-keywords
 	sed -i 's/if(/if (/g' $i;
+	sed -i 's/for(/for (/g' $i;
 	sed -i 's/else(/else (/g' $i;
 	sed -i 's/catch(/catch (/g' $i;
 	sed -i 's/try{/try {/g' $i;
@@ -21,6 +22,9 @@ for i in `find -name *.dart`; do
 	sed -i 's/\(\w\) *)/\1)/g' $i;
 	sed -i 's/\(\w\) *]/\1]/g' $i;
 	sed -i 's/\(\w\) *}/\1}/g' $i;
+
+	# remove trailing whitespace
+	sed -i 's/\s*$//g' $i;
 
 	# https://www.dartlang.org/articles/style-guide/#do-place-spaces-around-in-and-after-each--in-a-loop
 	sed -i 's/;\(\w\)/; \1/g' $i;

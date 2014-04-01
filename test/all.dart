@@ -19,7 +19,7 @@ main () {
   nodeChange.main();
   node.main();
   nodeUpdateChildren.main();
-  
+
   domComponent.main();
   domElements.main();
   domElementsSpecial.main();

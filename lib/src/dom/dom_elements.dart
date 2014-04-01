@@ -1,18 +1,18 @@
 part of tiles;
 
 /**
- * specialized registerComponent method, which by tagname and pair flag 
+ * specialized registerComponent method, which by tagname and pair flag
  * create according factory for html elements
- * 
+ *
  * @param String tagname tag name of final html element
  * @param bool   pair    parity of final html element
- * @return ComponentDescriptionFactory which contains ComponentFactory to create DomCommponent 
+ * @return ComponentDescriptionFactory which contains ComponentFactory to create DomCommponent
  */
 ComponentDescriptionFactory _registerDomComponent(String tagname, [bool pair, bool svg = false, ComponentFactory factory]) {
-  
+
   if (factory == null) {
-    /** 
-     * create default factory which create DomComponent 
+    /**
+     * create default factory which create DomComponent
      */
     factory = ([Map props, List<ComponentDescription> children]) => new DomComponent(props, children, tagname, pair, svg);;
   }
@@ -28,7 +28,7 @@ _processChildren(dynamic children) {
   if (!(children is List) && children != null) {
     children = [children];
   }
-  
+
   if (children != null) {
     List newChildren = [];
     children.forEach((child) {
@@ -148,17 +148,17 @@ ComponentDescriptionFactory a = _registerDomComponent("a"),
   u = _registerDomComponent("u"),
   ul = _registerDomComponent("ul"),
   /**
-   * we need to use varElement 
+   * we need to use varElement
    * because var is reserved keyword
    */
   varElement = _registerDomComponent("var"),
   video = _registerDomComponent("video"),
-  
+
   /** SVG ELEMENTS */
-  g = _registerSvgComponent("g"), 
-  svg = _registerSvgComponent("svg"), 
+  g = _registerSvgComponent("g"),
+  svg = _registerSvgComponent("svg"),
   text = _registerSvgComponent("text"),
-  
+
   /** NOT PAIR ELEMENTS */
   area = _registerDomComponent("area", false),
   base = _registerDomComponent("base", false),
@@ -172,19 +172,19 @@ ComponentDescriptionFactory a = _registerDomComponent("a"),
   link = _registerDomComponent("link", false),
   meta = _registerDomComponent("meta", false),
   param = _registerDomComponent("param", false),
-  /** 
+  /**
    * Command is not in react
    * param = registerDomComponent("param", false),
    */
   source = _registerDomComponent("source", false),
   track = _registerDomComponent("track", false),
   wbr = _registerDomComponent("wbr", false),
-  
+
   /** SVG NOT PAIR ELEMENTS */
-  circle = _registerSvgComponent("circle", false),  
-  line = _registerSvgComponent("line", false), 
-  path = _registerSvgComponent("path", false), 
-  polyline = _registerSvgComponent("polyline", false), 
+  circle = _registerSvgComponent("circle", false),
+  line = _registerSvgComponent("line", false),
+  path = _registerSvgComponent("path", false),
+  polyline = _registerSvgComponent("polyline", false),
   rect = _registerSvgComponent("rect", false);
-  
+
 
