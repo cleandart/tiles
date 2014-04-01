@@ -44,7 +44,8 @@ _update(num data) {
  */
 _updateTree(Node rootNode) {
   if (rootNode.isDirty || rootNode.hasDirtyDescendant) {
-    List<NodeChange> changes = rootNode.update();
+    List<NodeChange> changes = [];
+    rootNode.update(changes: changes);
     changes.reversed.forEach((NodeChange change) => _applyChange(change));
   }
 }

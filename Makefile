@@ -8,7 +8,7 @@ test: analyze
 	bash test/run.sh;
 
 testcore: 
-	bash test/run.sh -d
+	bash test/run.sh -c
 
 testbrowser: 
 	bash test/run.sh -b

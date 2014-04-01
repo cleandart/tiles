@@ -1,8 +1,6 @@
 part of tiles;
 
-_updateChildren (Node node) {
-  List<NodeChange> result = [];
-  
+_updateChildren (Node node, [List<NodeChange> changes]) {
   /**
    * get old children from node, next children descriptions from component and prepare next children map 
    */
@@ -13,12 +11,13 @@ _updateChildren (Node node) {
   List<ComponentDescription> descriptions = _getChildrenFromComponent(node.component);
   for(num i = 0; i < descriptions.length; ++i){
     dynamic key = descriptions[i].key;
-    if(key == null) key = i;
+    if(key == null) {
+      key = i;
+    }
     
     ComponentDescription description = descriptions[i];
     Node oldChild = oldChildren[key];
     Node nextChild;
-    bool justCreated = false;
     
     /**
      * if factory is same, just apply new props
@@ -26,9 +25,9 @@ _updateChildren (Node node) {
     if (oldChild != null && oldChild.factory == description.factory) {
       nextChild = oldChild;
       nextChild.apply(description.props, description.children);
-      result.add(new NodeChange(NodeChangeType.MOVED, nextChild));
+      _addChanges(new NodeChange(NodeChangeType.MOVED, nextChild), changes);
 
-      result.addAll(nextChild.update());
+      nextChild.update(changes: changes, force: true);
       oldChildren.remove(key);
     } else {
       /**
@@ -36,24 +35,20 @@ _updateChildren (Node node) {
        */
       nextChild = new Node.fromDescription(node, description);
       nextChild.update();
-      result.add(new NodeChange(NodeChangeType.CREATED, nextChild));
-      justCreated = true;
+      _addChanges(new NodeChange(NodeChangeType.CREATED, nextChild), changes);
 
       if (oldChild != null) {
-        result.add(new NodeChange(NodeChangeType.DELETED, oldChild));
+        _addChanges(new NodeChange(NodeChangeType.DELETED, oldChild), changes);
         oldChildren.remove(key);
       }
     }
     nextChildren.add(nextChild);
   }
-  for (dynamic key in oldChildren.keys) {
-    result.add(new NodeChange(NodeChangeType.DELETED, oldChildren[key]));
+  for (Node child in oldChildren.values) {
+    _addChanges(new NodeChange(NodeChangeType.DELETED, child), changes);
   }
   
   node.children = nextChildren;
-  
-  return result;
-
 }
 
 Map<dynamic, Node> _createChildrenMap (List<Node> nodes) {

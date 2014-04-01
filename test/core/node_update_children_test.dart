@@ -4,7 +4,6 @@ import 'package:unittest/unittest.dart';
 import 'package:unittest/mock.dart';
 import 'package:tiles/tiles.dart';
 import '../mocks.dart';
-import 'dart:async';
 
 
 main() {
@@ -37,6 +36,8 @@ main() {
       
       component.when(callsTo("render")).alwaysReturn([description]);
       
+      changes = [];
+      
     });
     
     eraseComponent() {
@@ -53,13 +54,14 @@ main() {
     
     void createNode() {
       node = new Node(null, component, factory);
-      changes = node.update();
+      node.update(changes: changes);
       
     }
     
     void updateNode() {
       node.isDirty = true;
-      changes = node.update();
+      changes = [];
+      node.update(changes: changes);
     }
     
     group("(simple update)", () {
@@ -95,7 +97,8 @@ main() {
       test("update - if no apply called, update will do no change", () {
         createNode();
         
-        changes = node.update();
+        changes = [];
+        node.update(changes: changes);
         expect(changes, isEmpty);
         
       });
@@ -107,7 +110,8 @@ main() {
         
         expect(node.hasDirtyDescendant, isTrue);
         
-        changes = node.update();
+        changes = [];
+        node.update(changes: changes);
   
         expect(node.hasDirtyDescendant, isFalse);
         
@@ -126,9 +130,7 @@ main() {
         
         Node oldNode = node.children.first;
         
-        node.apply();
-        
-        changes = node.update();
+        updateNode();
         expect(changes.isEmpty, isFalse);
         expect(changes.length, equals(3)); // both, node and it's child is updated
         
@@ -161,9 +163,7 @@ main() {
          */
         Node oldChild = node.children.first;
         
-        node.apply();
-  
-        node.update();
+        updateNode();
         /**
          * because in RenderingAlwaysNewFactoryComponent is always created new, 
          * unique factory, node.update always replace child.
