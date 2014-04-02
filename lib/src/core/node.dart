@@ -2,27 +2,31 @@ part of tiles;
 
 class Node {
   final Component component;
-  
-  List<NodeChild> children;
-  
+
+  List<Node> children;
+
   final Node parent;
-  
+
+  final dynamic key;
+
+  final ComponentFactory factory;
+
   bool _isDirty = false;
-  
+
   bool _hasDirtyDescendant = false;
-  
+
   dynamic _oldProps;
-  
+
   bool get isDirty => _isDirty;
-  
+
   bool get hasDirtyDescendant => _hasDirtyDescendant;
-  
+
   void componentNeedUpdate(bool now) {
     this.isDirty = true;
   }
-  
+
   /**
-   * mark this instance as dirty and if status was changed, 
+   * mark this instance as dirty and if status was changed,
    * than flag whole route to root of node tree as "has dirty descendant".
    */
   void set isDirty(bool value) {
@@ -35,9 +39,9 @@ class Node {
       }
     }
   }
-  
+
   /**
-   * set only if it is true and set it true too to whole parent path 
+   * set only if it is true and set it true too to whole parent path
    */
   void set hasDirtyDescendant(bool value) {
     if (value) {
@@ -51,91 +55,57 @@ class Node {
 
   /**
    * Create node with component from it's description
-   * 
-   *   Node node = new Node(parent, description); 
+   *
+   *   Node node = new Node(parent, description);
    */
-  Node(this.parent, Component this.component) {
+  Node(this.parent, Component this.component, this.factory, [this.key]) {
     this.isDirty = true;
     this.children = [];
     if (component.needUpdate != null) {
       component.needUpdate.listen(componentNeedUpdate);
     }
   }
-  
-//  Node(...)
+
+  factory Node.fromDescription(Node parent, ComponentDescription description){
+    return new Node(parent, description.createComponent(), description.factory, description.key);
+  }
+
 
   /**
    * Recognize if update this instance or children by _isDirty and _hasDirtyDescendants
    */
-  List<NodeChange> update([bool addOwnUpdate = true]) {
-    /**
-     * if nothing in this subtree is changed, return empty list
-     */
-    if (!_isDirty && !_hasDirtyDescendant) {
-      return [];
+  update({List<NodeChange> changes, bool force: false}) {
+    logger.finer('is dirty or force');
+    if (_isDirty || force) {
+      /**
+       * create result as list with this as updated.
+       */
+      _addChanges(new NodeChange(NodeChangeType.UPDATED, this, _oldProps, this.component.props), changes);
+
+      /**
+       * update children and add node changes to result
+       */
+      _updateChildren(this, changes);
+
+      this._isDirty = this._hasDirtyDescendant = false;
+
+    } else if(_hasDirtyDescendant) {
+      logger.finer('dirty desc');
+      /**
+       * if has dirty descendant, call update recursively and set self as don't have dirty descendant.
+       */
+      children.forEach((child) => child.update(changes: changes));
+
+      this._hasDirtyDescendant = false;
+
+    } else {
+      logger.finer('not dirty');
     }
-    
-    /**
-     * else create list and 
-     */
-    List<NodeChange> result = [];
-
-    /**
-     * if node is dirty, add everything returned by _updateThis, 
-     */
-    if (_isDirty) {
-      result.addAll(_updateThis(addOwnUpdate));
-    }
-
-    /**
-     * and in every case, add everything from children.
-     */
-    children.forEach((child) => result.addAll(child.node.update()));
-
-    /**
-     * tag this node as clean without dirty descendants
-     */
-    this._isDirty = this._hasDirtyDescendant = false;
-    
-    /**
-     * return counted list of changes in tree.
-     */
-    return result;
   }
-  
-  /**
-   * Get component descriptions from this._component render method, 
-   * compare them with children, and 
-   * update children to corespond with component descriptions.
-   * 
-   * For now, don't recognize keys. TODO
-   * 
-   * Returns changes on children 
-   */
-  List<NodeChange> _updateThis([bool addOwnUpdate = true]) {
-    List<NodeChange> result = []; 
-    /**
-     * create result as list with this as updated.
-     */
-    if (addOwnUpdate) {
-      result = [new NodeChange(NodeChangeType.UPDATED, this, _oldProps, this.component.props)];
-    }
-    
-    /**
-     * update children and add node changes to result
-     */
-    result.addAll(_updateChildren(this));
 
-    
-    /**
-     * return counted change-list
-     */
-    return result;
-  }
-  
   /**
    * apply props to inner component.
-   * 
+   *
    * if no props, apply null
    */
   void apply([dynamic props, List<ComponentDescription> children]) {
@@ -143,15 +113,15 @@ class Node {
     this._oldProps = this.component.props;
     this.component.props = props;
     this.component.children = children;
-    this.isDirty = true;
   }
-  
+
 }
 
-class NodeChild {
-  final Node node; 
-  final ComponentFactory factory;
-  final dynamic key;
-  
-  NodeChild(this.node, this.factory, [this.key]);
+/**
+ * helper function, to enable not everywhere to add the same if
+ */
+_addChanges(NodeChange change, List<NodeChange> changes) {
+  if(changes != null) {
+    changes.add(change);
+  }
 }

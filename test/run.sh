@@ -177,11 +177,11 @@ then
 	test_browser;
 	test_selenium;
 else
-	opts=`getopt dbs "$@" 2> /dev/null`
+	opts=`getopt cbs "$@" 2> /dev/null`
 	if [ $? -ne 0 ] 
 	then
 		echo >&2 \
-		"$(red)usage: $0 [-d] [-b] [-s]$(white)"
+		"$(red)usage: $0 [-c] [-b] [-s]$(white)"
 		exit 1;
 	fi
 
@@ -193,13 +193,13 @@ else
 	while [ $# -gt 0 ]
 	do
 	case "$1" in
-		-d)	test_core; break;;
+		-c)	test_core; break;;
 		-b)	test_browser; break;;
 		-s)	test_selenium; break;;
 		--)	shift; break;;
 		-*)
 			echo >&2 \
-			"usage: $0 [-d] [-b] [-s]"
+			"usage: $0 [-c] [-b] [-s]"
 			exit 1;;
 		*)	break;;		# terminate while loop
 	esac
