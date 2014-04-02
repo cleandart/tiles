@@ -1,28 +1,37 @@
 part of tiles;
 
+class DummyList{
+  const DummyList();
+  add(var elem){}
+}
+
+// TODO: make changes parameter named
+// TODO: is there any reason, why _updateChildren is not a method of Node class?
 _updateChildren (Node node, [List<NodeChange> changes]) {
   /**
-   * get old children from node, next children descriptions from component and prepare next children map 
+   * get old children from node, next children descriptions from component and prepare next children map
    */
   Map<dynamic, Node> oldChildren = _createChildrenMap(node.children);
   List<Node> nextChildren = [];
-  
-  
   List<ComponentDescription> descriptions = _getChildrenFromComponent(node.component);
+
+  logger.finer('component: ${node.component.props}');
+
   for(num i = 0; i < descriptions.length; ++i){
     dynamic key = descriptions[i].key;
     if(key == null) {
       key = i;
     }
-    
+
     ComponentDescription description = descriptions[i];
     Node oldChild = oldChildren[key];
     Node nextChild;
-    
+
     /**
      * if factory is same, just apply new props
      */
     if (oldChild != null && oldChild.factory == description.factory) {
+      logger.finer('same factory, updating props');
       nextChild = oldChild;
       nextChild.apply(description.props, description.children);
       _addChanges(new NodeChange(NodeChangeType.MOVED, nextChild), changes);
@@ -30,6 +39,7 @@ _updateChildren (Node node, [List<NodeChange> changes]) {
       nextChild.update(changes: changes, force: true);
       oldChildren.remove(key);
     } else {
+      logger.finer('different factory, create & delete');
       /**
        * else create new node and if necessery, remove old one
        */
@@ -47,7 +57,6 @@ _updateChildren (Node node, [List<NodeChange> changes]) {
   for (Node child in oldChildren.values) {
     _addChanges(new NodeChange(NodeChangeType.DELETED, child), changes);
   }
-  
   node.children = nextChildren;
 }
 
@@ -79,9 +88,9 @@ List<ComponentDescription> _getChildrenFromComponent(Component component) {
      */
     return rawChildren;
   } else if (rawChildren == null) {
-    /** 
+    /**
      * if component don't render anything and return null instead of empty list,
-     * replace null with empty list. 
+     * replace null with empty list.
      */
     return [];
   } else {
