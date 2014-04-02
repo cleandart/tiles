@@ -31,20 +31,22 @@ class InputComponent extends Component {
     ]);
   }
 
-  void inputKeyUp(Component component, Event event) {
+  bool inputKeyUp(Component component, Event event) {
     InputElement inputElement = getElementForComponent(component);
 
     this.text = inputElement.value;
     this.redraw();
+    return true;
   }
 
   void inputRef(Component component) {
     this.myInput = component;
   }
 
-  void labelClick(Component component, Event event) {
+  bool labelClick(Component component, Event event) {
     this.text = "";
     this.redraw();
+    return true;
   }
 
   Component myInput;
