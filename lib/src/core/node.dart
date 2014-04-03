@@ -17,6 +17,8 @@ class Node {
 
   dynamic _oldProps;
 
+  bool _wasNeverUpdated = true;
+
   bool get isDirty => _isDirty;
 
   bool get hasDirtyDescendant => _hasDirtyDescendant;
@@ -76,7 +78,8 @@ class Node {
    */
   update({List<NodeChange> changes, bool force: false}) {
     logger.finer('is dirty or force');
-    if (_isDirty || force) {
+    if (_wasNeverUpdated || ((_isDirty || force)
+        &&  component.shouldUpdate(component.props, _oldProps))) {
 
       /**
        * create result as list with this as updated.
@@ -88,7 +91,7 @@ class Node {
        */
       _updateChildren(this, changes);
 
-      this._isDirty = this._hasDirtyDescendant = false;
+      this._wasNeverUpdated = this._isDirty = this._hasDirtyDescendant = false;
 
     } else if (_hasDirtyDescendant) {
       logger.finer('dirty desc');

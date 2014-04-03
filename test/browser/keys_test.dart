@@ -43,6 +43,7 @@ main() {
        */
       component.when(callsTo("redraw"))
         .alwaysCall(([bool what]) => controller.add(what));
+      component.when(callsTo("shouldUpdate")).alwaysReturn(true);
     });
 
     group("(simple move)", () {
@@ -212,6 +213,9 @@ main() {
           .alwaysReturn(customComponent2);
         customDescription1.when(callsTo("get key")).alwaysReturn("key1");
         customDescription2.when(callsTo("get key")).alwaysReturn("key2");
+        customComponent1.when(callsTo("shouldUpdate")).alwaysReturn(true);
+        customComponent2.when(callsTo("shouldUpdate")).alwaysReturn(true);
+
       });
 
       test("should move child nodes of moved custom node", () {

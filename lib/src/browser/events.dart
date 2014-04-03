@@ -111,11 +111,11 @@ _handleEventType(String what) {
     while (targetNode != null) {
 
       EventListener listener;
-      
+
       try {
         listener = targetNode.component.props[what];
       } catch (e) {}
-      
+
       if (listener != null && listener(targetNode.component, event) == false) {
         break;
       }

@@ -114,7 +114,7 @@ main() {
 
       mountRoot.children.first.children.first.click();
     });
-    
+
     test("should not propagate up when listener returns false", () {
       mountComponent(span({
           "onClick": expectAsync((DomComponent component, Event event) {
@@ -128,7 +128,7 @@ main() {
 
       mountRoot.children.first.children.first.click();
     });
-    
+
     test("should listen to events on custom component also, if props has [onEvent] in props", () {
       ComponentMock componentMock = new ComponentMock();
       componentMock.when(callsTo("render")).alwaysReturn(div());

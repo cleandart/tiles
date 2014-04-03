@@ -8,13 +8,14 @@ import '../mocks.dart';
 
 main() {
 
-//  var component = new ComponentMock()
-//    ..when(callsTo('render')).alwaysReturn([]);
-//
-//  component.getLogs(callsTo('componentWillReceiveProps')).verify(happenedOnce);
   group("(Node)", () {
     ComponentDescriptionMock description;
     ComponentDescriptionMock description2;
+
+    ComponentMock componentForDescription = new ComponentMock();
+    componentForDescription.when(callsTo("shouldUpdate")).alwaysReturn(true);
+
+
     ComponentMock component;
     Node node;
     List<NodeChange> changes;
@@ -23,8 +24,8 @@ main() {
     ComponentDescriptionMock createDefaultDescription() {
       ComponentDescriptionMock description = new ComponentDescriptionMock();
 
-      description.when(callsTo("createComponent")).alwaysReturn(new ComponentMock());
-      description.when(callsTo("get factory")).alwaysReturn(([dynamic props, children]) => new ComponentMock());
+      description.when(callsTo("createComponent")).alwaysReturn(componentForDescription);
+      description.when(callsTo("get factory")).alwaysReturn(([dynamic props, children]) => componentForDescription);
 
       return description;
     }
@@ -35,6 +36,7 @@ main() {
       component = new ComponentMock();
 
       component.when(callsTo("render")).alwaysReturn([description]);
+      component.when(callsTo("shouldUpdate")).alwaysReturn(true);
 
       changes = [];
 
@@ -42,14 +44,17 @@ main() {
 
     eraseComponent() {
       component = new ComponentMock();
+      component.when(callsTo("shouldUpdate")).alwaysReturn(true);
+
     }
 
     eraseDescription() {
       description = new ComponentDescriptionMock();
-      description.when(callsTo("createComponent")).alwaysReturn(new ComponentMock());
+      description.when(callsTo("createComponent")).alwaysReturn(componentForDescription);
 
       component = new ComponentMock();
       component.when(callsTo("render")).alwaysReturn([description]);
+      component.when(callsTo("shouldUpdate")).alwaysReturn(true);
     }
 
     void createNode() {
@@ -143,9 +148,9 @@ main() {
         /**
          * return every time new factory
          */
-        ComponentFactory factory1 = ([dynamic props, children]) => new ComponentMock();
-        ComponentFactory factory2 = ([dynamic props, children]) => new ComponentMock();
-        ComponentFactory factory3 = ([dynamic props, children]) => new ComponentMock();
+        ComponentFactory factory1 = ([dynamic props, children]) => componentForDescription;
+        ComponentFactory factory2 = ([dynamic props, children]) => componentForDescription;
+        ComponentFactory factory3 = ([dynamic props, children]) => componentForDescription;
         description.when(callsTo("get factory"))
           .thenReturn(factory1)
           .thenReturn(factory2)

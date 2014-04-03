@@ -49,6 +49,7 @@ main() {
        */
       component.when(callsTo("redraw"))
         .alwaysCall(([bool what]) => controller.add(what));
+      component.when(callsTo("shouldUpdate")).alwaysReturn(true);
 
       /**
        * uncomment to see what theese test do in browser
@@ -340,6 +341,8 @@ main() {
     test("should remove all children of removed not dom component", () {
       ComponentMock componentWithSpan = new ComponentMock();
       componentWithSpan.when(callsTo("render")).alwaysReturn([span()]);
+      
+      componentWithSpan.when(callsTo("shouldUpdate")).alwaysReturn(true);
 
       ComponentDescriptionMock descriptionWithSpan = new ComponentDescriptionMock();
       descriptionWithSpan.when(callsTo("createComponent")).alwaysReturn(componentWithSpan);
@@ -375,16 +378,20 @@ main() {
         .alwaysReturn(controller.stream);
       cmp1.when(callsTo("redraw"))
         .alwaysCall(([bool what]) => controller.add(what));
+      cmp1.when(callsTo("shouldUpdate")).alwaysReturn(true);
+
 
       ComponentDescriptionMock desc1 = new ComponentDescriptionMock();
       desc1.when(callsTo("createComponent")).alwaysReturn(cmp1);
 
 
       ComponentMock cmp2 = new ComponentMock();
+      cmp2.when(callsTo("shouldUpdate")).alwaysReturn(true);
       ComponentDescriptionMock desc2 = new ComponentDescriptionMock();
       desc2.when(callsTo("createComponent")).alwaysReturn(cmp2);
 
       ComponentMock cmp3 = new ComponentMock();
+      cmp3.when(callsTo("shouldUpdate")).alwaysReturn(true);
       ComponentDescriptionMock desc3 = new ComponentDescriptionMock();
       desc3.when(callsTo("createComponent")).alwaysReturn(cmp3);
 
