@@ -33,6 +33,11 @@ mountComponent(ComponentDescription description, html.HtmlElement mountRoot) {
   mountRoot.children.clear();
 
   _mountNode(node, mountRoot);
+
+  /**
+   * mount root node to mount root to be able easy unmount node.
+   */
+  _elementToNode[mountRoot] = node;
 }
 
 /**
@@ -104,6 +109,10 @@ _mountNode(Node node, html.HtmlElement mountRoot, [Node nextNode]) {
       _mountNode(child, mountRoot, nextNode);
     });
   }
+  /**
+   * call didMount life-cycle on component
+   */
+  node.component.didMount();
 
   /**
    * if component have map-like props and have _Ref in "ref" key,

@@ -78,7 +78,7 @@ class Node {
    */
   update({List<NodeChange> changes, bool force: false}) {
     logger.finer('is dirty or force');
-    if (_wasNeverUpdated || ((_isDirty || force) 
+    if (_wasNeverUpdated || ((_isDirty || force)
         &&  (component.shouldUpdate(component.props, _oldProps)) != false)) {
 
       /**

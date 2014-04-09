@@ -341,7 +341,7 @@ main() {
     test("should remove all children of removed not dom component", () {
       ComponentMock componentWithSpan = new ComponentMock();
       componentWithSpan.when(callsTo("render")).alwaysReturn([span()]);
-      
+
       componentWithSpan.when(callsTo("shouldUpdate")).alwaysReturn(true);
 
       ComponentDescriptionMock descriptionWithSpan = new ComponentDescriptionMock();

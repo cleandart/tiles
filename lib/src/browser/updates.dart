@@ -171,12 +171,17 @@ _applyUpdatedChange(NodeChange change) {
     html.Text text = _nodeToElement[change.node];
     text.text = change.node.component.props;
   }
+  /**
+   * call life-cycle method didUpdate
+   */
+  change.node.component.didUpdate();
 }
 
 /**
  * Applies delete change by removing node from DOM.
  */
 _applyDeletedChange(NodeChange change) {
+
   _removeNodeFromDom(change.node);
 }
 
@@ -222,9 +227,19 @@ _moveNode(Node node) {
 _removeNodeFromDom(Node node) {
   if (node.component is DomComponent) {
     html.Element element = _nodeToElement[node];
-    element.remove();
+
+    /**
+     * remove all relations and notify component about unmount
+     */
+    node.component.willUnmount();
+
     _deleteRelations(node, element);
+    element.remove();
   } else {
+    /**
+     * remove all relations and notify component about unmount
+     */
+    node.component.willUnmount();
     for (Node child in node.children) {
       _removeNodeFromDom(child);
     }
