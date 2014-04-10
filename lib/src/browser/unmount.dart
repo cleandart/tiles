@@ -1,6 +1,7 @@
 part of tiles_browser;
 
 unmountComponent(html.Element mountRoot) {
+  logger.fine("unmountComponent called");
   Node node = _elementToNode[mountRoot];
   if (node == null && mountRoot.children.length == 1) {
     node = _elementToNode[mountRoot.firstChild];
@@ -16,6 +17,7 @@ unmountComponent(html.Element mountRoot) {
 }
 
 _unmountNode(Node node) {
+  logger.fine("_unmountNode called");
   /**
    * notify component, that will be unmounted
    */

@@ -26,6 +26,8 @@ typedef void _Ref(Component component);
  * in the component description into element
  */
 mountComponent(ComponentDescription description, html.HtmlElement mountRoot) {
+  logger.fine("mountComponent called");
+
   Node node = new Node.fromDescription(null, description);
 
   _rootNodes.add(node);
@@ -48,10 +50,12 @@ mountComponent(ComponentDescription description, html.HtmlElement mountRoot) {
  * That means, it render it's tree structure into element.
  */
 _mountNode(Node node, html.HtmlElement mountRoot, [Node nextNode]) {
+  logger.fine("_mountNode called");
   /**
    * update to build full node tree structure
    */
   if (node.component is DomTextComponent) {
+    logger.finer("mounting DomTextComponent");
     /**
      * if node contains text, write text and end recursion
      */
@@ -64,6 +68,7 @@ _mountNode(Node node, html.HtmlElement mountRoot, [Node nextNode]) {
     }
 
   } else if (node.component is DomComponent) {
+    logger.finer("mounting DomComponent");
     /**
      * if component is dom component,
      * * create new element for it,
@@ -85,6 +90,7 @@ _mountNode(Node node, html.HtmlElement mountRoot, [Node nextNode]) {
       mountRoot.children.add(componentElement);
     }
   } else {
+    logger.finer("mounting custom component");
     /**
      * if component is custom component,
      * then just run recursion for children on the same element
@@ -115,6 +121,7 @@ _mountNode(Node node, html.HtmlElement mountRoot, [Node nextNode]) {
     if (node.component.props != null
         && node.component.props[_REF] != null
         && node.component.props[_REF] is _Ref) {
+      logger.finest("calling reference");
       node.component.props[_REF](node.component);
     }
   } catch (e) {}
@@ -137,6 +144,7 @@ _canAddAttribute(bool svg, String key) {
  * If oldProps setted, use them to compare new and remove old.
  */
 _applyAttributes(html.Element element, Map props, {bool svg: false, Node node, Map oldProps}) {
+  logger.fine("_applyAttributes called");
   if (oldProps == null) {
     oldProps = {};
   } else {
@@ -172,6 +180,7 @@ _applyAttributes(html.Element element, Map props, {bool svg: false, Node node, M
 }
 
 _applyAttribute(html.Element element, String key, dynamic value) {
+  logger.finer("_applyAttribute called");
   if (element is html.InputElement || element is html.TextAreaElement) {
     /**
      * retype it to not throwing warving
@@ -193,6 +202,7 @@ _applyAttribute(html.Element element, String key, dynamic value) {
  * create relations for propper functionality of tiles_browser
  */
 void _saveRelations(Node node, html.Node element) {
+  logger.fine("_saveRelations called");
   _nodeToElement[node] = element;
   _componentToElement[node.component] = element;
   _elementToNode[element] = node;
@@ -202,6 +212,7 @@ void _saveRelations(Node node, html.Node element) {
  * Remove relations between node and element.
  */
 void _deleteRelations(Node node, html.Node element) {
+  logger.fine("_deleteRelations called");
   _nodeToElement.remove(node);
   _componentToElement.remove(node.component);
   _elementToNode.remove(element);

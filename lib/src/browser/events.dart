@@ -75,6 +75,7 @@ typedef bool EventListener(Component component, html.Event event);
  * register listener on element of root node
  */
 _processEvent(String key, dynamic value, Node node) {
+  logger.fine("_processEvent called on key $key");
   if (allowedEvents.containsKey(key)) {
     if (!(value is EventListener)) {
       throw "there can be only EventListener in $key attribute";
@@ -105,7 +106,9 @@ _processEvent(String key, dynamic value, Node node) {
  * from target node to root node
  */
 _handleEventType(String what) {
+  logger.fine("_handleEventType called with listener $what");
   return (html.Event event) {
+    logger.finer("Event $what catched and starting synthetic bubbling");
     Node targetNode = _elementToNode[event.target];
 
     while (targetNode != null) {
@@ -131,6 +134,7 @@ _handleEventType(String what) {
  * to not register another listener
  */
 _registerListener(html.Element element, String event) {
+  logger.fine("_registerListener called with listener $event");
   Set registeredListeners = _registeredListeners[element];
   if (registeredListeners == null) {
     registeredListeners = _registeredListeners[element] = new Set();

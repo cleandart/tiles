@@ -15,10 +15,14 @@ bool _browserConfigurationInitialized = false;
  * which controlls root nodes if don't have dirty descendats.
  */
 initTilesBrowserConfiguration() {
+  logger.fine("initTilesBrowserConfiguration called");
+
   if (!_browserConfigurationInitialized) {
     html.window.animationFrame.then(_update);
     _browserConfigurationInitialized = true;
   } else {
+    logger.finer("initialized second not first time");
+
     throw "Browser configuration should not be initialized twice";
   }
 
@@ -31,6 +35,7 @@ initTilesBrowserConfiguration() {
  * At the end, request new animation frame
  */
 _update(num data) {
+  logger.finer("_update called");
   _rootNodes.forEach((Node node) {
     _updateTree(node);
   });
@@ -43,7 +48,9 @@ _update(num data) {
  * Performs update on root node and apply this changes to dom.
  */
 _updateTree(Node rootNode) {
+  logger.finer("_updateTree called");
   if (rootNode.isDirty || rootNode.hasDirtyDescendant) {
+    logger.finer("updating dirty tree");
     List<NodeChange> changes = [];
     rootNode.update(changes: changes);
     changes.reversed.forEach((NodeChange change) => _applyChange(change));
@@ -56,6 +63,7 @@ _updateTree(Node rootNode) {
  * Distinguish type of change and call adequate method
  */
 _applyChange(NodeChange change) {
+  logger.finer("_applyChange called with type $change.type");
   switch (change.type) {
     case NodeChangeType.CREATED:
       _applyCreatedChange(change);
@@ -77,6 +85,7 @@ _applyChange(NodeChange change) {
  * and place node from change to correct place in DOM
  */
 _applyCreatedChange(NodeChange change) {
+  logger.finer("_applyCreatedChange called");
   Node node = change.node;
   html.Element mountRoot = _nodeToElement[node.parent];
   Node nextNode = _findFirstDomDescendantAfter(node.parent, node);
@@ -88,6 +97,7 @@ _applyCreatedChange(NodeChange change) {
  * which is dom component allready rendered in DOM
  */
 _findFirstDomDescendantAfter(Node parent, Node node) {
+  logger.finest("_findFirstDomDescendantAfter called");
   Node result;
   for (int i = parent.children.length - 1; i >= 0; --i) {
     Node child = parent.children[i];
@@ -121,6 +131,7 @@ _findFirstDomDescendantAfter(Node parent, Node node) {
  * associated to node of this component.
  */
 _applyUpdatedChange(NodeChange change) {
+  logger.finer("_applyUpdatedChange called");
   if (change.node.component is DomComponent) {
     html.Element element = _nodeToElement[change.node];
     Map oldProps = change.oldProps;
@@ -148,6 +159,7 @@ _applyUpdatedChange(NodeChange change) {
  * Applies delete change by removing node from DOM.
  */
 _applyDeletedChange(NodeChange change) {
+  logger.finer("_applyDeletedChange called");
 
   _removeNodeFromDom(change.node);
 }
@@ -156,6 +168,7 @@ _applyDeletedChange(NodeChange change) {
  * Applies move changed by moving node on the correct position.
  */
 _applyMovedChange(NodeChange change) {
+  logger.finer("_applyMoveChange called");
   Node node = change.node;
   _moveNode(node);
 }
@@ -170,6 +183,7 @@ _applyMovedChange(NodeChange change) {
  * apply this method to it's children in reversed order.
  */
 _moveNode(Node node) {
+  logger.finer("_moveNode called");
   if (node.component is DomComponent) {
     html.Element mountRoot = _nodeToElement[node.parent];
     Node nextNode = _findFirstDomDescendantAfter(node.parent, node);
@@ -192,6 +206,7 @@ _moveNode(Node node) {
  * because all children of element will be deleted too.
  */
 _removeNodeFromDom(Node node) {
+  logger.finer("_removeNodeFromDom called");
   if (node.component is DomComponent) {
     html.Element element = _nodeToElement[node];
 

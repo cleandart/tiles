@@ -33,6 +33,7 @@ class Node {
    */
   void set isDirty(bool value) {
     if (value) {
+      logger.fine("Node set dirty to true");
       bool changed = !_isDirty;
       this._isDirty = true;
       if (parent != null && changed && !_hasDirtyDescendant) {
@@ -47,6 +48,7 @@ class Node {
    */
   void set hasDirtyDescendant(bool value) {
     if (value) {
+      logger.fine("Node set has dirty descendant to true");
       bool changed = !_hasDirtyDescendant;
       _hasDirtyDescendant = true;
       if (parent != null && changed) {
@@ -77,9 +79,10 @@ class Node {
    * Recognize if update this instance or children by _isDirty and _hasDirtyDescendants
    */
   update({List<NodeChange> changes, bool force: false}) {
-    logger.finer('is dirty or force');
+    logger.fine("Node.update");
     if (_wasNeverUpdated || ((_isDirty || force)
         &&  (component.shouldUpdate(component.props, _oldProps)) != false)) {
+      logger.finer('need update: dirty = $isDirty, force = $force, _wasNeverUpdated = $_wasNeverUpdated');
 
       /**
        * create result as list with this as updated.
@@ -94,7 +97,7 @@ class Node {
       this._wasNeverUpdated = this._isDirty = this._hasDirtyDescendant = false;
 
     } else if (_hasDirtyDescendant) {
-      logger.finer('dirty desc');
+      logger.finer('has dirty desc');
       /**
        * if has dirty descendant, call update recursively and set self as don't have dirty descendant.
        */
@@ -103,7 +106,7 @@ class Node {
       this._hasDirtyDescendant = false;
 
     } else {
-      logger.finer('not dirty');
+      logger.finer('going to update nothing');
     }
   }
 
@@ -113,6 +116,7 @@ class Node {
    * if no props, apply null
    */
   void apply([dynamic props, List<ComponentDescription> children]) {
+    logger.fine("Node.apply");
     this.component.willReceiveProps(props);
     this._oldProps = this.component.props;
     this.component.props = props;

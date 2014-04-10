@@ -85,7 +85,7 @@ void main() {
   for (int i=0; i<100; i++) {
     node.update(force: true);
   }
-  logger.level = Level.FINE;
+  logger.level = Level.INFO;
   timeprint("after creating node");
   node.update(force: true);
   timeprint("virtual dom building ends");

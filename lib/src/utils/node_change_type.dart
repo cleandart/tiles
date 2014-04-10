@@ -23,13 +23,5 @@ class NodeChangeType {
       MOVED: "MOVED",
       DELETED: "DELETED"
     }[this];
-//    if (this == CREATED)
-//      return "CREATED";
-//    if (this == UPDATED)
-//      return "UPDATED";
-//    if (this == MOVED)
-//      return "MOVED";
-//    if (this == DELETED)
-//      return "DELETED";
   }
 }
