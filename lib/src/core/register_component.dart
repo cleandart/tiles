@@ -14,7 +14,7 @@ part of tiles;/**
  */
 ComponentDescriptionFactory registerComponent(ComponentFactory factory) {
   logger.finest("component registered");
-  return ([dynamic props, dynamic children, dynamic key]) {
+  return ({dynamic props, dynamic children, dynamic key}) {
     logger.finest("Component description factory called");
     /**
      * parse children, as they can be in different forms

@@ -17,7 +17,7 @@ main() {
       String value = "value";
 
       setUp(() {
-        textareaComponent = textarea({"value": value, "type": "attrValue"}).createComponent();
+        textareaComponent = textarea(props: {"value": value, "type": "attrValue"}).createComponent();
       });
 
       test("should be DomComponent", () {

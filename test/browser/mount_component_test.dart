@@ -62,21 +62,21 @@ main() {
 
 
     test("should create div element if mount div()", () {
-      mountComponent(div({"class": "divclass"}), mountRoot);
+      mountComponent(div(props: {"class": "divclass"}), mountRoot);
 
       expect(mountRoot.children.length, equals(1));
       expect(mountRoot.children.first.attributes["class"], contains("divclass"));
     });
 
     test("should create 2 level children if passed 2 level of dom components", () {
-      mountComponent(div(null, div()), mountRoot);
+      mountComponent(div(children: div()), mountRoot);
 
       expect(mountRoot.children.length, equals(1));
       expect(mountRoot.children.first.children.length, equals(1));
     });
 
     test("should create 3 level children if passed 2 level of dom components", () {
-      mountComponent(div(null, div(null, div())), mountRoot);
+      mountComponent(div(children: div(children: div())), mountRoot);
 
       expect(mountRoot.children.length, equals(1));
       expect(mountRoot.children.first.children.length, equals(1));
@@ -84,14 +84,14 @@ main() {
     });
 
     test("should create second level with 2 elements if passed such cescriptions", () {
-      mountComponent(div(null, [div(), div()]), mountRoot);
+      mountComponent(div(children: [div(), div()]), mountRoot);
 
       expect(mountRoot.children.length, equals(1));
       expect(mountRoot.children.first.children.length, equals(2));
     });
 
     test("sould create div with text, if is that passed to it", () {
-      mountComponent(div(null, "text"), mountRoot);
+      mountComponent(div(children: "text"), mountRoot);
 
       expect(mountRoot.children.length, equals(1));
       expect(mountRoot.children.first.childNodes.length, equals(1));
@@ -99,7 +99,7 @@ main() {
     });
 
     test("should create image if image passed", () {
-      mountComponent(img({
+      mountComponent(img(props: {
         "src": imageSource,
         "style": "height: 500px;",
           }), mountRoot);
@@ -120,7 +120,7 @@ main() {
     });
 
     test("should write all children of children into element, if first level children was not dom components", () {
-      mountComponent(div(null, [descriptionWithSpan, descriptionWithImage]), mountRoot);
+      mountComponent(div(children: [descriptionWithSpan, descriptionWithImage]), mountRoot);
 
       expect(mountRoot.children.length, equals(1));
       Element el = mountRoot.children.first;
@@ -172,7 +172,7 @@ main() {
     test("should add only allowed attributes", () {
       var props = {"d": "d", "crap": "crap", "id": "id"};
 
-      mountComponent(span(props), mountRoot);
+      mountComponent(span(props: props), mountRoot);
 
       expect(mountRoot.children.first is SpanElement, isTrue);
       expect(mountRoot.children.first.attributes.containsKey("id"), isTrue);
@@ -184,7 +184,7 @@ main() {
     test("should add only allowed svg attributes for svg element", () {
       var props = {"d": "d", "crap": "crap", "id": "id"};
 
-      mountComponent(svg(props), mountRoot);
+      mountComponent(svg(props: props), mountRoot);
 
       expect(mountRoot.children.first.attributes.containsKey("d"), isTrue);
       expect(mountRoot.children.first.attributes["d"], equals("d"));

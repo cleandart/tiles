@@ -26,7 +26,7 @@ main() {
     });
 
     test("should accept map as props and save it to props", () {
-      DomComponent elementComponent = element({"attr": "value"}).createComponent();
+      DomComponent elementComponent = element(props: {"attr": "value"}).createComponent();
 
       expect(elementComponent.props["attr"], equals("value"));
     });
@@ -35,7 +35,7 @@ main() {
       ComponentDescription child = new ComponentDescriptionMock();
       List<ComponentDescription> children = [child];
 
-      DomComponent elementComponent = element(null, children).createComponent();
+      DomComponent elementComponent = element(children: children).createComponent();
 
       expect(elementComponent.children, equals(children));
     });
@@ -45,7 +45,7 @@ main() {
     });
 
     test("nested rendering", () {
-      ComponentDescription aa = a({}, [div(null, [span(), span()]), div()]);
+      ComponentDescription aa = a(props: {}, children: [div(children: [span(), span()]), div()]);
       Component aaa = aa.createComponent();
 
       DomComponent innerSpan = aaa.render()[0].createComponent().render()[0].createComponent();

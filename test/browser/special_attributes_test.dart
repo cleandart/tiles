@@ -64,8 +64,8 @@ main() {
 
     test("should set value if seted attribute value", () {
       component.when(callsTo("render"))
-        .thenReturn(input({value: value1}))
-        .thenReturn(input({value: value2}));
+        .thenReturn(input(props: {value: value1}))
+        .thenReturn(input(props: {value: value2}));
 
       mountComponent(description, mountRoot);
 
@@ -83,8 +83,8 @@ main() {
 
     test("should set default value and not replace real value if seted attribute defaultValue", () {
       component.when(callsTo("render"))
-        .thenReturn(input({defaultValue: value1}))
-        .thenReturn(input({defaultValue: value2}));
+        .thenReturn(input(props: {defaultValue: value1}))
+        .thenReturn(input(props: {defaultValue: value2}));
 
       mountComponent(description, mountRoot);
 
@@ -102,8 +102,8 @@ main() {
 
     test('should add value into textarea from "value" prop', () {
       component.when(callsTo("render"))
-        .thenReturn(textarea({value: value1}, div()))
-        .thenReturn(textarea({value: value2}));
+        .thenReturn(textarea(props: {value: value1}, children: div()))
+        .thenReturn(textarea(props: {value: value2}));
 
       mountComponent(description, mountRoot);
 
@@ -113,8 +113,8 @@ main() {
 
     test('should update value in textarea from "value" prop', () {
       component.when(callsTo("render"))
-        .thenReturn(textarea({value: value1}, div()))
-        .thenReturn(textarea({value: value2}));
+        .thenReturn(textarea(props: {value: value1}, children: div()))
+        .thenReturn(textarea(props: {value: value2}));
 
       mountComponent(description, mountRoot);
 

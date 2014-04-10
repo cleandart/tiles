@@ -17,17 +17,17 @@ class InputComponent extends Component {
   String text = "";
 
   render() {
-    return div({}, [
-      input({
+    return div(props: {}, children: [
+      input(props: {
         "type": "text",
         "value": text,
         "ref": inputRef,
         "onKeyUp": inputKeyUp
       }),
-      label({
+      label(props: {
         "id": text,
         "onClick": labelClick
-        }, text)
+        }, children: text)
     ]);
   }
 

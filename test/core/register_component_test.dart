@@ -18,7 +18,7 @@ main() {
       var props = new Mock();
       var children = [new ComponentDescriptionMock()];
       var key = "key";
-      ComponentDescription description = factory(props, children, key);
+      ComponentDescription description = factory(props: props, children: children, key: key);
 
       expect(description.props, equals(props));
       expect(description.children, equals(children));

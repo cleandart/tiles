@@ -35,7 +35,7 @@ _processChildren(dynamic children) {
       if (child is ComponentDescription) {
         newChildren.add(child);
       } else if (child is String) {
-        newChildren.add(_domTextComponentDescriptionFactory(child));
+        newChildren.add(_domTextComponentDescriptionFactory(props: child));
       } else {
         throw "Children should contain only instance of ComponentDescription or String";
       }

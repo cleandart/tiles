@@ -185,10 +185,9 @@ _applyAttribute(html.Element element, String key, dynamic value) {
     /**
      * retype it to not throwing warving
      */
-    html.InputElement el = element;
     if (key == _VALUE) {
-      if (el.value != value.toString()) {
-        el.value = value.toString();
+      if (element.value != value.toString()) {
+        element.value = value.toString();
       }
     } else if (key == _DEFAULTVALUE) {
       element.setAttribute(_VALUE, value.toString());

@@ -50,13 +50,13 @@ main() {
 
       test("should just reorder elements, when all 2 child components have keys", () {
         component.when(callsTo("render"))
-        .thenReturn(div(null, [
-          span(null, null, "0"),
-          span(null, null, "1"),
+        .thenReturn(div(children: [
+          span(key: "0"),
+          span(key: "1"),
         ]))
-        .thenReturn(div(null, [
-          span(null, null, "1"),
-          span(null, null, "0"),
+        .thenReturn(div(children: [
+          span(key: "1"),
+          span(key: "0"),
         ]));
 
         mountComponent(description, mountRoot);
@@ -79,23 +79,23 @@ main() {
 
       test("should reorder longer list of children correctly", () {
         component.when(callsTo("render"))
-        .thenReturn(div(null, [
-          span({"id": 0}, null, "0"),
-          span({"id": 1}, null, "1"),
-          span({"id": 2}, null, "2"),
-          span({"id": 3}, null, "3"),
-          span({"id": 4}, null, "4"),
-          span({"id": 5}, null, "5"),
-          span({"id": 6}, null, "6"),
+        .thenReturn(div(children: [
+          span(props: {"id": 0}, key: "0"),
+          span(props: {"id": 1}, key: "1"),
+          span(props: {"id": 2}, key: "2"),
+          span(props: {"id": 3}, key: "3"),
+          span(props: {"id": 4}, key: "4"),
+          span(props: {"id": 5}, key: "5"),
+          span(props: {"id": 6}, key: "6"),
         ]))
-        .thenReturn(div(null, [
-          span({"id": 0}, null, "0"),
-          span({"id": 3}, null, "3"),
-          span({"id": 2}, null, "2"),
-          span({"id": 4}, null, "4"),
-          span({"id": 6}, null, "6"),
-          span({"id": 1}, null, "1"),
-          span({"id": 5}, null, "5"),
+        .thenReturn(div(children: [
+          span(props: {"id": 0}, key: "0"),
+          span(props: {"id": 3}, key: "3"),
+          span(props: {"id": 2}, key: "2"),
+          span(props: {"id": 4}, key: "4"),
+          span(props: {"id": 6}, key: "6"),
+          span(props: {"id": 1}, key: "1"),
+          span(props: {"id": 5}, key: "5"),
         ]));
 
         mountComponent(description, mountRoot);
@@ -122,22 +122,22 @@ main() {
 
     test("should reorder longer list of children partial with keys correctly", () {
         component.when(callsTo("render"))
-        .thenReturn(div(null, [
+        .thenReturn(div(children: [
           span(),
-          span({"id": 1}, null, "1"),
+          span(props: {"id": 1}, key: "1"),
           span(),
-          span({"id": 3}, null, "3"),
-          span({"id": 4}, null, "4"),
-          span({"id": 5}, null, "5"),
+          span(props: {"id": 3}, key: "3"),
+          span(props: {"id": 4}, key: "4"),
+          span(props: {"id": 5}, key: "5"),
           span(),
         ]))
-        .thenReturn(div(null, [
+        .thenReturn(div(children: [
                                span(),
-          span({"id": 3}, null, "3"),
+          span(props: {"id": 3}, key: "3"),
           span(),
-          span({"id": 4}, null, "4"),
-          span({"id": 6}, null, "5"),
-          span({"id": 1}, null, "1"),
+          span(props: {"id": 4}, key: "4"),
+          span(props: {"id": 6}, key: "5"),
+          span(props: {"id": 1}, key: "1"),
           span(),
         ]));
 
@@ -165,15 +165,15 @@ main() {
 
       test("should reorder correctly with new keys", () {
         component.when(callsTo("render"))
-        .thenReturn(div(null, [
-          span({"id": 0}, null, "0"),
-          span({"id": 1}, null, "1"),
+        .thenReturn(div(children: [
+          span(props: {"id": 0}, key: "0"),
+          span(props: {"id": 1}, key: "1"),
           span(),
         ]))
-        .thenReturn(div(null, [
-          span({"id": 1}, null, "1"),
-          span({"id": 2}, null, "2"),
-          span({"id": 0}, null, "0"),
+        .thenReturn(div(children: [
+          span(props: {"id": 1}, key: "1"),
+          span(props: {"id": 2}, key: "2"),
+          span(props: {"id": 0}, key: "0"),
         ]));
 
         mountComponent(description, mountRoot);
@@ -228,14 +228,14 @@ main() {
 
         component.when(callsTo("render"))
           .thenReturn([
-            img(null, null, "img"),
-            input(null, null, "input"),
+            img(key: "img"),
+            input(key: "input"),
             customDescription1
           ])
           .thenReturn([
-            img(null, null, "img"),
+            img(key: "img"),
             customDescription1,
-            input(null, null, "input"),
+            input(key: "input"),
           ]);
 
         mountComponent(description, mountRoot);
@@ -263,8 +263,8 @@ main() {
       });
       test("should move child nodes of moved custom component and inside of the component", () {
         customComponent1.when(callsTo("render"))
-          .thenReturn([span(null, null, "SPAN"), div(null, null, "DIV"), ])
-        .thenReturn([div(null, null, "DIV"), span(null, null, "SPAN"), ]);
+          .thenReturn([span(key: "SPAN"), div(key: "DIV"), ])
+        .thenReturn([div(key: "DIV"), span(key: "SPAN"), ]);
 
         component.when(callsTo("render"))
           .thenReturn([img(), input(), customDescription1])
@@ -315,12 +315,12 @@ main() {
       test("should move more than one custom components correctly with move of insde components", () {
         customComponent1.when(callsTo("render"))
           .thenReturn([
-            span(null, null, "span1"),
-            div(null, null, "div1"),
+            span(key: "span1"),
+            div(key: "div1"),
           ])
           .thenReturn([
-            div(null, null, "div1"),
-            span(null, null, "span1"),
+            div(key: "div1"),
+            span(key: "span1"),
           ]);
 
         customComponent2.when(callsTo("render"))
