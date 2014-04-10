@@ -112,17 +112,15 @@ _handleEventType(String what) {
     Node targetNode = _elementToNode[event.target];
 
     while (targetNode != null) {
-
-      EventListener listener;
-
-      try {
-        listener = targetNode.component.props[what];
-      } catch (e) {}
-
-      if (listener != null && listener(targetNode.component, event) == false) {
-        break;
+      if (targetNode.listeners != null) {
+        EventListener listener;
+  
+        listener = targetNode.listeners[what];
+  
+        if (listener != null && listener(targetNode.component, event) == false) {
+          break;
+        }
       }
-
       targetNode = targetNode.parent;
     }
   };
