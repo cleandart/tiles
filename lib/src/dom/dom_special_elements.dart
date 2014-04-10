@@ -5,7 +5,7 @@ const _VALUE = "value";
 class TextareaComponent extends DomComponent {
 
   TextareaComponent(Map props):
-    super(props, null, "textarea");
+    super(props: props, tagName: "textarea");
 
   render() => null;
 }

@@ -7,6 +7,6 @@ class NodeChange {
   final dynamic newProps;
 
 
-  NodeChange(NodeChangeType this.type, Node this.node, [dynamic this.oldProps, dynamic this.newProps]);
+  NodeChange(NodeChangeType this.type, Node this.node, {dynamic this.oldProps, dynamic this.newProps});
 
 }

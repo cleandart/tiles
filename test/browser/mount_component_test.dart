@@ -223,7 +223,7 @@ main() {
     });
 
     test("should remove relation between component and element on unmount", () {
-      Component divComponent = new DomComponent(null, null, "div");
+      Component divComponent = new DomComponent(tagName: "div");
       ComponentDescriptionMock divDescription= new ComponentDescriptionMock();
       divDescription.when(callsTo("createComponent")).alwaysReturn(divComponent);
 

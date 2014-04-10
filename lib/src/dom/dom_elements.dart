@@ -8,13 +8,13 @@ part of tiles;
  * @param bool   pair    parity of final html element
  * @return ComponentDescriptionFactory which contains ComponentFactory to create DomCommponent
  */
-ComponentDescriptionFactory _registerDomComponent(String tagname, [bool pair, bool svg = false, ComponentFactory factory]) {
+ComponentDescriptionFactory _registerDomComponent(String tagname, {bool pair, bool svg: false, ComponentFactory factory}) {
 
   if (factory == null) {
     /**
      * create default factory which create DomComponent
      */
-    factory = ({Map props, List<ComponentDescription> children}) => new DomComponent(props, children, tagname, pair, svg);;
+    factory = ({Map props, List<ComponentDescription> children}) => new DomComponent(props: props, children: children, tagName: tagname, pair: pair, svg: svg);;
   }
 
   return registerComponent(factory);
@@ -47,8 +47,8 @@ _processChildren(dynamic children) {
 /**
  * for now, function _registerSvgComponent do the same, as _registerDomComponent
  */
-ComponentDescriptionFactory _registerSvgComponent(String tagname, [bool pair]) {
-  return _registerDomComponent(tagname, pair, true);
+ComponentDescriptionFactory _registerSvgComponent(String tagname, {bool pair}) {
+  return _registerDomComponent(tagname, pair: pair, svg: true);
 }
 
 /**
@@ -138,7 +138,7 @@ ComponentDescriptionFactory a = _registerDomComponent("a"),
   table = _registerDomComponent("table"),
   tbody = _registerDomComponent("tbody"),
   td = _registerDomComponent("td"),
-  textarea = _registerDomComponent("textarea", true, false, _textareaFactory),
+  textarea = _registerDomComponent("textarea", pair: true, factory: _textareaFactory),
   tfoot = _registerDomComponent("tfoot"),
   th = _registerDomComponent("th"),
   thead = _registerDomComponent("thead"),
@@ -160,31 +160,31 @@ ComponentDescriptionFactory a = _registerDomComponent("a"),
   text = _registerSvgComponent("text"),
 
   /** NOT PAIR ELEMENTS */
-  area = _registerDomComponent("area", false),
-  base = _registerDomComponent("base", false),
-  br = _registerDomComponent("br", false),
-  col = _registerDomComponent("col", false),
-  embed = _registerDomComponent("embed", false),
-  hr = _registerDomComponent("hr", false),
-  img = _registerDomComponent("img", false),
-  input = _registerDomComponent("input", false),
-  keygen = _registerDomComponent("keygen", false),
-  link = _registerDomComponent("link", false),
-  meta = _registerDomComponent("meta", false),
-  param = _registerDomComponent("param", false),
+  area = _registerDomComponent("area", pair: false),
+  base = _registerDomComponent("base", pair: false),
+  br = _registerDomComponent("br", pair: false),
+  col = _registerDomComponent("col", pair: false),
+  embed = _registerDomComponent("embed", pair: false),
+  hr = _registerDomComponent("hr", pair: false),
+  img = _registerDomComponent("img", pair: false),
+  input = _registerDomComponent("input", pair: false),
+  keygen = _registerDomComponent("keygen", pair: false),
+  link = _registerDomComponent("link", pair: false),
+  meta = _registerDomComponent("meta", pair: false),
+  param = _registerDomComponent("param", pair: false),
   /**
    * Command is not in react
    * param = registerDomComponent("param", false),
    */
-  source = _registerDomComponent("source", false),
-  track = _registerDomComponent("track", false),
-  wbr = _registerDomComponent("wbr", false),
+  source = _registerDomComponent("source", pair: false),
+  track = _registerDomComponent("track", pair: false),
+  wbr = _registerDomComponent("wbr", pair: false),
 
   /** SVG NOT PAIR ELEMENTS */
-  circle = _registerSvgComponent("circle", false),
-  line = _registerSvgComponent("line", false),
-  path = _registerSvgComponent("path", false),
-  polyline = _registerSvgComponent("polyline", false),
-  rect = _registerSvgComponent("rect", false);
+  circle = _registerSvgComponent("circle", pair: false),
+  line = _registerSvgComponent("line", pair: false),
+  path = _registerSvgComponent("path", pair: false),
+  polyline = _registerSvgComponent("polyline", pair: false),
+  rect = _registerSvgComponent("rect", pair: false);
 
 

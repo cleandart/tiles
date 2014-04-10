@@ -12,7 +12,7 @@ class ComponentDescription {
   /**
    * default constructor which only set final vars.
    */
-  ComponentDescription (ComponentFactory this.factory, [dynamic  this.props, this.children, this.key]) {}
+  ComponentDescription (ComponentFactory this.factory, {dynamic  this.props, this.children, this.key}) {}
 
   /**
    * creates component by factory with props.

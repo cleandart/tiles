@@ -14,7 +14,7 @@ main() {
       dynamic props = new Mock();
       var children = [new ComponentDescriptionMock()];
 
-      ComponentDescription description = new ComponentDescription(factory, props, children);
+      ComponentDescription description = new ComponentDescription(factory, props: props, children: children);
 
       expect(description.factory, equals(factory));
       expect(description.props, equals(props));
@@ -45,7 +45,7 @@ main() {
       dynamic props = new Mock();
       List<ComponentDescription> children = [new ComponentDescriptionMock()];
 
-      ComponentDescription description = new ComponentDescription(factory, props, children);
+      ComponentDescription description = new ComponentDescription(factory, props: props, children: children);
 
       expect(description.createComponent(), equals(component));
       expect(testProps, equals(props));
@@ -71,7 +71,7 @@ main() {
     test("should have key optionali added in constructor", () {
       var key = new Mock();
 
-      ComponentDescription description = new ComponentDescription(({props, children}) => null, null, null, key);
+      ComponentDescription description = new ComponentDescription(({props, children}) => null, key: key);
 
       expect(description.key, equals(key));
     });

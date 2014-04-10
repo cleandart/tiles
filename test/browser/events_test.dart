@@ -20,7 +20,7 @@ main() {
        */
       querySelector("body").append(mountRoot);
 
-      component = new DomComponent(null, null, "span");
+      component = new DomComponent(tagName: "span");
 
       description = new ComponentDescriptionMock();
       description.when(callsTo("createComponent")).alwaysReturn(component);

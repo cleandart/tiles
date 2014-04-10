@@ -17,7 +17,7 @@ main() {
       var rand = new Random();
       NodeChangeType type = NodeChangeType.values[rand.nextInt(NodeChangeType.values.length)];
 
-      NodeChange change = new NodeChange(type, node, oldProps, newProps);
+      NodeChange change = new NodeChange(type, node, oldProps: oldProps, newProps: newProps);
 
       expect(change.type, equals(type));
       expect(change.node, equals(node));

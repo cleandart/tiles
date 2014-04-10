@@ -22,6 +22,6 @@ ComponentDescriptionFactory registerComponent(ComponentFactory factory) {
      * here is the place, where strings are converted to DomTextComponent description factory
      */
     children = _processChildren(children);
-    return new ComponentDescription(factory, props, children, key);
+    return new ComponentDescription(factory, props: props, children: children, key: key);
   };
 }
