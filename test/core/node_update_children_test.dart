@@ -353,8 +353,6 @@ main() {
 
           updateNode();
 
-          print(changes.length);
-
           expect(countChangeTypes(changes, NodeChangeType.MOVED), equals(6));
           expect(countChangeTypes(changes, NodeChangeType.UPDATED), equals(7));
           expect(countChangeTypes(changes, NodeChangeType.CREATED), equals(2));
@@ -388,6 +386,47 @@ main() {
           expect(node.children[2], equals(children[7]));
         });
 
+      });
+
+      group("(listeners)", () {
+        test("should change listeners when changed in description", () {
+          Map listeners1 = {1: 1};
+          Map listeners2 = {2: 2};
+
+          eraseDescription();
+          description2 = description;
+          eraseDescription();
+
+          description.when(callsTo("get listeners")).alwaysReturn(listeners1);
+          description.when(callsTo("get factory")).alwaysReturn(factory);
+          description2.when(callsTo("get listeners")).alwaysReturn(listeners2);
+          description2.when(callsTo("get factory")).alwaysReturn(factory);
+
+          component = new ComponentMock();
+          component.when(callsTo("shouldUpdate")).alwaysReturn(true);
+
+          component.when(callsTo("render"))
+            .thenReturn(description)
+            .thenReturn(description2);
+
+          node = new Node(null, component, factory);
+
+          List<NodeChange> changes = [];
+          node.update();
+
+          expect(node.children.length, equals(1));
+          expect(node.children.first.listeners, equals(listeners1));
+
+          node.update(force: true, changes: changes);
+
+          expect(node.children.first.listeners, equals(listeners2));
+
+          expect(changes.length, equals(3));
+          expect(changes.last.node, equals(node.children.first));
+          expect(changes.last.type, equals(NodeChangeType.UPDATED));
+          expect(changes.last.oldListeners, equals(listeners1));
+          expect(changes.last.newListeners, equals(listeners2));
+        });
       });
 
     });

@@ -7,6 +7,7 @@ import 'package:unittest/mock.dart';
 
 main() {
   group("(ComponentDescription)", () {
+    ComponentFactory factory = ({props, children}) => new ComponentMock();
     test("constructor (create with factory, props and children and then check if there is", () {
 
       Component component = new ComponentMock();
@@ -54,26 +55,38 @@ main() {
     });
 
     test("should have readonly props", () {
-      ComponentDescription description = new ComponentDescription(({props, children}) => null);
+      ComponentDescription description = new ComponentDescription(factory);
       expect(() {description.props = null;}, throws);
     });
 
     test("should have readonly children", () {
-      ComponentDescription description = new ComponentDescription(({props, children}) => null);
+      ComponentDescription description = new ComponentDescription(factory);
       expect(() {description.children = null;}, throws);
     });
 
     test("should have no key by default", () {
-      ComponentDescription description = new ComponentDescription(({props, children}) => null);
+      ComponentDescription description = new ComponentDescription(factory);
       expect(description.key, isNull);
     });
 
     test("should have key optionali added in constructor", () {
       var key = new Mock();
 
-      ComponentDescription description = new ComponentDescription(({props, children}) => null, key: key);
+      ComponentDescription description = new ComponentDescription(factory, key: key);
 
       expect(description.key, equals(key));
+    });
+
+    test("should have no listeners by default", () {
+      ComponentDescription description = new ComponentDescription(factory);
+      expect(description.listeners, isNull);
+    });
+
+    test("should have option to add listeners", () {
+      Map listeners = {1: new Mock()};
+      ComponentDescription description = new ComponentDescription(factory, listeners: listeners);
+
+      expect(description.listeners, equals(listeners));
     });
 
   });

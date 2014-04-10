@@ -74,6 +74,48 @@ main() {
       node.update();
     });
 
+    test("should correctly create node from description", () {
+      Map listeners = {1: 1};
+      ComponentMock component = new ComponentMock();
+      var calledProps, calledChildren;
+      ComponentFactory factory = ({props, children}) {
+        calledChildren = children;
+        calledProps = props;
+        return component;
+      };
+      var key = "key";
+      var props = new Mock();
+      var children = [new ComponentMock()];
+
+      ComponentDescription description = new ComponentDescription(factory, props: props, children: children, key: key, listeners: listeners);
+
+      Node node = new Node.fromDescription(null, description);
+
+      expect(node.factory, equals(factory));
+      expect(node.key, equals(key));
+      expect(node.component, equals(component));
+      expect(calledProps, equals(props));
+      expect(calledChildren, equals(children));
+      expect(node.listeners, equals(listeners));
+    });
+
+    test("should create node with listeners, when in constructor", () {
+      var listeners = {1: new Mock()};
+      Node node = new Node(null, new ComponentMock(), null, listeners: listeners);
+
+      expect(node.listeners, equals(listeners));
+    });
+
+    test("should add new listeners, when applied", () {
+      Node node = new Node(null, new ComponentMock(), ({props, children}) => null);
+      expect(node.listeners, equals(null));
+
+      node.apply(listeners: {});
+
+      expect(node.listeners, equals({}));
+
+    });
+
   });
 
 }

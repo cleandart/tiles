@@ -65,6 +65,18 @@ main() {
       expect(svgComponent.svg, isTrue);
     });
 
+    test("should create null listeners by default", () {
+      ComponentDescription description = div();
+
+      expect(description.listeners, isNull);
+    });
+
+    test("should support listeners", () {
+      ComponentDescription description = div(listeners: {});
+
+      expect(description.listeners, isNotNull);
+    });
+
   });
 
 }

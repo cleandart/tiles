@@ -11,6 +11,8 @@ class Node {
 
   final ComponentFactory factory;
 
+  Map listeners;
+
   bool _isDirty = false;
 
   bool _hasDirtyDescendant = false;
@@ -62,7 +64,7 @@ class Node {
    *
    *   Node node = new Node(parent, description);
    */
-  Node(this.parent, Component this.component, this.factory, [this.key]) {
+  Node(this.parent, Component this.component, this.factory, {this.key, this.listeners}) {
     this.isDirty = true;
     this.children = [];
     if (component.needUpdate != null) {
@@ -71,14 +73,14 @@ class Node {
   }
 
   factory Node.fromDescription(Node parent, ComponentDescription description) {
-    return new Node(parent, description.createComponent(), description.factory, description.key);
+    return new Node(parent, description.createComponent(), description.factory, key: description.key, listeners: description.listeners);
   }
 
 
   /**
    * Recognize if update this instance or children by _isDirty and _hasDirtyDescendants
    */
-  update({List<NodeChange> changes, bool force: false}) {
+  update({List<NodeChange> changes, bool force: false, Map oldListeners}) {
     logger.fine("Node.update");
     if (_wasNeverUpdated || ((_isDirty || force)
         &&  (component.shouldUpdate(component.props, _oldProps)) != false)) {
@@ -87,7 +89,7 @@ class Node {
       /**
        * create result as list with this as updated.
        */
-      _addChanges(new NodeChange(NodeChangeType.UPDATED, this, oldProps: _oldProps, newProps: this.component.props), changes);
+      _addChanges(new NodeChange(NodeChangeType.UPDATED, this, oldProps: _oldProps, newProps: this.component.props, oldListeners: oldListeners, newListeners: listeners), changes);
 
       /**
        * update children and add node changes to result
@@ -115,12 +117,13 @@ class Node {
    *
    * if no props, apply null
    */
-  void apply({dynamic props, List<ComponentDescription> children}) {
+  void apply({dynamic props, List<ComponentDescription> children, Map listeners}) {
     logger.fine("Node.apply");
     this.component.willReceiveProps(props);
     this._oldProps = this.component.props;
     this.component.props = props;
     this.component.children = children;
+    this.listeners = listeners;
   }
 
 }
