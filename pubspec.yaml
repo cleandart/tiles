@@ -6,6 +6,7 @@ dependencies:
 dev_dependencies:
   browser: any
   meta: any
+  react: any
   unittest: any
   useful: any
   webdriver: any
