@@ -95,6 +95,8 @@ _processEvent(String key, dynamic value, Node node) {
     html.Element masterRoot = _nodeToElement[parent];
 
     _registerListener(masterRoot, key);
+  } else {
+    throw "Listeners should be applied only to valid event types, not on $key";
   }
 }
 

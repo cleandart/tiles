@@ -143,6 +143,14 @@ main() {
       mountRoot.children.first.click();
 
     });
+    
+    test("should not accept invalid event type", () {
+      expect(() {
+        mountComponent(div(listeners: {
+          "invalidListener": (Component component, Event event) => null
+        }), mountRoot);
+      }, throws);
+    });
 
   });
 }
