@@ -89,7 +89,7 @@ _applyCreatedChange(NodeChange change) {
   Node node = change.node;
   html.Element mountRoot = _nodeToElement[node.parent];
   Node nextNode = _findFirstDomDescendantAfter(node.parent, node);
-  _mountNode(node, mountRoot, nextNode);
+  _mountNode(node, mountRoot, nextNode: nextNode);
 }
 
 /**

@@ -49,7 +49,7 @@ mountComponent(ComponentDescription description, html.HtmlElement mountRoot) {
  *
  * That means, it render it's tree structure into element.
  */
-_mountNode(Node node, html.HtmlElement mountRoot, [Node nextNode]) {
+_mountNode(Node node, html.HtmlElement mountRoot, {Node nextNode}) {
   logger.fine("_mountNode called");
   /**
    * update to build full node tree structure
@@ -105,7 +105,7 @@ _mountNode(Node node, html.HtmlElement mountRoot, [Node nextNode]) {
       } catch (e) {}
     });
     node.children.forEach((Node child) {
-      _mountNode(child, mountRoot, nextNode);
+      _mountNode(child, mountRoot, nextNode: nextNode);
     });
   }
   /**
