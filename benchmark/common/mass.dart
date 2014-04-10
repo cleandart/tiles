@@ -1,14 +1,16 @@
 library tiles_benchmark_mass;
 
-import './wrapper.dart';
+import '../utils/wrapper.dart';
 
 class Mass extends Component {
   Mass([props, children]): super(props, children);
   
   render() {
-    return div(children: [
-      span(children: "ahoj")
-    ]);
+    var children = [];
+    for(var i = 0; i < 1000; ++i) {
+      children.add(div(children: "child $i", key: "child$i"));
+    }
+    return div(children: children);
   }
 }
 
