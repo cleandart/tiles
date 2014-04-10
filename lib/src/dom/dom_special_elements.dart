@@ -10,4 +10,4 @@ class TextareaComponent extends DomComponent {
   render() => null;
 }
 
-ComponentFactory _textareaFactory = ([Map props, children]) => new TextareaComponent(props);
+ComponentFactory _textareaFactory = ({Map props, children}) => new TextareaComponent(props);

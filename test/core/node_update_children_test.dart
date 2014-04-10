@@ -19,13 +19,13 @@ main() {
     ComponentMock component;
     Node node;
     List<NodeChange> changes;
-    ComponentFactory factory = ([props, children]) => new Component(props);
+    ComponentFactory factory = ({props, children}) => new Component(props);
 
     ComponentDescriptionMock createDefaultDescription() {
       ComponentDescriptionMock description = new ComponentDescriptionMock();
 
       description.when(callsTo("createComponent")).alwaysReturn(componentForDescription);
-      description.when(callsTo("get factory")).alwaysReturn(([dynamic props, children]) => componentForDescription);
+      description.when(callsTo("get factory")).alwaysReturn(({dynamic props, children}) => componentForDescription);
 
       return description;
     }
@@ -148,9 +148,9 @@ main() {
         /**
          * return every time new factory
          */
-        ComponentFactory factory1 = ([dynamic props, children]) => componentForDescription;
-        ComponentFactory factory2 = ([dynamic props, children]) => componentForDescription;
-        ComponentFactory factory3 = ([dynamic props, children]) => componentForDescription;
+        ComponentFactory factory1 = ({dynamic props, children}) => componentForDescription;
+        ComponentFactory factory2 = ({dynamic props, children}) => componentForDescription;
+        ComponentFactory factory3 = ({dynamic props, children}) => componentForDescription;
         description.when(callsTo("get factory"))
           .thenReturn(factory1)
           .thenReturn(factory2)

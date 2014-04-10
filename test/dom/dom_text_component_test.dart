@@ -16,7 +16,7 @@ main() {
     setUp(() {
       text = "text";
       component = new DomTextComponent(text);
-      factory = registerComponent(([props, children]) => new Component(props, children));
+      factory = registerComponent(({props, children}) => new Component(props, children));
     });
 
     test("should have working constructor with one String parameter as props", () {

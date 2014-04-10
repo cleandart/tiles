@@ -17,6 +17,6 @@ class ComponentDescription {
   /**
    * creates component by factory with props.
    */
-  Component createComponent() => this.factory(this.props, this.children);
+  Component createComponent() => this.factory(props: this.props, children: this.children);
 
 }

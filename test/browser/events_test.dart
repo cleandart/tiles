@@ -136,7 +136,7 @@ main() {
         "onClick": expectAsync((Component component, Event event) {
         }, count: 1)
       });
-      ComponentDescriptionFactory component = registerComponent(([props, children]) => componentMock);
+      ComponentDescriptionFactory component = registerComponent(({props, children}) => componentMock);
       mountComponent(component(), mountRoot);
 
       mountRoot.children.first.click();
