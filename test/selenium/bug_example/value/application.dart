@@ -20,7 +20,7 @@ class InputComponent extends Component {
     return div({}, [
       input({
         "type": "text",
-        "defaultValue": text,
+        "value": text,
         "ref": inputRef,
         "onKeyUp": inputKeyUp
       }),
