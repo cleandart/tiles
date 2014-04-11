@@ -1,6 +1,8 @@
 part of tiles_browser;
 
 const _REF = "ref";
+const _VALUE = "value";
+const _DEFAULTVALUE = "defaultValue";
 
 /**
  * Map needed when doing updates on dom.
@@ -74,16 +76,7 @@ _mountNode(Node node, html.HtmlElement mountRoot, [Node nextNode]) {
     html.Element componentElement = new html.Element.tag(component.tagName);
     _saveRelations(node, componentElement);
 
-    component.props.forEach((String key, value) {
-      /**
-       * filter props by allowedAttrs and allowedSvgAttrs
-       */
-      if (_canAddAttribute(component, key)) {
-        componentElement.setAttribute(key, value.toString());
-      } else {
-        _processEvent(key, value, node);
-      }
-    });
+    _applyAttributes(componentElement, component.props, svg: component.svg, node: node);
     node.children.forEach((Node child) => _mountNode(child, componentElement));
 
     if (nextNode != null) {
@@ -132,10 +125,68 @@ _mountNode(Node node, html.HtmlElement mountRoot, [Node nextNode]) {
  * if attribute with passed key can be added
  * to element of component from arguments.
  */
-_canAddAttribute(DomComponent component, String key) {
-  return (!component.svg && allowedAttrs.contains(key))
-      || (component.svg && allowedSvgAttributes.contains(key));
+_canAddAttribute(bool svg, String key) {
+  return (!svg && allowedAttrs.contains(key))
+      || (svg && allowedSvgAttributes.contains(key));
 
+}
+
+/**
+ * Applies props to element.
+ *
+ * If oldProps setted, use them to compare new and remove old.
+ */
+_applyAttributes(html.Element element, Map props, {bool svg: false, Node node, Map oldProps}) {
+  if (oldProps == null) {
+    oldProps = {};
+  } else {
+    oldProps = new Map.from(oldProps);
+  }
+
+  props.forEach((String key, value) {
+        /**
+         * filter props by allowedAttrs and allowedSvgAttrs
+         */
+        if (_canAddAttribute(svg, key)) {
+          if (oldProps[key] != value
+              && element.getAttribute(key) != value) {
+            _applyAttribute(element, key, value);
+          }
+          /**
+           * remove key from oldProps to "mark it" as present in new props
+           */
+          oldProps.remove(key);
+        } else {
+          _processEvent(key, value, node);
+        }
+  });
+
+  /**
+   * remove old props not present in new one.
+   */
+  oldProps.forEach((String key, value) {
+    element.attributes.remove(key);
+  });
+
+
+}
+
+_applyAttribute(html.Element element, String key, dynamic value) {
+  if (element is html.InputElement || element is html.TextAreaElement) {
+    /**
+     * retype it to not throwing warving
+     */
+    html.InputElement el = element;
+    if (key == _VALUE) {
+      if (el.value != value.toString()) {
+        el.value = value.toString();
+      }
+    } else if (key == _DEFAULTVALUE) {
+      element.setAttribute(_VALUE, value.toString());
+      return;
+    }
+  }
+  element.setAttribute(key, value.toString());
 }
 
 /**
