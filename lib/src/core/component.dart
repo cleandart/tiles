@@ -36,7 +36,7 @@ class Component {
 
   shouldUpdate(dynamic newProps, dynamic oldProps) => true;
 
-  List<ComponentDescription> render() {}
+  List<ComponentDescription> render() => null;
 
   didUpdate() {}
 

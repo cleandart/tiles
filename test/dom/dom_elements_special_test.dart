@@ -24,22 +24,21 @@ main() {
         expect(textareaComponent is DomComponent, isTrue);
       });
 
-      test('should return in content what it gets in prosp["value"]', () {
-        expect(textareaComponent.content(), equals(value));
+      test('should have value in props', () {
+        expect(textareaComponent.props["value"], equals(value));
       });
 
-      test('should remove value from props', () {
-        expect(textareaComponent.props[value], isNull);
-      });
-
-      test('should remove value from props when setted by setter', () {
+      test('should have value in props when setted by setter', () {
         textareaComponent.props = {value: value};
-        expect(textareaComponent.props[value], isNull);
+        expect(textareaComponent.props["value"], equals(value));
       });
 
-      test('should return <textarea type="attrValue">value</textarea> as .openMarkup() .content() .closeMarkup', () {
-        expect(textareaComponent.content(), equals("value"));
-        expect(textareaComponent.props.containsKey("value"), isFalse);
+      test("should render nothing, evet if it has children", () {
+        textareaComponent.children = [];
+
+        expect(textareaComponent.children, equals([]));
+
+        expect(textareaComponent.render(), isNull);
       });
 
     });

@@ -41,7 +41,7 @@ final Set<String> allowedAttrs = new Set.from(["accept", "accessKey", "action", 
   "httpEquiv", "icon", "id", "label", "lang", "list", "loop", "max", "maxLength", "method", "min", "multiple", "name",
   "pattern", "placeholder", "poster", "preload", "radioGroup", "readOnly", "rel", "required", "role",
   "rowSpan", "scrollLeft", "scrollTop", "selected", "size", "spellCheck", "src", "step", "style", "tabIndex",
-  "target", "title", "type", "value", "width", "wmode"]);
+  "target", "title", "type", "value", "defaultValue", "width", "wmode"]);
 
 final Set<String> allowedSvgAttributes = new Set.from(["cx", "cy", "d", "fill", "fx", "fy", "gradientTransform",
   "gradientUnits", "offset", "points", "r", "rx", "ry",

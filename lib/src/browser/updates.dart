@@ -130,40 +130,7 @@ _applyUpdatedChange(NodeChange change) {
     /**
      * change or remove old attributes
      */
-    if (oldProps != null) {
-      oldProps.forEach((String key, dynamic value) {
-        if (newProps == null) {
-          return;
-        }
-
-        if (!newProps.containsKey(key)) {
-          element.attributes.remove(key);
-        } else if (newProps[key] != value) {
-          /**
-           * filter attrs
-           */
-          if (_canAddAttribute(component, key)) {
-            element.setAttribute(key, newProps[key].toString());
-          }
-        }
-      });
-    }
-
-    /**
-     * add new attributes
-     */
-    if (newProps != null) {
-      newProps.forEach((String key, dynamic value) {
-        if (oldProps == null || !oldProps.containsKey(key)) {
-          /**
-           * filter attrs
-           */
-          if (_canAddAttribute(component, key)) {
-            element.setAttribute(key, value.toString());
-          }
-        }
-      });
-    }
+    _applyAttributes(element, newProps, svg: component.svg, node: change.node, oldProps: oldProps);
   } else if (change.node.component is DomTextComponent) {
     /**
      * if component is dom text componetn, update text of the element
