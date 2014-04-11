@@ -8,7 +8,7 @@ import "package:useful/useful.dart";
 Logger logger = new Logger("tiles");
 
 Stopwatch stopwatch = new Stopwatch()..start();
-timeprint(message){
+timeprint(message) {
   logger.info("$message ${stopwatch.elapsedMilliseconds}");
   stopwatch.reset();
 }
@@ -18,11 +18,11 @@ class _Div extends react.Component{
 
   _Div([props, children]): super(props, children);
 
-  shouldComponentUpdate(nProps, nState){
+  shouldComponentUpdate(nProps, nState) {
     return nProps['key'] != props['key'];
   }
 
-  render(){
+  render() {
     return react.div(props, props['children']);
   }
 }
@@ -33,11 +33,11 @@ class _Span extends react.Component{
 
   _Span([props, children]): super(props, children);
 
-  shouldComponentUpdate(nProps, nState){
+  shouldComponentUpdate(nProps, nState) {
     return nProps['children'][0] != props['children'][0];
   }
 
-  render(){
+  render() {
     return react.span(props, props['children']);
   }
 }
@@ -52,7 +52,7 @@ class _Hello extends react.Component {
     timeprint("rendering start");
     List<List<String>> data = props['data'];
     var children = [];
-    for(var elem in data){
+    for (var elem in data) {
       children.add(
           react.div({'class': 'div(${elem[0]})'},[
             react.span({'class': 'inner_span_${elem[0]}'}, elem[0]),
@@ -76,13 +76,13 @@ void main() {
 
   react.initTilesBrowserConfiguration();
   var data=[];
-  for(num i=0; i<1000; i++){
+  for (num i=0; i<1000; i++) {
     data.add(["name_$i", "value_$i"]);
   }
   timeprint("virtual dom building starts");
   react.ComponentDescription h = Hello({"data": data}, []);
   react.Node node = new react.Node.fromDescription(null, h);
-  for (int i=0; i<100; i++){
+  for (int i=0; i<100; i++) {
     node.update(force: true);
   }
   logger.level = Level.FINE;
@@ -99,3 +99,4 @@ void main() {
 //  window.focus();
 //  window.close();
 }
+

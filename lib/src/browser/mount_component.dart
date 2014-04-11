@@ -3,8 +3,8 @@ part of tiles_browser;
 const _REF = "ref";
 
 /**
- * Map needed when doing updates on dom. 
- * 
+ * Map needed when doing updates on dom.
+ *
  * For easy identifying place, where nodeChange should be applyed.
  */
 final Map<Node, html.Node> _nodeToElement = {};
@@ -12,37 +12,42 @@ final Map<Node, html.Node> _nodeToElement = {};
 final List<Node> _rootNodes = [];
 
 /**
- * definition of type for reference in props, 
+ * definition of type for reference in props,
  * to easyli check that ref is function with one Component argument
  */
-typedef void _Ref(Component component); 
+typedef void _Ref(Component component);
 
 /**
- * Mount component into the html element. 
- * 
- * That means, that render structure described 
- * in the component description into element 
+ * Mount component into the html element.
+ *
+ * That means, that render structure described
+ * in the component description into element
  */
 mountComponent(ComponentDescription description, html.HtmlElement mountRoot) {
   Node node = new Node.fromDescription(null, description);
-  
+
   _rootNodes.add(node);
 
   node.update();
-  
+
   mountRoot.children.clear();
 
   _mountNode(node, mountRoot);
+
+  /**
+   * mount root node to mount root to be able easy unmount node.
+   */
+  _elementToNode[mountRoot] = node;
 }
 
 /**
  * Mount node into html element.
- *  
+ *
  * That means, it render it's tree structure into element.
  */
 _mountNode(Node node, html.HtmlElement mountRoot, [Node nextNode]) {
   /**
-   * update to build full node tree structure 
+   * update to build full node tree structure
    */
   if (node.component is DomTextComponent) {
     /**
@@ -58,17 +63,17 @@ _mountNode(Node node, html.HtmlElement mountRoot, [Node nextNode]) {
 
   } else if (node.component is DomComponent) {
     /**
-     * if component is dom component, 
+     * if component is dom component,
      * * create new element for it,
-     * * fill it's attrs by component's props, 
-     * * run recursion with children 
+     * * fill it's attrs by component's props,
+     * * run recursion with children
      * * and place it into mountRoot
      */
-  
+
     DomComponent component = node.component;
     html.Element componentElement = new html.Element.tag(component.tagName);
     _saveRelations(node, componentElement);
-    
+
     component.props.forEach((String key, value) {
       /**
        * filter props by allowedAttrs and allowedSvgAttrs
@@ -80,7 +85,7 @@ _mountNode(Node node, html.HtmlElement mountRoot, [Node nextNode]) {
       }
     });
     node.children.forEach((Node child) => _mountNode(child, componentElement));
-    
+
     if (nextNode != null) {
       mountRoot.insertBefore(componentElement, _nodeToElement[nextNode]);
     } else {
@@ -88,21 +93,33 @@ _mountNode(Node node, html.HtmlElement mountRoot, [Node nextNode]) {
     }
   } else {
     /**
-     * if component is custom component, 
+     * if component is custom component,
      * then just run recursion for children on the same element
      */
     _nodeToElement[node] = mountRoot;
+    allowedEvents.keys.forEach((eventType) {
+      try {
+        EventListener listener = node.component.props[eventType];
+        if (listener != null) {
+          _processEvent(eventType, listener, node);
+        }
+      } catch (e) {}
+    });
     node.children.forEach((Node child) {
-      _mountNode(child, mountRoot, nextNode); 
+      _mountNode(child, mountRoot, nextNode);
     });
   }
-  
   /**
-   * if component have map-like props and have _Ref in "ref" key, 
+   * call didMount life-cycle on component
+   */
+  node.component.didMount();
+
+  /**
+   * if component have map-like props and have _Ref in "ref" key,
    * execute it with the coponent as argument
    */
   try {
-    if (node.component.props != null 
+    if (node.component.props != null
         && node.component.props[_REF] != null
         && node.component.props[_REF] is _Ref) {
       node.component.props[_REF](node.component);
@@ -111,14 +128,14 @@ _mountNode(Node node, html.HtmlElement mountRoot, [Node nextNode]) {
 }
 
 /**
- * Returns boolean which is true 
- * if attribute with passed key can be added 
+ * Returns boolean which is true
+ * if attribute with passed key can be added
  * to element of component from arguments.
  */
 _canAddAttribute(DomComponent component, String key) {
-  return (!component.svg && allowedAttrs.contains(key)) 
+  return (!component.svg && allowedAttrs.contains(key))
       || (component.svg && allowedSvgAttributes.contains(key));
-  
+
 }
 
 /**
@@ -137,6 +154,6 @@ void _deleteRelations(Node node, html.Node element) {
   _nodeToElement.remove(node);
   _componentToElement.remove(node.component);
   _elementToNode.remove(element);
-  
+
 }
 

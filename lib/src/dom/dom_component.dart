@@ -3,9 +3,9 @@ part of tiles;
 class DomComponent extends Component {
   final String tagName;
   final bool pair;
-  
+
   Map _props;
-  
+
   set props (Map data) {
     if (data != null) {
       _props = data;
@@ -13,11 +13,11 @@ class DomComponent extends Component {
       _props = {};
     }
   }
-  
+
   Map get props => _props;
-  
+
   final bool svg;
-  
+
   DomComponent([this._props, List<ComponentDescription> children, this.tagName, pair, this.svg = false]):
       this.pair = pair == null || pair,
       super(null, children) {
@@ -26,11 +26,11 @@ class DomComponent extends Component {
       _props = {};
     }
   }
-  
+
   List<ComponentDescription> render() {
     return this.children;
   }
-  
+
 }
 
 
@@ -43,7 +43,7 @@ final Set<String> allowedAttrs = new Set.from(["accept", "accessKey", "action", 
   "rowSpan", "scrollLeft", "scrollTop", "selected", "size", "spellCheck", "src", "step", "style", "tabIndex",
   "target", "title", "type", "value", "width", "wmode"]);
 
-final Set<String> allowedSvgAttributes = new Set.from(["cx", "cy", "d", "fill", "fx", "fy", "gradientTransform", 
+final Set<String> allowedSvgAttributes = new Set.from(["cx", "cy", "d", "fill", "fx", "fy", "gradientTransform",
   "gradientUnits", "offset", "points", "r", "rx", "ry",
   "spreadMethod", "stopColor", "stopOpacity", "stroke", "strokeLinecap", "strokeWidth", "transform",
   "version", "viewBox", "x1", "x2", "x", "y1", "y2", "y"]);

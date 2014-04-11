@@ -15,7 +15,7 @@ class NodeChangeType {
   final int value;
 
   const NodeChangeType._(this.value);
-  
+
   String toString() {
     return {
       CREATED: "CREATED",

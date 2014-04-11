@@ -17,6 +17,8 @@ class Node {
 
   dynamic _oldProps;
 
+  bool _wasNeverUpdated = true;
+
   bool get isDirty => _isDirty;
 
   bool get hasDirtyDescendant => _hasDirtyDescendant;
@@ -66,7 +68,7 @@ class Node {
     }
   }
 
-  factory Node.fromDescription(Node parent, ComponentDescription description){
+  factory Node.fromDescription(Node parent, ComponentDescription description) {
     return new Node(parent, description.createComponent(), description.factory, description.key);
   }
 
@@ -76,7 +78,9 @@ class Node {
    */
   update({List<NodeChange> changes, bool force: false}) {
     logger.finer('is dirty or force');
-    if (_isDirty || force) {
+    if (_wasNeverUpdated || ((_isDirty || force)
+        &&  (component.shouldUpdate(component.props, _oldProps)) != false)) {
+
       /**
        * create result as list with this as updated.
        */
@@ -87,9 +91,9 @@ class Node {
        */
       _updateChildren(this, changes);
 
-      this._isDirty = this._hasDirtyDescendant = false;
+      this._wasNeverUpdated = this._isDirty = this._hasDirtyDescendant = false;
 
-    } else if(_hasDirtyDescendant) {
+    } else if (_hasDirtyDescendant) {
       logger.finer('dirty desc');
       /**
        * if has dirty descendant, call update recursively and set self as don't have dirty descendant.
@@ -121,7 +125,8 @@ class Node {
  * helper function, to enable not everywhere to add the same if
  */
 _addChanges(NodeChange change, List<NodeChange> changes) {
-  if(changes != null) {
+  if (changes != null) {
     changes.add(change);
   }
 }
+

@@ -8,9 +8,9 @@ void main() {
 //  useCompactVMConfiguration();
   WebElement textInput;
   WebElement label;
-  
+
   String testApplicationPath = getTestPagePath("simple_app", "application.html");
-  
+
   setUp(() {
     return getWebDriver()
         .then((_driver) => driver = _driver)
@@ -26,7 +26,7 @@ void main() {
 
 
   tearDown(closeWebDriver);
-  
+
   group("webdriver", () {
     seleniumTest('should be possible to write to input', () {
       return driver.keyboard.sendKeys('abcdef')
@@ -36,7 +36,7 @@ void main() {
             expect(value, 'abcdef');
           });
     });
-  
+
     seleniumTest('should fill span with value from input', () {
       return driver.keyboard.sendKeys('abcdef')
           .then((_) => sleep(100)) //because of animation frame
@@ -62,7 +62,7 @@ void main() {
             expect(text, 'abcdef');
           });
     });
-    
+
     seleniumTest('should empty span on click on span', () {
       return driver.keyboard.sendKeys(['a', 'e', 'f', Keys.LEFT, Keys.LEFT, 'b', 'c', 'd'])
           .then((_) => driver.mouse.moveTo(element: label).click())

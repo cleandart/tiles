@@ -7,20 +7,20 @@ main() {
 
   Element divEl = new DivElement();
   querySelector("body").append(divEl);
-  
+
   mountComponent(inputComponent(), divEl);
 }
 
 class InputComponent extends Component {
   InputComponent([props, children]): super(props, children);
-  
+
   String text = "";
-  
+
   render() {
     return div({}, [
       input({
-        "type": "text", 
-        "value": text, 
+        "type": "text",
+        "value": text,
         "ref": inputRef,
         "onKeyUp": inputKeyUp
       }),
@@ -30,23 +30,25 @@ class InputComponent extends Component {
         }, text)
     ]);
   }
-  
-  void inputKeyUp(Component component, Event event) {
+
+  bool inputKeyUp(Component component, Event event) {
     InputElement inputElement = getElementForComponent(component);
-    
+
     this.text = inputElement.value;
     this.redraw();
+    return true;
   }
-  
+
   void inputRef(Component component) {
     this.myInput = component;
   }
-  
-  void labelClick(Component component, Event event) {
+
+  bool labelClick(Component component, Event event) {
     this.text = "";
     this.redraw();
+    return true;
   }
-  
+
   Component myInput;
 }
 

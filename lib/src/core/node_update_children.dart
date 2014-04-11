@@ -2,7 +2,7 @@ part of tiles;
 
 class DummyList{
   const DummyList();
-  add(var elem){}
+  add(var elem) {}
 }
 
 // TODO: make changes parameter named
@@ -17,9 +17,9 @@ _updateChildren (Node node, [List<NodeChange> changes]) {
 
   logger.finer('component: ${node.component.props}');
 
-  for(num i = 0; i < descriptions.length; ++i){
+  for (num i = 0; i < descriptions.length; ++i) {
     dynamic key = descriptions[i].key;
-    if(key == null) {
+    if (key == null) {
       key = i;
     }
 
@@ -57,6 +57,7 @@ _updateChildren (Node node, [List<NodeChange> changes]) {
   for (Node child in oldChildren.values) {
     _addChanges(new NodeChange(NodeChangeType.DELETED, child), changes);
   }
+
   node.children = nextChildren;
 }
 
