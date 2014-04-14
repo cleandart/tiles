@@ -11,6 +11,13 @@ class Component extends tiles.Component implements  react.Component {
   Component([props, children]): super(props, children);
   
   @override
+  Map props;
+  
+  dynamic _jsRedraw;
+
+
+  
+  @override
   dynamic ref;
   
   @override
@@ -51,10 +58,10 @@ class Component extends tiles.Component implements  react.Component {
   }
   
   @override
-  getDefaultProps() {}
+  getDefaultProps() => {};
   
   @override
-  getInitialState() {}
+  getInitialState() => {};
   
   @override
   bind(key) {
@@ -67,11 +74,25 @@ class Component extends tiles.Component implements  react.Component {
 
   @override
   initComponentInternal(props, _jsRedraw, [ref = null]) {
+    this._jsRedraw = _jsRedraw;
+    this.ref = ref;
+    _initProps(props);
+  }
+  
+  _initProps(props) {
+    this.props = {}
+      ..addAll(getDefaultProps())
+      ..addAll(props);
   }
 
   @override
   initStateInternal() {
+    this.state = new Map.from(getInitialState());
+    /** Call transferComponent to get state also to _prevState */
+    transferComponentState();
   }
+
+
 
   @override
   Map get prevState => null;
@@ -243,6 +264,7 @@ initTiles() {
 
 
 }
+
 typedef JsObject _Factory({props, children});
 initReact() {
   react.setClientConfiguration();

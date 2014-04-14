@@ -3,11 +3,13 @@ library tiles_benchmark_mass;
 import '../utils/wrapper.dart';
 
 class Mass extends Component {
-  Mass([props, children]): super(props, children);
+  Map props;
+  
+  Mass([this.props, children]): super(null, children);
   
   render() {
     var children = [];
-    for(var i = 0; i < 1000; ++i) {
+    for(var i = 0; i < this.props["count"]; ++i) {
       children.add(div(children: "child $i", key: "child$i"));
     }
     return div(children: children);
