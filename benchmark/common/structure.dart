@@ -1,4 +1,4 @@
-library tiles_benchmark_mass;
+library tiles_benchmark_structure;
 
 import '../utils/wrapper.dart';
 

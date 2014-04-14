@@ -1,10 +1,9 @@
 library tiles_react_wrapper;
 
-import 'package:tiles/tiles.dart' as tiles;
 import 'package:tiles/tiles_browser.dart' as tiles;
+import 'package:tiles/tiles.dart' as tiles;
 import 'package:react/react.dart' as react;
 import 'package:react/react_client.dart' as react;
-import 'dart:async';
 import "dart:js";
 
 class Component extends tiles.Component implements  react.Component {
