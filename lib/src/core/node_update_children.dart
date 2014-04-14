@@ -8,6 +8,7 @@ class DummyList{
 // TODO: make changes parameter named
 // TODO: is there any reason, why _updateChildren is not a method of Node class?
 _updateChildren (Node node, [List<NodeChange> changes]) {
+  logger.fine("_updateChildren called");
   /**
    * get old children from node, next children descriptions from component and prepare next children map
    */
@@ -55,6 +56,7 @@ _updateChildren (Node node, [List<NodeChange> changes]) {
     nextChildren.add(nextChild);
   }
   for (Node child in oldChildren.values) {
+    logger.finer("removin old child");
     _addChanges(new NodeChange(NodeChangeType.DELETED, child), changes);
   }
 
@@ -62,6 +64,7 @@ _updateChildren (Node node, [List<NodeChange> changes]) {
 }
 
 Map<dynamic, Node> _createChildrenMap (List<Node> nodes) {
+  logger.finer("_createChildMap");
   Map result = {};
   num index = 0;
   for (Node node in nodes) {
@@ -72,11 +75,13 @@ Map<dynamic, Node> _createChildrenMap (List<Node> nodes) {
     }
     index++;
   }
+  logger.finer("_createChildMap created");
   return result;
 }
 
 
 List<ComponentDescription> _getChildrenFromComponent(Component component) {
+  logger.finer("_getChildrenFromComponent");
   var rawChildren = component.render();
   if (rawChildren is ComponentDescription) {
     /**
