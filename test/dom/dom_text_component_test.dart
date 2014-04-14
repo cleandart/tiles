@@ -16,7 +16,7 @@ main() {
     setUp(() {
       text = "text";
       component = new DomTextComponent(text);
-      factory = registerComponent(([props, children]) => new Component(props, children));
+      factory = registerComponent(({props, children}) => new Component(props, children));
     });
 
     test("should have working constructor with one String parameter as props", () {
@@ -48,31 +48,31 @@ main() {
     };
 
     test("should surround string child passed to DOM element", () {
-      desc = span(null, [text]);
+      desc = span(children: [text]);
 
       _expectTextComponentInChildren(desc);
     });
 
     test("should surround string passed to DOM element as children", () {
-      desc = span(null, text);
+      desc = span(children: text);
 
       _expectTextComponentInChildren(desc);
     });
 
     test("should surround text passed as children to ComponentDescriptionFactory created by registerComponent", () {
-      desc = factory(null, [text]);
+      desc = factory(children: [text]);
 
       _expectTextComponentInChildren(desc);
     });
 
     test("should surround text passed as child to ComponentDescriptionFactory created by registerComponent", () {
-      desc = factory(null, text);
+      desc = factory(children: text);
 
       _expectTextComponentInChildren(desc);
     });
 
     test("should surround also other then only one child", () {
-      desc = factory(null, [span(), text]);
+      desc = factory(children: [span(), text]);
 
       expect(desc.children.last.props, equals(text));
     });

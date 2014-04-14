@@ -17,17 +17,17 @@ class InputComponent extends Component {
   String text = "";
 
   render() {
-    return div({}, [
-      input({
+    return div(props: {}, children: [
+      input(props: {
         "type": "text",
         "defaultValue": text,
         "ref": inputRef,
         "onKeyUp": inputKeyUp
       }),
-      label({
+      label(props: {
         "id": text,
         "onClick": labelClick
-        }, text)
+        }, children: text)
     ]);
   }
 
@@ -52,5 +52,5 @@ class InputComponent extends Component {
   Component myInput;
 }
 
-ComponentDescriptionFactory inputComponent = registerComponent(([props, List<ComponentDescription> children]) => new InputComponent(props, children));
+ComponentDescriptionFactory inputComponent = registerComponent(({props, List<ComponentDescription> children}) => new InputComponent(props, children));
 

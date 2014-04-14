@@ -87,12 +87,12 @@ class Node {
       /**
        * create result as list with this as updated.
        */
-      _addChanges(new NodeChange(NodeChangeType.UPDATED, this, _oldProps, this.component.props), changes);
+      _addChanges(new NodeChange(NodeChangeType.UPDATED, this, oldProps: _oldProps, newProps: this.component.props), changes);
 
       /**
        * update children and add node changes to result
        */
-      _updateChildren(this, changes);
+      _updateChildren(this, changes: changes);
 
       this._wasNeverUpdated = this._isDirty = this._hasDirtyDescendant = false;
 
@@ -115,7 +115,7 @@ class Node {
    *
    * if no props, apply null
    */
-  void apply([dynamic props, List<ComponentDescription> children]) {
+  void apply({dynamic props, List<ComponentDescription> children}) {
     logger.fine("Node.apply");
     this.component.willReceiveProps(props);
     this._oldProps = this.component.props;

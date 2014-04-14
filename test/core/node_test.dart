@@ -14,7 +14,7 @@ main() {
 //
 //  component.getLogs(callsTo('componentWillReceiveProps')).verify(happenedOnce);
   group("(Node)", () {
-    ComponentFactory factory = ([props, children]) => new Component(props);
+    ComponentFactory factory = ({props, children}) => new Component(props);
 
     /**
      * test simple constructor and state after constructor was called
@@ -68,7 +68,7 @@ main() {
 
     test("should accept ComponentDescription not in list from component.render()", () {
       ComponentMock component = new ComponentMock();
-      component.when(callsTo("render")).alwaysReturn(new ComponentDescription(([dynamic props, children]) => new ComponentMock(), null, null));
+      component.when(callsTo("render")).alwaysReturn(new ComponentDescription(({dynamic props, children}) => new ComponentMock()));
 
       Node node = new Node(null, component, factory);
       node.update();

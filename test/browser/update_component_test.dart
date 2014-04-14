@@ -75,10 +75,10 @@ main() {
     test("should replace only inner element, which should be replaced", () {
       component.when(callsTo("render"))
         .thenCall(() {
-          return [div(null, span()), div()];
+          return [div(children: span()), div()];
         })
         .thenCall(() {
-          return [div(null, img()), div()];
+          return [div(children: img()), div()];
         });
 
       mountComponent(description, mountRoot);
@@ -102,10 +102,10 @@ main() {
     test("should replace element at place", () {
       component.when(callsTo("render"))
         .thenCall(() {
-          return [div(null, [span(), span()])];
+          return [div(children: [span(), span()])];
         })
         .thenCall(() {
-          return [div(null, [img(), span()])];
+          return [div(children: [img(), span()])];
         });
 
       mountComponent(description, mountRoot);
@@ -123,10 +123,10 @@ main() {
     test("should replace 2 elements at place", () {
       component.when(callsTo("render"))
         .thenCall(() {
-          return [div(null, [span(), span(), span()])];
+          return [div(children: [span(), span(), span()])];
         })
         .thenCall(() {
-          return [div(null, [div(), img(), span()])];
+          return [div(children: [div(), img(), span()])];
         });
 
       mountComponent(description, mountRoot);
@@ -145,11 +145,10 @@ main() {
     test("should replace elements properly in more complicated example", () {
       component.when(callsTo("render"))
         .thenCall(() {
-          return [div(null, [
+          return [div(children: [
                     span(),
                     span(),
-                    span(null,
-                      div(null, [
+                    span(children: div(children: [
                         span(),
                         div(),
                         img(),
@@ -159,11 +158,10 @@ main() {
                  ])];
         })
         .thenCall(() {
-          return [div(null, [
+          return [div(children: [
                     div(),
                     img(),
-                    span(null,
-                      div(null, [
+                    span(children: div(children: [
                         span(),
                         i(),
                         img(),
@@ -205,8 +203,8 @@ main() {
       int height = 12;
 
       component.when(callsTo("render"))
-        .thenReturn([span({"class": myClass, "id": id})])
-        .thenReturn([span({"class": myOtherClass, "height": height})]);
+        .thenReturn([span(props: {"class": myClass, "id": id})])
+        .thenReturn([span(props: {"class": myOtherClass, "height": height})]);
 
       mountComponent(description, mountRoot);
 
@@ -227,8 +225,8 @@ main() {
        * one html attribute, one svg and one non of them
        */
       component.when(callsTo("render"))
-        .thenReturn([span({})])
-        .thenReturn([span({"class": "class", "text": "text", "crap": "crap"})]);
+        .thenReturn([span(props: {})])
+        .thenReturn([span(props: {"class": "class", "text": "text", "crap": "crap"})]);
 
       mountComponent(description, mountRoot);
 
@@ -246,8 +244,8 @@ main() {
        * one html attribute, one svg and one non of them
        */
       component.when(callsTo("render"))
-        .thenReturn([span({"id": "id", "d": "d", "crap": "crap"})])
-        .thenReturn([span({"id": "id2", "d": "d2", "crap": "crap2"})]);
+        .thenReturn([span(props: {"id": "id", "d": "d", "crap": "crap"})])
+        .thenReturn([span(props: {"id": "id2", "d": "d2", "crap": "crap2"})]);
 
       mountComponent(description, mountRoot);
 
@@ -265,8 +263,8 @@ main() {
        * one html attribute, one svg and one non of them
        */
       component.when(callsTo("render"))
-        .thenReturn([svg({})])
-        .thenReturn([svg({"id": "id2", "d": "d2", "crap": "crap"})]);
+        .thenReturn([svg(props: {})])
+        .thenReturn([svg(props: {"id": "id2", "d": "d2", "crap": "crap"})]);
 
       mountComponent(description, mountRoot);
 
@@ -284,8 +282,8 @@ main() {
        * one html attribute, one svg and one non of them
        */
       component.when(callsTo("render"))
-        .thenReturn([svg({"id": "id", "d": "d", "crap": "crap"})])
-        .thenReturn([svg({"id": "id2", "d": "d2", "crap": "crap2"})]);
+        .thenReturn([svg(props: {"id": "id", "d": "d", "crap": "crap"})])
+        .thenReturn([svg(props: {"id": "id2", "d": "d2", "crap": "crap2"})]);
 
       mountComponent(description, mountRoot);
 
@@ -304,7 +302,7 @@ main() {
 
       component.when(callsTo("render"))
         .thenReturn([span()])
-        .thenReturn([span({"class": myClass, "height": height})]);
+        .thenReturn([span(props: {"class": myClass, "height": height})]);
 
       mountComponent(description, mountRoot);
 
@@ -323,7 +321,7 @@ main() {
       int height = 12;
 
       component.when(callsTo("render"))
-        .thenReturn([span({"class": myClass, "height": height})])
+        .thenReturn([span(props: {"class": myClass, "height": height})])
         .thenReturn([span()]);
 
       mountComponent(description, mountRoot);
@@ -397,13 +395,13 @@ main() {
 
       cmp1.when(callsTo("render")).alwaysReturn([desc2, desc3]);
       cmp2.when(callsTo("render"))
-        .thenReturn([div({"id": "div1"}), div({"id": "div2"})])  /*div1, div2*/
-        .thenReturn([div({"id": "div1"}), div({"id": "div2"})])
-        .thenReturn([div({"id": "div1"}), div({"id": "div2"})])
-        .thenReturn([div({"id": "div1"}), span()]); // replace div2 by span
+        .thenReturn([div(props: {"id": "div1"}), div(props: {"id": "div2"})])  /*div1, div2*/
+        .thenReturn([div(props: {"id": "div1"}), div(props: {"id": "div2"})])
+        .thenReturn([div(props: {"id": "div1"}), div(props: {"id": "div2"})])
+        .thenReturn([div(props: {"id": "div1"}), span()]); // replace div2 by span
       cmp3.when(callsTo("render"))
-        .thenReturn([div({"id": "div3"}), div({"id": "div4"})])
-        .thenReturn([div({"id": "div3.1"}), div({"id": "div4"})])
+        .thenReturn([div(props: {"id": "div3"}), div(props: {"id": "div4"})])
+        .thenReturn([div(props: {"id": "div3.1"}), div(props: {"id": "div4"})])
         .thenReturn([span(), div()])
         .thenReturn([span(), div()]);
 
@@ -538,8 +536,8 @@ main() {
       String text1 = "hello",
           text2 = "aloha";
       component.when(callsTo("render"))
-        .thenReturn(div(null, text1))
-        .thenReturn(div(null, text2));
+        .thenReturn(div(children: text1))
+        .thenReturn(div(children: text2));
 
       mountComponent(description, mountRoot);
 

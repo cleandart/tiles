@@ -80,8 +80,8 @@ main() {
         /**
          * apply props
          */
-        node.apply("oldProps");
-        node.apply("nextProps");
+        node.apply(props: "oldProps");
+        node.apply(props: "nextProps");
 
         /**
          * expect called of shouldUpdate with correct values

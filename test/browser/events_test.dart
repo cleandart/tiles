@@ -20,7 +20,7 @@ main() {
        */
       querySelector("body").append(mountRoot);
 
-      component = new DomComponent(null, null, "span");
+      component = new DomComponent(tagName: "span");
 
       description = new ComponentDescriptionMock();
       description.when(callsTo("createComponent")).alwaysReturn(component);
@@ -34,15 +34,15 @@ main() {
     });
 
     test("should controll type of event listener and throw if not correct", () {
-      expect(() => mountComponent(span({"onClick": () {} }), mountRoot), throws);
+      expect(() => mountComponent(span(props: {"onClick": () {} }), mountRoot), throws);
     });
 
     test("should accept correct event listener", () {
-      expect(() => mountComponent(span({"onClick": (Component component, Event event) {} }), mountRoot), isNot(throws));
+      expect(() => mountComponent(span(props: {"onClick": (Component component, Event event) {} }), mountRoot), isNot(throws));
     });
 
     test("should prevent default if component prevented default", () {
-      mountComponent(span({
+      mountComponent(span(props: {
         "onClick": (Component component, Event event) {
           event.preventDefault();
         }
@@ -57,7 +57,7 @@ main() {
     });
 
     test("should not prevent default if component not prevented default", () {
-      mountComponent(span({
+      mountComponent(span(props: {
         "onClick": (Component component, Event event) {}
       }), mountRoot);
 
@@ -71,12 +71,12 @@ main() {
 
     test("should bubble event in correct order and only once", () {
       num order = 0;
-      mountComponent(span({
+      mountComponent(span(props: {
         "id": "wrapper",
         "onClick": expectAsync((Component component, Event event) {
           expect(order++, equals(1));
         }, count: 1)
-      }, span({
+      }, children: span(props: {
         "onClick": expectAsync((Component component, Event event) {
           expect(order++, equals(0));
         }, count: 1)
@@ -87,12 +87,12 @@ main() {
     });
 
     test("should put correct component to event listeners", () {
-      mountComponent(span({
+      mountComponent(span(props: {
         "onClick": expectAsync((DomComponent component, Event event) {
           expect(component.tagName, equals("span"));
           expect(getElementForComponent(component), equals(mountRoot.firstChild));
         })
-      }, div({
+      }, children: div(props: {
         "onClick": expectAsync((DomComponent component, Event event) {
           expect(component.tagName, equals("div"));
           expect(getElementForComponent(component), equals(mountRoot.firstChild.firstChild));
@@ -103,10 +103,10 @@ main() {
     });
 
     test("should ignore stopPropagation on event", () {
-      mountComponent(span({
+      mountComponent(span(props: {
         "onClick": expectAsync((DomComponent component, Event event) {
         }, count: 1)
-      }, div({
+      }, children: div(props: {
         "onClick": expectAsync((DomComponent component, Event event) {
           event.stopPropagation();
         }, count: 1)
@@ -116,10 +116,10 @@ main() {
     });
 
     test("should not propagate up when listener returns false", () {
-      mountComponent(span({
+      mountComponent(span(props: {
           "onClick": expectAsync((DomComponent component, Event event) {
           }, count: 0)
-        }, div({
+        }, children: div(props: {
           "onClick": expectAsync((DomComponent component, Event event) {
             return false;
           }, count: 1)
@@ -136,7 +136,7 @@ main() {
         "onClick": expectAsync((Component component, Event event) {
         }, count: 1)
       });
-      ComponentDescriptionFactory component = registerComponent(([props, children]) => componentMock);
+      ComponentDescriptionFactory component = registerComponent(({props, children}) => componentMock);
       mountComponent(component(), mountRoot);
 
       mountRoot.children.first.click();

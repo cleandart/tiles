@@ -1,7 +1,7 @@
 import "package:tiles/tiles.dart" as react;
 import "package:tiles/tiles_browser.dart" as react;
-import "dart:html";
-import "dart:async";
+//import "dart:html";
+//import "dart:async";
 import "package:logging/logging.dart";
 import "package:useful/useful.dart";
 
@@ -27,7 +27,7 @@ class _Div extends react.Component{
   }
 }
 
-var Div = react.registerComponent(([props, children]) => new _Div(props, children));
+var Div = react.registerComponent(({props, children}) => new _Div(props, children));
 
 class _Span extends react.Component{
 
@@ -38,11 +38,11 @@ class _Span extends react.Component{
   }
 
   render() {
-    return react.span(props, props['children']);
+    return react.span(props: props, children: props['children']);
   }
 }
 
-var Span = react.registerComponent(([props, children]) => new _Span(props, children));
+var Span = react.registerComponent(({props, children}) => new _Span(props, children));
 
 class _Hello extends react.Component {
 
@@ -54,20 +54,20 @@ class _Hello extends react.Component {
     var children = [];
     for (var elem in data) {
       children.add(
-          react.div({'class': 'div(${elem[0]})'},[
-            react.span({'class': 'inner_span_${elem[0]}'}, elem[0]),
+          react.div(props: {'class': 'div(${elem[0]})'}, children: [
+            react.span(props: {'class': 'inner_span_${elem[0]}'}, children: elem[0]),
             " ",
-            react.span({'class': 'inner_span_${elem[0]}'}, elem[1])
-          ], elem[0])
+            react.span(props: {'class': 'inner_span_${elem[0]}'}, children: elem[1])
+          ], key: elem[0])
       );
     }
-    var res = react.div({}, children);
+    var res = react.div(props: {}, children: children);
     timeprint("rendering ends");
     return res;
   }
 }
 
-var Hello = react.registerComponent(([p, c]) => new _Hello(p, c));
+var Hello = react.registerComponent(({props, children}) => new _Hello(props, children));
 
 void main() {
   setupDefaultLogHandler();
@@ -80,7 +80,7 @@ void main() {
     data.add(["name_$i", "value_$i"]);
   }
   timeprint("virtual dom building starts");
-  react.ComponentDescription h = Hello({"data": data}, []);
+  react.ComponentDescription h = Hello(props: {"data": data}, children: []);
   react.Node node = new react.Node.fromDescription(null, h);
   for (int i=0; i<100; i++) {
     node.update(force: true);

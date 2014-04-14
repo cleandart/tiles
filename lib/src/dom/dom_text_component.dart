@@ -15,4 +15,4 @@ class DomTextComponent extends Component {
 }
 
 ComponentDescriptionFactory _domTextComponentDescriptionFactory =
-  registerComponent(([String props, children]) => new DomTextComponent(props));
+  registerComponent(({String props, children}) => new DomTextComponent(props));

@@ -7,7 +7,7 @@ class DummyList{
 
 // TODO: make changes parameter named
 // TODO: is there any reason, why _updateChildren is not a method of Node class?
-_updateChildren (Node node, [List<NodeChange> changes]) {
+_updateChildren (Node node, {List<NodeChange> changes}) {
   logger.fine("_updateChildren called");
   /**
    * get old children from node, next children descriptions from component and prepare next children map
@@ -34,7 +34,7 @@ _updateChildren (Node node, [List<NodeChange> changes]) {
     if (oldChild != null && oldChild.factory == description.factory) {
       logger.finer('same factory, updating props');
       nextChild = oldChild;
-      nextChild.apply(description.props, description.children);
+      nextChild.apply(props: description.props, children: description.children);
       _addChanges(new NodeChange(NodeChangeType.MOVED, nextChild), changes);
 
       nextChild.update(changes: changes, force: true);

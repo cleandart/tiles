@@ -49,7 +49,7 @@ mountComponent(ComponentDescription description, html.HtmlElement mountRoot) {
  *
  * That means, it render it's tree structure into element.
  */
-_mountNode(Node node, html.HtmlElement mountRoot, [Node nextNode]) {
+_mountNode(Node node, html.HtmlElement mountRoot, {Node nextNode}) {
   logger.fine("_mountNode called");
   /**
    * update to build full node tree structure
@@ -105,7 +105,7 @@ _mountNode(Node node, html.HtmlElement mountRoot, [Node nextNode]) {
       } catch (e) {}
     });
     node.children.forEach((Node child) {
-      _mountNode(child, mountRoot, nextNode);
+      _mountNode(child, mountRoot, nextNode: nextNode);
     });
   }
   /**
@@ -185,10 +185,9 @@ _applyAttribute(html.Element element, String key, dynamic value) {
     /**
      * retype it to not throwing warving
      */
-    html.InputElement el = element;
     if (key == _VALUE) {
-      if (el.value != value.toString()) {
-        el.value = value.toString();
+      if (element.value != value.toString()) {
+        element.value = value.toString();
       }
     } else if (key == _DEFAULTVALUE) {
       element.setAttribute(_VALUE, value.toString());
