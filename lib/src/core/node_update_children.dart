@@ -34,10 +34,11 @@ _updateChildren (Node node, {List<NodeChange> changes}) {
     if (oldChild != null && oldChild.factory == description.factory) {
       logger.finer('same factory, updating props');
       nextChild = oldChild;
-      nextChild.apply(props: description.props, children: description.children);
+      Map oldListeners = nextChild.listeners;
+      nextChild.apply(props: description.props, children: description.children, listeners: description.listeners);
       _addChanges(new NodeChange(NodeChangeType.MOVED, nextChild), changes);
 
-      nextChild.update(changes: changes, force: true);
+      nextChild.update(changes: changes, force: true, oldListeners: oldListeners);
       oldChildren.remove(key);
     } else {
       logger.finer('different factory, create & delete');

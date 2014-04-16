@@ -14,7 +14,7 @@ part of tiles;/**
  */
 ComponentDescriptionFactory registerComponent(ComponentFactory factory) {
   logger.finest("component registered");
-  return ({dynamic props, dynamic children, dynamic key}) {
+  return ({dynamic props, dynamic children, dynamic key, Map listeners}) {
     logger.finest("Component description factory called");
     /**
      * parse children, as they can be in different forms
@@ -22,6 +22,6 @@ ComponentDescriptionFactory registerComponent(ComponentFactory factory) {
      * here is the place, where strings are converted to DomTextComponent description factory
      */
     children = _processChildren(children);
-    return new ComponentDescription(factory, props: props, children: children, key: key);
+    return new ComponentDescription(factory, props: props, children: children, key: key, listeners: listeners);
   };
 }

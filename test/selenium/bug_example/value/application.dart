@@ -21,13 +21,15 @@ class InputComponent extends Component {
       input(props: {
         "type": "text",
         "value": text,
-        "ref": inputRef,
+        "ref": inputRef
+      }, listeners: {
         "onKeyUp": inputKeyUp
       }),
       label(props: {
-        "id": text,
-        "onClick": labelClick
-        }, children: text)
+        "id": text
+        }, listeners: {
+          "onClick": labelClick
+        },children: text)
     ]);
   }
 

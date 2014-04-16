@@ -9,10 +9,12 @@ class ComponentDescription {
 
   final dynamic key;
 
+  final Map listeners;
+
   /**
    * default constructor which only set final vars.
    */
-  ComponentDescription (ComponentFactory this.factory, {dynamic  this.props, this.children, this.key}) {}
+  ComponentDescription (ComponentFactory this.factory, {dynamic  this.props, this.children, this.key, this.listeners}) {}
 
   /**
    * creates component by factory with props.

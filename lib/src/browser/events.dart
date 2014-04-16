@@ -95,6 +95,8 @@ _processEvent(String key, dynamic value, Node node) {
     html.Element masterRoot = _nodeToElement[parent];
 
     _registerListener(masterRoot, key);
+  } else {
+    throw "Listeners should be applied only to valid event types, not on $key";
   }
 }
 
@@ -112,17 +114,15 @@ _handleEventType(String what) {
     Node targetNode = _elementToNode[event.target];
 
     while (targetNode != null) {
-
-      EventListener listener;
-
-      try {
-        listener = targetNode.component.props[what];
-      } catch (e) {}
-
-      if (listener != null && listener(targetNode.component, event) == false) {
-        break;
+      if (targetNode.listeners != null) {
+        EventListener listener;
+  
+        listener = targetNode.listeners[what];
+  
+        if (listener != null && listener(targetNode.component, event) == false) {
+          break;
+        }
       }
-
       targetNode = targetNode.parent;
     }
   };

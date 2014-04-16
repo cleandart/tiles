@@ -81,7 +81,7 @@ _mountNode(Node node, html.HtmlElement mountRoot, {Node nextNode}) {
     html.Element componentElement = new html.Element.tag(component.tagName);
     _saveRelations(node, componentElement);
 
-    _applyAttributes(componentElement, component.props, svg: component.svg, node: node);
+    _applyAttributes(componentElement, component.props, svg: component.svg, node: node, listeners: node.listeners);
     node.children.forEach((Node child) => _mountNode(child, componentElement));
 
     if (nextNode != null) {
@@ -92,18 +92,12 @@ _mountNode(Node node, html.HtmlElement mountRoot, {Node nextNode}) {
   } else {
     logger.finer("mounting custom component");
     /**
-     * if component is custom component,
-     * then just run recursion for children on the same element
+     * if component is custom component, apply event listeners
+     * and then just run recursion for children on the same element
      */
     _nodeToElement[node] = mountRoot;
-    allowedEvents.keys.forEach((eventType) {
-      try {
-        EventListener listener = node.component.props[eventType];
-        if (listener != null) {
-          _processEvent(eventType, listener, node);
-        }
-      } catch (e) {}
-    });
+    _applyEventListeners(node.listeners, node);
+    
     node.children.forEach((Node child) {
       _mountNode(child, mountRoot, nextNode: nextNode);
     });
@@ -143,7 +137,7 @@ _canAddAttribute(bool svg, String key) {
  *
  * If oldProps setted, use them to compare new and remove old.
  */
-_applyAttributes(html.Element element, Map props, {bool svg: false, Node node, Map oldProps}) {
+_applyAttributes(html.Element element, Map props, {bool svg: false, Node node, Map oldProps, Map listeners}) {
   logger.fine("_applyAttributes called");
   if (oldProps == null) {
     oldProps = {};
@@ -164,10 +158,14 @@ _applyAttributes(html.Element element, Map props, {bool svg: false, Node node, M
            * remove key from oldProps to "mark it" as present in new props
            */
           oldProps.remove(key);
-        } else {
-          _processEvent(key, value, node);
         }
   });
+  
+  /**
+   * if listeners exists, apply them
+   */
+  _applyEventListeners(listeners, node);
+  
 
   /**
    * remove old props not present in new one.
@@ -177,6 +175,14 @@ _applyAttributes(html.Element element, Map props, {bool svg: false, Node node, M
   });
 
 
+}
+
+_applyEventListeners(Map listeners, Node node) {
+  if (listeners != null) {
+    listeners.forEach((String eventType, EventListener listener) {
+      _processEvent(eventType, listener, node);
+    });
+  }
 }
 
 _applyAttribute(html.Element element, String key, dynamic value) {
