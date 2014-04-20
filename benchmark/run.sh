@@ -1,42 +1,89 @@
 #!/bin/bash
 
+########################################################################
+#                                                                      #
+#    To run this script, content_shell must be in the path,            #
+#    and dart editor running with tiles as one of the root folders.    #
+#                                                                      #
+########################################################################
+
 . ./bin/functions.sh --source-only
 
 DIR=$(dirname $0)
 
 STARTTIME=$(date +%s);
 
-startStopWatch() {
-	STARTTIME=$(date +%s%N);
+runner () {
+	content_shell --dump-render-tree \
+		"http://127.0.0.1:3030/tiles/benchmark/runner.html#{\"levels\":$2,\"library\":\"$1\",\"environment\":\"$3\"}" 2> /dev/null \
+	| grep "CONSOLE"\
+	| sed "s/^CONSOLE MESSAGE: line [0-9]*: //g"
 }
 
-stopStopWatch() {
-	ENDTIME=$(date +%s%N)
-	DURATION=$(($ENDTIME-$STARTTIME))
-
-	MILISECONDS=$(($DURATION/1000000))
-	SECONDS=$(($MILISECONDS/1000))
-	echo "Time needed: $(yellow)$SECONDS$(white) sedonds and $(yellow)$MILISECONDS$(white) miliseconds"
+tiles () {
+	for i in "$@"
+	do
+		printf "tiles $i: ";
+		runner tiles $i "DOM";
+	done
 }
 
-run () {
-	./content_shell --dump-render-tree benchmark/$1.html 2>&1
+react () {
+	for i in "$@"
+	do
+		printf "react $i: ";
+		runner react $i "DOM";
+	done
 }
 
-analyze() {
-	startStopWatch;
-
-	RESULT=$(run $1);
-	echo "number of linex in $(green)$1$(white) is $(yellow)`echo "$RESULT" | wc -l`$(white)";
-
-	stopStopWatch;
+tiles_virtual () {
+	for i in "$@"
+	do
+		printf "tiles virtual $i: ";
+		runner tiles $i "virtual";
+	done
 }
 
-analyze mass_react;
+tiles_mass_vs_structure () {
+	echo "$(green)tiles_mass_vs_structure$(white)" 1>&2;
+	tiles \
+		"[5040]         "\
+		"[5040,1]       "\
+		"[504,10]       "\
+		"[50,10,10]     "\
+		"[50,10,5,2]    "\
+		"[10,10,5,5,2]  "\
+		"[10,5,5,5,2,2] "\
+		"[7,6,5,4,3,2,1]"
+}
 
-analyze mass_tiles;
+react_mass_vs_structure () {
+	echo "$(green)react_mass_vs_structure$(white)" 1>&2;
+	react \
+		"[5040]         "\
+		"[5040,1]       "\
+		"[504,10]       "\
+		"[50,10,10]     "\
+		"[50,10,5,2]    "\
+		"[10,10,5,5,2]  "\
+		"[10,5,5,5,2,2] "\
+		"[7,6,5,4,3,2,1]"
+}
 
-analyze structure_tiles;
+tiles_virtual_analyze () {
+	echo "$(green)tiles_virtual$(white)" 1>&2;
+	tiles_virtual \
+		"[5040]         "\
+		"[5040,1]       "\
+		"[504,10]       "\
+		"[50,10,10]     "\
+		"[50,10,5,2]    "\
+		"[10,10,5,5,2]  "\
+		"[10,5,5,5,2,2] "\
+		"[7,6,5,4,3,2,1]"
+}
 
-analyze structure_react;
+tiles_mass_vs_structure
+react_mass_vs_structure
+tiles_virtual_analyze
 
