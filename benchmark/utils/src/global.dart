@@ -18,29 +18,29 @@ printResults() {
 
 Map getSettingsFromHash() {
   String hash;
-  if(window.location.hash.length > 1) {
+  if (window.location.hash.length > 1) {
     hash = window.location.hash.substring(1);
   } else {
     hash = "{}";
   }
-  
+
   var json = JSON.decode(hash);
 //  window.console.log("${json["levels"][2]}");
-  
+
   Map result = {};
 
   _parseInput(json, result, ["levels", "library", "environment"]);
-  
+
   return result;
 }
 
 _parseInput(dynamic json, Map result, List<String> whats) {
-  for(String what in whats){
+  for (String what in whats) {
     if (json[what] != null) {
       result[what] = json[what];
     } else {
       result[what] = settings[what];
     }
   }
-  
+
 }

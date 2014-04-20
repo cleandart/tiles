@@ -4,21 +4,22 @@ import 'dart:html';
 
 main() {
   var localSettings = getSettingsFromHash();
-  if(localSettings["library"] == "react") {
+  if (localSettings["library"] == "react") {
     initReact();
   } else {
     initTiles();
   }
-    
-  
+
+
   Element element = querySelector("#container");
   var description = component(props: {"levels": localSettings["levels"], "level": 0, "prefix": "runner"});
-  
-  if(localSettings["environment"] == "virtual") {
-    createVirtualDOM(description, null);
+
+  if (localSettings["environment"] == "virtual") {
+    createVirtualDOM(description, element);
   } else {
     mountComponent(description, element);
   }
-  
+
   printResults();
 }
+

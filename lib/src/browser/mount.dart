@@ -97,7 +97,7 @@ _mountNode(Node node, html.HtmlElement mountRoot, {Node nextNode}) {
      */
     _nodeToElement[node] = mountRoot;
     _applyEventListeners(node.listeners, node);
-    
+
     node.children.forEach((Node child) {
       _mountNode(child, mountRoot, nextNode: nextNode);
     });
@@ -160,12 +160,12 @@ _applyAttributes(html.Element element, Map props, {bool svg: false, Node node, M
           oldProps.remove(key);
         }
   });
-  
+
   /**
    * if listeners exists, apply them
    */
   _applyEventListeners(listeners, node);
-  
+
 
   /**
    * remove old props not present in new one.

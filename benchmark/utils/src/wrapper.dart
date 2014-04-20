@@ -2,33 +2,33 @@ part of utils;
 
 class Component extends tiles.Component implements  react.Component {
   Component([props, children]): super(props, children);
-  
+
   @override
   Map props;
-  
+
   dynamic _jsRedraw;
 
 
-  
+
   @override
   dynamic ref;
-  
+
   @override
   dynamic state;
-  
+
   @override
   dynamic nextState;
-  
+
   @override
   setState(_) {
     redraw();
   }
-  
+
   @override
   replaceState(_) {
     redraw();
   }
-  
+
   @override
   componentWillMount() {
   }
@@ -42,21 +42,21 @@ class Component extends tiles.Component implements  react.Component {
   componentWillReceiveProps(_) {
     willReceiveProps(_);
   }
-  
+
   @override
-  componentWillUpdate(_, __){}
-  
+  componentWillUpdate(_, __) {}
+
   @override
   componentWillUnmount() {
     willUnmount();
   }
-  
+
   @override
   getDefaultProps() => {};
-  
+
   @override
   getInitialState() => {};
-  
+
   @override
   bind(key) {
   }
@@ -72,7 +72,7 @@ class Component extends tiles.Component implements  react.Component {
     this.ref = ref;
     _initProps(props);
   }
-  
+
   _initProps(props) {
     this.props = {}
       ..addAll(getDefaultProps())
@@ -122,16 +122,16 @@ var circle, g, line, path, polyline, rect, svg, text;
 
 
 
-_ReactElementToTiles(element){
+_ReactElementToTiles(element) {
   return ({props, children, key, listeners}) {
-    if(!(props is Map)) {
+    if (!(props is Map)) {
       props = {};
     }
     if (listeners is Map) {
       props.addAll(listeners);
     }
     props["key"] = key;
-   return element(props, children); 
+   return element(props, children);
   };
 }
 typedef JsObject _Factory({props, children});

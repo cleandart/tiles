@@ -8,24 +8,26 @@ initGlobal() {
 initTiles() {
   initGlobal();
   tiles.initTilesBrowserConfiguration();
-  
+
   createVirtualDOM = (dynamic what, dynamic where) {
     tilesBenchmark.start(Benchmark.VIRTUALDOMBUILDING);
+    tilesBenchmark.start(Benchmark.ALLRENDERED);
     tiles.Node node = new tiles.Node.fromDescription(null, what);
     node.update();
     tilesBenchmark.stop(Benchmark.VIRTUALDOMBUILDING);
   };
-  
+
   mountComponent = (dynamic what, dynamic where) {
     tilesBenchmark.start(Benchmark.MOUNTING);
+    tilesBenchmark.start(Benchmark.ALLRENDERED);
     tiles.mountComponent(what, where);
     tilesBenchmark.stop(Benchmark.MOUNTING);
   };
 
   registerComponent = tiles.registerComponent;
-  
+
   benchmark = tilesBenchmark;
-  
+
   a = tiles.a;
   abbr = tiles.abbr;
   address = tiles.address;
@@ -166,32 +168,33 @@ initReact() {
   initGlobal();
   react.setClientConfiguration();
 
-  createVirtualDOM = (dynamic what, dynamic where) {
-    // TODO domysli
-  };
-  
+
   mountComponent = (dynamic what, dynamic where) {
     reactBenchmark.start(Benchmark.MOUNTING);
-    react.renderComponent(what, where); 
+    reactBenchmark.start(Benchmark.ALLRENDERED);
+    react.renderComponent(what, where);
     reactBenchmark.stop(Benchmark.MOUNTING);
   };
+
+  createVirtualDOM = mountComponent;
+
   registerComponent = (_Factory factory) {
     react.ReactComponentFactory reactFactory = ([Map props, dynamic children]) => factory(props: props, children: children);
     var registeredComponent = react.registerComponent(reactFactory);
     return ({props, children, key, Map listeners}) {
-      if(!(props is Map)) {
+      if (!(props is Map)) {
         props = {};
       }
-      if(listeners is Map) {
+      if (listeners is Map) {
         props.addAll(listeners);
       }
       props["key"] = key;
       return registeredComponent(props, children);
     };
   };
-  
+
   benchmark = reactBenchmark;
-  
+
   a = _ReactElementToTiles(react.a);
   abbr = _ReactElementToTiles(react.abbr);
   address = _ReactElementToTiles(react.address);
