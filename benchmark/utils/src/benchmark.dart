@@ -8,6 +8,8 @@ class Benchmark {
   static const ALLRENDERED = "All rendered";
   static const VIRTUALDOMBUILDING = "Virtual DOM building";
   static const MOUNTING = "Mounting to element";
+  static const CLEANUPDATING = "CLEAN UPDATING";
+  static const DIRTYUPDATING = "DIRTY UPDATING";
   Stopwatch stopwatch;
   Benchmark() {
     stopwatch = new Stopwatch()..start();
@@ -32,10 +34,15 @@ class Benchmark {
     duration.end = stopwatch.elapsedMilliseconds;
   }
 
-  toString() => "${durations[MOUNTING]}, ${durations[VIRTUALDOMBUILDING]}, ${durations[ALLRENDERED]}";
+  toString() => "${durations[MOUNTING]}, ${durations[VIRTUALDOMBUILDING]}, ${durations[ALLRENDERED]}, ${durations[CLEANUPDATING]}, ${durations[DIRTYUPDATING]}";
 
   print(var printer) {
     printer(this.toString());
+  }
+  
+  prepareUpdate() {
+    toRender = 1;
+    rendered = 0;
   }
 }
 

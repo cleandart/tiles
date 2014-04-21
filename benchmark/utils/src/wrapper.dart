@@ -1,7 +1,12 @@
 part of utils;
 
 class Component extends tiles.Component implements  react.Component {
-  Component([props, children]): super(props, children);
+  Component([props, children]): super(props, children), _needUpdateController = new StreamController(sync: true) {
+  }
+
+  final StreamController _needUpdateController;
+
+  Stream<bool> get needUpdate => _needUpdateController.stream;
 
   @override
   Map props;
@@ -22,6 +27,16 @@ class Component extends tiles.Component implements  react.Component {
   @override
   setState(_) {
     redraw();
+  }
+
+  
+  redraw([now]) {
+    if(_USED == _REACT) {
+      _jsRedraw();
+    } else {
+      _needUpdateController.add(now);
+      tiles.updateAllVirtualDomTreesSync();
+    }
   }
 
   @override

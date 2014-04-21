@@ -6,6 +6,7 @@ initGlobal() {
 }
 
 initTiles() {
+  _USED = _TILES;
   initGlobal();
   tiles.initTilesBrowserConfiguration();
 
@@ -165,6 +166,7 @@ initTiles() {
 }
 
 initReact() {
+  _USED = _REACT;
   initGlobal();
   react.setClientConfiguration();
 

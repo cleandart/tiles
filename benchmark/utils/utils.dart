@@ -7,6 +7,7 @@ import 'package:react/react_client.dart' as react;
 import "dart:js";
 import "dart:html";
 import "dart:convert";
+import "dart:async";
 import 'package:logging/logging.dart';
 import "package:useful/useful.dart";
 

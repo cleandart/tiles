@@ -1,10 +1,16 @@
 part of utils;
 
 Map settings = {
-  "levels": [1],
+  "levels": [1,1],
   "lib": "tiles",
-  "environment": "DOM"
+  "environment": "DOM",
+  "dirty": false,
+  "update": true
 };
+
+String _USED;
+const String _TILES = "tiles";
+const String _REACT = "react";
 
 Logger logger = new Logger('benchmark');
 Logger loggerTiles = new Logger('benchmark.tiles');
@@ -29,7 +35,7 @@ Map getSettingsFromHash() {
 
   Map result = {};
 
-  _parseInput(json, result, ["levels", "library", "environment"]);
+  _parseInput(json, result, ["levels", "library", "environment", "update", "dirty"]);
 
   return result;
 }

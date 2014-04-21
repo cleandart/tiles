@@ -2,16 +2,25 @@ library tiles_benchmark_component;
 
 import '../utils/utils.dart';
 
+var update;
+
+bool redrawing = false;
+
 class BenchmarkComponent extends Component {
   Map props;
+  
+  String prefix;
+  String me;
+  num level;
 
   BenchmarkComponent([this.props, children]): super(null, children) {
+    me = "";
   }
-
+  
   render() {
     List levels = props["levels"];
-    num level = props["level"];
-    String prefix = props["prefix"];
+    level = props["level"];
+    prefix = props["prefix"] + me;
 
     if (levels.length <= level) {
       return div(children: "i am ${prefix}", key: prefix);
@@ -29,19 +38,33 @@ class BenchmarkComponent extends Component {
         children.add(component(props: {
           "levels": levels,
           "level": level + 1,
-          "prefix": props["prefix"] + ".$i"
+          "prefix": prefix + ".$i"
         }, key: "child$i"));
       }
     }
 
     ++benchmark.rendered;
     if (benchmark.rendered == benchmark.toRender) {
-      benchmark.stop(Benchmark.ALLRENDERED);
+      if (!redrawing) {
+        benchmark.stop(Benchmark.ALLRENDERED);
+      }
+    }
+    
+    if (level == 0) {
+      update = this.redraw;
     }
 
     return div(children: children);
   }
-
+  
+  redraw([bool dirty = false]) {
+    redrawing = true;
+    if (dirty) {
+      me = "Updated is ";
+    }
+    super.redraw();
+  }
+  
 }
 
 var registeredComponent = registerComponent(({props, children}) => new BenchmarkComponent(props, children));

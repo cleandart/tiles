@@ -36,10 +36,26 @@ initTilesBrowserConfiguration() {
  */
 _update(num data) {
   logger.finer("_update called");
+  _updateTrees();
+  html.window.animationFrame.then(_update);
+}
+
+/**
+ * Performs update of dom synchronously.
+ *
+ * Find all root nodes, and updte each tree by updating root node.
+ */
+_updateTrees() {
   _rootNodes.forEach((Node node) {
     _updateTree(node);
   });
-  html.window.animationFrame.then(_update);
+}
+
+/**
+ * Function to sync update of all doms - for benchmarks.
+ */
+updateAllVirtualDomTreesSync() {
+  _updateTrees();
 }
 
 /**

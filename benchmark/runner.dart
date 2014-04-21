@@ -18,8 +18,19 @@ main() {
     createVirtualDOM(description, element);
   } else {
     mountComponent(description, element);
-  }
 
+    if (localSettings["update"] == true) {
+      bool dirty = localSettings["dirty"];
+      String benchmarkType = dirty ? Benchmark.DIRTYUPDATING : Benchmark.CLEANUPDATING;
+
+      benchmark.prepareUpdate();
+      benchmark.start(benchmarkType);
+      update(dirty);
+      benchmark.stop(benchmarkType);
+
+    }
+  }
+  
   printResults();
 }
 
