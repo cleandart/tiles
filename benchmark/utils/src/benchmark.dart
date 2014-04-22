@@ -34,7 +34,7 @@ class Benchmark {
     duration.end = stopwatch.elapsedMilliseconds;
   }
 
-  toString() => "${durations[MOUNTING]}, ${durations[VIRTUALDOMBUILDING]}, ${durations[ALLRENDERED]}, ${durations[CLEANUPDATING]}, ${durations[DIRTYUPDATING]}";
+  toString() => "${durations[MOUNTING]},${durations[VIRTUALDOMBUILDING]},${durations[ALLRENDERED]},${durations[CLEANUPDATING]},${durations[DIRTYUPDATING]}";
 
   print(var printer) {
     printer(this.toString());
