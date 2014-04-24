@@ -39,7 +39,7 @@ class Benchmark {
   print(var printer) {
     printer(this.toString());
   }
-  
+
   prepareUpdate() {
     toRender = 1;
     rendered = 0;

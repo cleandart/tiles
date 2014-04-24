@@ -29,9 +29,9 @@ class Component extends tiles.Component implements  react.Component {
     redraw();
   }
 
-  
+
   redraw([now]) {
-    if(_USED == _REACT) {
+    if (_USED == _REACT) {
       _jsRedraw();
     } else {
       _needUpdateController.add(now);

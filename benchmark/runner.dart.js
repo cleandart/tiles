@@ -1516,11 +1516,11 @@ var $$ = {};
     }
   },
   _Copier_visitMap_closure: {
-    "^": "Closure:174;box_0,this_1",
+    "^": "Closure:175;box_0,this_1",
     call$2: [function(key, val) {
       var t1 = this.this_1;
       J.$indexSet$ax(this.box_0.copy_0, t1._dispatch$1(key), t1._dispatch$1(val));
-    }, "call$2", null, 4, 0, null, 24, 173, "call"],
+    }, "call$2", null, 4, 0, null, 24, 174, "call"],
     $isFunction: true
   },
   _Serializer: {
@@ -2754,7 +2754,7 @@ var $$ = {};
     $isFunction: true
   },
   Primitives_functionNoSuchMethod_closure: {
-    "^": "Closure:175;box_0,arguments_1,namedArgumentList_2",
+    "^": "Closure:176;box_0,arguments_1,namedArgumentList_2",
     call$2: [function($name, argument) {
       var t1 = this.box_0;
       t1.names_1 = t1.names_1 + "$" + H.S($name);
@@ -2765,14 +2765,14 @@ var $$ = {};
     $isFunction: true
   },
   Primitives_applyFunction_closure: {
-    "^": "Closure:175;box_0,defaultArguments_1",
+    "^": "Closure:176;box_0,defaultArguments_1",
     call$2: [function(parameter, value) {
       var t1 = this.defaultArguments_1;
       if (t1.containsKey$1(parameter))
         t1.$indexSet(0, parameter, value);
       else
         this.box_0.bad_0 = true;
-    }, "call$2", null, 4, 0, null, 176, 19, "call"],
+    }, "call$2", null, 4, 0, null, 177, 19, "call"],
     $isFunction: true
   },
   TypeErrorDecoder: {
@@ -3155,7 +3155,7 @@ var $$ = {};
     $isFunction: true
   },
   initHooks_closure0: {
-    "^": "Closure:177;getUnknownTag_1",
+    "^": "Closure:178;getUnknownTag_1",
     call$2: [function(o, tag) {
       return this.getUnknownTag_1(o, tag);
     }, "call$2", null, 4, 0, null, 140, 78, "call"],
@@ -4382,7 +4382,7 @@ var $$ = {};
     $isFunction: true
   },
   _Future__chainForeignFuture_closure0: {
-    "^": "Closure:178;target_1",
+    "^": "Closure:179;target_1",
     call$2: [function(error, stackTrace) {
       this.target_1._completeError$2(error, stackTrace);
     }, function(error) {
@@ -4405,7 +4405,7 @@ var $$ = {};
     $isFunction: true
   },
   _Future__propagateToListeners_handleValueCallback: {
-    "^": "Closure:179;box_1,listener_3,sourceValue_4,zone_5",
+    "^": "Closure:180;box_1,listener_3,sourceValue_4,zone_5",
     call$0: [function() {
       var e, s, t1, t2, exception;
       try {
@@ -4535,11 +4535,11 @@ var $$ = {};
     "^": "Closure:141;box_2,listener_11",
     call$1: [function(ignored) {
       P._Future__propagateToListeners(this.box_2.source_4, this.listener_11);
-    }, "call$1", null, 2, 0, null, 180, "call"],
+    }, "call$1", null, 2, 0, null, 181, "call"],
     $isFunction: true
   },
   _Future__propagateToListeners_handleWhenCompleteCallback_closure0: {
-    "^": "Closure:178;box_0,listener_12",
+    "^": "Closure:179;box_0,listener_12",
     call$2: [function(error, stackTrace) {
       var t1, completeResult;
       t1 = this.box_0;
@@ -4604,7 +4604,7 @@ var $$ = {};
   Stream_forEach__closure0: {
     "^": "Closure:141;",
     call$1: [function(_) {
-    }, "call$1", null, 2, 0, null, 181, "call"],
+    }, "call$1", null, 2, 0, null, 182, "call"],
     $isFunction: true
   },
   Stream_forEach_closure0: {
@@ -4619,7 +4619,7 @@ var $$ = {};
     call$1: [function(_) {
       var t1 = this.box_0;
       t1.count_0 = t1.count_0 + 1;
-    }, "call$1", null, 2, 0, null, 181, "call"],
+    }, "call$1", null, 2, 0, null, 182, "call"],
     $isFunction: true
   },
   Stream_length_closure0: {
@@ -5214,7 +5214,7 @@ var $$ = {};
     $isFunction: true
   },
   _cancelAndErrorClosure_closure: {
-    "^": "Closure:182;subscription_0,future_1",
+    "^": "Closure:183;subscription_0,future_1",
     call$2: [function(error, stackTrace) {
       return P._cancelAndError(this.subscription_0, this.future_1, error, stackTrace);
     }, "call$2", null, 4, 0, null, 110, 111, "call"],
@@ -5287,7 +5287,7 @@ var $$ = {};
     }, 139],
     _handleError$2: [function(error, stackTrace) {
       this._addError$2(error, stackTrace);
-    }, "call$2", "get$_handleError", 4, 0, 183, 110, 111],
+    }, "call$2", "get$_handleError", 4, 0, 184, 110, 111],
     _handleDone$0: [function() {
       this._close$0();
     }, "call$0", "get$_handleDone", 0, 0, 105],
@@ -5818,7 +5818,7 @@ var $$ = {};
     "^": "Closure:141;this_0",
     call$1: [function(each) {
       return this.this_0.$index(0, each);
-    }, "call$1", null, 2, 0, null, 184, "call"],
+    }, "call$1", null, 2, 0, null, 185, "call"],
     $isFunction: true
   },
   _HashMap_addAll_closure: {
@@ -6105,7 +6105,7 @@ var $$ = {};
     "^": "Closure:141;this_0",
     call$1: [function(each) {
       return this.this_0.$index(0, each);
-    }, "call$1", null, 2, 0, null, 184, "call"],
+    }, "call$1", null, 2, 0, null, 185, "call"],
     $isFunction: true
   },
   _LinkedHashMap_addAll_closure: {
@@ -6815,7 +6815,7 @@ var $$ = {};
     $asIterable: null
   },
   Maps_mapToString_closure: {
-    "^": "Closure:174;box_0,result_1",
+    "^": "Closure:175;box_0,result_1",
     call$2: [function(k, v) {
       var t1 = this.box_0;
       if (!t1.first_0)
@@ -6825,7 +6825,7 @@ var $$ = {};
       t1.write$1(k);
       t1.write$1(": ");
       t1.write$1(v);
-    }, "call$2", null, 4, 0, null, 185, 186, "call"],
+    }, "call$2", null, 4, 0, null, 186, 187, "call"],
     $isFunction: true
   },
   ListQueue: {
@@ -7001,7 +7001,7 @@ var $$ = {};
     return P._convertJsonToDart(parsed, reviver);
   }, "call$2", "_parseJson$closure", 4, 0, null, 103, 128],
   _convertJsonToDart_closure: {
-    "^": "Closure:174;",
+    "^": "Closure:175;",
     call$2: [function(key, value) {
       return value;
     }, "call$2", null, 4, 0, null, 24, 19, "call"],
@@ -7147,14 +7147,14 @@ var $$ = {};
     H.printString(line);
   }, "call$1", "print$closure", 2, 0, null, 0],
   Function__toMangledNames_closure: {
-    "^": "Closure:174;result_0",
+    "^": "Closure:175;result_0",
     call$2: [function(symbol, value) {
       this.result_0.$indexSet(0, symbol.get$_name(), value);
-    }, "call$2", null, 4, 0, null, 187, 19, "call"],
+    }, "call$2", null, 4, 0, null, 188, 19, "call"],
     $isFunction: true
   },
   NoSuchMethodError_toString_closure: {
-    "^": "Closure:188;box_0",
+    "^": "Closure:189;box_0",
     call$2: [function(key, value) {
       var t1 = this.box_0;
       if (t1.i_1 > 0)
@@ -7295,7 +7295,7 @@ var $$ = {};
       }}
   },
   Duration_toString_sixDigits: {
-    "^": "Closure:189;",
+    "^": "Closure:190;",
     call$1: [function(n) {
       if (n >= 100000)
         return "" + n;
@@ -7312,7 +7312,7 @@ var $$ = {};
     $isFunction: true
   },
   Duration_toString_twoDigits: {
-    "^": "Closure:189;",
+    "^": "Closure:190;",
     call$1: [function(n) {
       if (n >= 10)
         return "" + n;
@@ -8137,10 +8137,10 @@ var $$ = {};
     "^": "Object;",
     error$1: [function(_, arg) {
       return typeof console != "undefined" ? console.error(arg) : null;
-    }, "call$1", "get$error", 2, 0, 190, 120],
+    }, "call$1", "get$error", 2, 0, 191, 120],
     log$1: [function(arg) {
       return typeof console != "undefined" ? console.log(arg) : null;
-    }, "call$1", "get$log", 2, 0, 190, 120],
+    }, "call$1", "get$log", 2, 0, 191, 120],
     static: {"^": "Console__safeConsole"}
   },
   _ChildrenElementList: {
@@ -8336,7 +8336,7 @@ var $$ = {};
       if (t1._state !== 0)
         H.throwExpression(new P.StateError("Future already completed"));
       t1._complete$1(time);
-    }, "call$1", null, 2, 0, null, 191, "call"],
+    }, "call$1", null, 2, 0, null, 192, "call"],
     $isFunction: true
   },
   Interceptor_ListMixin1: {
@@ -8411,10 +8411,10 @@ var $$ = {};
     }
   },
   _AttributeMap_addAll_closure: {
-    "^": "Closure:174;this_0",
+    "^": "Closure:175;this_0",
     call$2: [function(k, v) {
       this.this_0.$indexSet(0, k, v);
-    }, "call$2", null, 4, 0, null, 185, 186, "call"],
+    }, "call$2", null, 4, 0, null, 186, 187, "call"],
     $isFunction: true
   },
   _ElementAttributeMap: {
@@ -9483,7 +9483,7 @@ var $$ = {};
     "^": "Closure:141;",
     call$1: [function(el) {
       return J.remove$0$ax(el);
-    }, "call$1", null, 2, 0, null, 192, "call"],
+    }, "call$1", null, 2, 0, null, 193, "call"],
     $isFunction: true
   }
 }],
@@ -9885,7 +9885,7 @@ var $$ = {};
       jsProps = P.JsObject_JsObject($.get$_Object(), null);
       J.$indexSet$ax(jsProps, "__internal__", H.fillLiteralMap(["props", component.get$props(), "component", component], P.LinkedHashMap_LinkedHashMap(null, null, null, null, null)));
       return jsProps;
-    }, "call$1", null, 2, 0, null, 193, "call"],
+    }, "call$1", null, 2, 0, null, 194, "call"],
     $isFunction: true
   },
   _registerComponent__closure: {
@@ -9912,7 +9912,7 @@ var $$ = {};
     call$1: [function(jsThis) {
       J.$index$asx(J.$index$asx(J.$index$asx(jsThis, "props"), "__internal__"), "component").initStateInternal$0();
       return P.JsObject_JsObject($.get$_Object(), null);
-    }, "call$1", null, 2, 0, null, 193, "call"],
+    }, "call$1", null, 2, 0, null, 194, "call"],
     $isFunction: true
   },
   _registerComponent_closure1: {
@@ -9923,18 +9923,18 @@ var $$ = {};
       t1 = J.$index$asx(J.$index$asx(t1.$index(jsThis, "props"), "__internal__"), "component");
       t1.componentWillMount$0();
       t1.transferComponentState$0();
-    }, "call$1", null, 2, 0, null, 193, "call"],
+    }, "call$1", null, 2, 0, null, 194, "call"],
     $isFunction: true
   },
   _registerComponent_closure2: {
-    "^": "Closure:174;",
+    "^": "Closure:175;",
     call$2: [function(jsThis, rootNode) {
       J.$index$asx(J.$index$asx(J.$index$asx(jsThis, "props"), "__internal__"), "component").componentDidMount$1(rootNode);
-    }, "call$2", null, 4, 0, null, 193, 171, "call"],
+    }, "call$2", null, 4, 0, null, 194, 172, "call"],
     $isFunction: true
   },
   _registerComponent_closure3: {
-    "^": "Closure:196;",
+    "^": "Closure:197;",
     call$3: [function(jsThis, newArgs, reactInternal) {
       var component, t1, newProps, nextProps;
       component = J.$index$asx(J.$index$asx(J.$index$asx(jsThis, "props"), "__internal__"), "component");
@@ -9947,11 +9947,11 @@ var $$ = {};
       component.set$props(nextProps);
     }, function(jsThis, newArgs) {
       return this.call$3(jsThis, newArgs, null);
-    }, "call$2", "call$3", null, null, 4, 2, null, 61, 193, 194, 195, "call"],
+    }, "call$2", "call$3", null, null, 4, 2, null, 61, 194, 195, 196, "call"],
     $isFunction: true
   },
   _registerComponent_closure4: {
-    "^": "Closure:199;",
+    "^": "Closure:200;",
     call$3: [function(jsThis, jsNextProps, nextState) {
       var newProps, component, nextProps;
       newProps = J.$index$asx(J.$index$asx(jsNextProps, "__internal__"), "props");
@@ -9966,11 +9966,11 @@ var $$ = {};
         component.transferComponentState$0();
         return false;
       }
-    }, "call$3", null, 6, 0, null, 193, 197, 198, "call"],
+    }, "call$3", null, 6, 0, null, 194, 198, 199, "call"],
     $isFunction: true
   },
   _registerComponent_closure5: {
-    "^": "Closure:200;",
+    "^": "Closure:201;",
     call$4: [function(jsThis, jsNextProps, nextState, reactInternal) {
       var component, newProps, nextProps;
       component = J.$index$asx(J.$index$asx(J.$index$asx(jsThis, "props"), "__internal__"), "component");
@@ -9983,39 +9983,39 @@ var $$ = {};
       component.transferComponentState$0();
     }, function(jsThis, jsNextProps, nextState) {
       return this.call$4(jsThis, jsNextProps, nextState, null);
-    }, "call$3", "call$4", null, null, 6, 2, null, 61, 193, 197, 198, 195, "call"],
+    }, "call$3", "call$4", null, null, 6, 2, null, 61, 194, 198, 199, 196, "call"],
     $isFunction: true
   },
   _registerComponent_closure6: {
-    "^": "Closure:203;",
+    "^": "Closure:204;",
     call$4: [function(jsThis, prevProps, prevState, rootNode) {
       var prevInternalProps, component;
       prevInternalProps = J.$index$asx(J.$index$asx(prevProps, "__internal__"), "props");
       component = J.$index$asx(J.$index$asx(J.$index$asx(jsThis, "props"), "__internal__"), "component");
       component.componentDidUpdate$3(prevInternalProps, component.get$prevState(), rootNode);
-    }, "call$4", null, 8, 0, null, 193, 201, 202, 171, "call"],
+    }, "call$4", null, 8, 0, null, 194, 202, 203, 172, "call"],
     $isFunction: true
   },
   _registerComponent_closure7: {
-    "^": "Closure:178;",
+    "^": "Closure:179;",
     call$2: [function(jsThis, reactInternal) {
       var t1 = J.getInterceptor$asx(jsThis);
       J.$indexSet$ax(J.$index$asx(t1.$index(jsThis, "props"), "__internal__"), "isMounted", false);
       J.$index$asx(J.$index$asx(t1.$index(jsThis, "props"), "__internal__"), "component").componentWillUnmount$0();
     }, function(jsThis) {
       return this.call$2(jsThis, null);
-    }, "call$1", "call$2", null, null, 2, 2, null, 61, 193, 195, "call"],
+    }, "call$1", "call$2", null, null, 2, 2, null, 61, 194, 196, "call"],
     $isFunction: true
   },
   _registerComponent_closure8: {
     "^": "Closure:141;",
     call$1: [function(jsThis) {
       return J.$index$asx(J.$index$asx(J.$index$asx(jsThis, "props"), "__internal__"), "component").render$0();
-    }, "call$1", null, 2, 0, null, 193, "call"],
+    }, "call$1", null, 2, 0, null, 194, "call"],
     $isFunction: true
   },
   _registerComponent_closure9: {
-    "^": "Closure:204;reactComponent_4",
+    "^": "Closure:205;reactComponent_4",
     call$2: [function(props, children) {
       var extendedProps, convertedArgs, t1;
       if (children == null)
@@ -10036,11 +10036,11 @@ var $$ = {};
       return this.reactComponent_4.apply$1([convertedArgs, H.setRuntimeTypeInfo(new P.JsArray(t1), [null])]);
     }, function(props) {
       return this.call$2(props, null);
-    }, "call$1", "call$2", null, null, 2, 2, null, 61, 168, 163, "call"],
+    }, "call$1", "call$2", null, null, 2, 2, null, 61, 169, 164, "call"],
     $isFunction: true
   },
   _reactDom_closure: {
-    "^": "Closure:204;method_0",
+    "^": "Closure:205;method_0",
     call$2: [function(args, children) {
       var t1, t2, t3;
       A._convertBoundValues(args);
@@ -10062,7 +10062,7 @@ var $$ = {};
       return this.method_0.apply$1([A.newJsMap(args), children]);
     }, function(args) {
       return this.call$2(args, null);
-    }, "call$1", "call$2", null, null, 2, 2, null, 61, 8, 163, "call"],
+    }, "call$1", "call$2", null, null, 2, 2, null, 61, 8, 164, "call"],
     $isFunction: true
   },
   _convertBoundValues_closure: {
@@ -10077,7 +10077,7 @@ var $$ = {};
     $isFunction: true
   },
   _convertEventHandlers_closure: {
-    "^": "Closure:174;args_1",
+    "^": "Closure:175;args_1",
     call$2: [function(key, value) {
       var t1 = {};
       t1.eventFactory_0 = null;
@@ -10104,12 +10104,12 @@ var $$ = {};
     $isFunction: true
   },
   _convertEventHandlers__closure: {
-    "^": "Closure:206;box_0,value_2",
+    "^": "Closure:207;box_0,value_2",
     call$2: [function(e, domId) {
       this.value_2.call$1(this.box_0.eventFactory_0.call$1(e));
     }, function(e) {
       return this.call$2(e, null);
-    }, "call$1", "call$2", null, null, 2, 2, null, 61, 10, 205, "call"],
+    }, "call$1", "call$2", null, null, 2, 2, null, 61, 10, 206, "call"],
     $isFunction: true
   },
   syntheticClipboardEventFactory_closure: {
@@ -10262,9 +10262,10 @@ var $$ = {};
 ["tiles", "package:tiles/tiles.dart", , V, {
   "^": "",
   _updateChildren: [function(node, changes) {
-    var oldChildren, nextChildren, t1, descriptions, t2, i, t3, key, description, oldChild, oldListeners, nextChild, t4, t5, subscription, child;
+    var oldChildren, oldChildrenPositions, nextChildren, t1, descriptions, t2, i, t3, key, description, oldChild, oldListeners, nextChild, t4, t5, subscription, child;
     $.get$logger0().fine$1("_updateChildren called");
     oldChildren = V._createChildrenMap(node.children);
+    oldChildrenPositions = V._createPositionMap(oldChildren.get$keys());
     nextChildren = [];
     t1 = node.component;
     descriptions = V._getChildrenFromComponent(t1);
@@ -10289,8 +10290,9 @@ var $$ = {};
         oldListeners = oldChild.get$listeners();
         t3 = description.get$props();
         oldChild.apply$3$children$listeners$props(J.get$children$x(description), description.get$listeners(), t3);
-        if (t2)
-          changes.push(new V.NodeChange(C.NodeChangeType_2, oldChild, null, null, null, null));
+        if (i !== oldChildrenPositions.$index(0, key))
+          if (t2)
+            changes.push(new V.NodeChange(C.NodeChangeType_2, oldChild, null, null, null, null));
         oldChild.update$3$changes$force$oldListeners(changes, true, oldListeners);
         oldChildren.remove$1(0, key);
         nextChild = oldChild;
@@ -10362,13 +10364,22 @@ var $$ = {};
         throw H.wrapException("render should return ComponentDescription or List<ComponentDescription>");
     }
   }, "call$1", "_getChildrenFromComponent$closure", 2, 0, null, 152],
+  _createPositionMap: [function(input) {
+    var result, t1, t2, i;
+    result = H.fillLiteralMap([], P.LinkedHashMap_LinkedHashMap(null, null, null, null, null));
+    for (t1 = input._map, t2 = new P.LinkedHashMapKeyIterator(t1, t1._modifications, null, null), t2._cell = t1._first, i = 0; t2.moveNext$0();) {
+      result.$indexSet(0, t2._collection$_current, i);
+      ++i;
+    }
+    return result;
+  }, "call$1", "_createPositionMap$closure", 2, 0, null, 158],
   registerComponent0: [function(factory) {
     $.get$logger0().finest$1("component registered");
     return new V.registerComponent_closure(factory);
-  }, "call$1", "registerComponent0$closure", 2, 0, 158, 159],
+  }, "call$1", "registerComponent0$closure", 2, 0, 159, 160],
   _registerDomComponent: [function(tagname, factory, pair, svg) {
     return V.registerComponent0(factory == null ? new V._registerDomComponent_closure(tagname, pair, svg) : factory);
-  }, "call$4$factory$pair$svg", "_registerDomComponent$closure", 2, 7, null, 61, 137, 61, 160, 161, 162, 159],
+  }, "call$4$factory$pair$svg", "_registerDomComponent$closure", 2, 7, null, 61, 137, 61, 161, 162, 163, 160],
   _processChildren: [function(children) {
     var newChildren;
     if (!J.getInterceptor(children).$isList && children != null)
@@ -10378,7 +10389,7 @@ var $$ = {};
       J.forEach$1$ax(children, new V._processChildren_closure(newChildren));
       return newChildren;
     }
-  }, "call$1", "_processChildren$closure", 2, 0, null, 163],
+  }, "call$1", "_processChildren$closure", 2, 0, null, 164],
   Component: {
     "^": "Object;props@,children*",
     get$needUpdate: function() {
@@ -10419,7 +10430,7 @@ var $$ = {};
     },
     componentNeedUpdate$1: [function(now) {
       this.set$isDirty(true);
-    }, "call$1", "get$componentNeedUpdate", 2, 0, 207, 208],
+    }, "call$1", "get$componentNeedUpdate", 2, 0, 208, 209],
     set$isDirty: function(value) {
       var t1, t2;
       if (value) {
@@ -10510,14 +10521,14 @@ var $$ = {};
     "^": "Closure:141;changes_0",
     call$1: [function(child) {
       return child.update$1$changes(this.changes_0);
-    }, "call$1", null, 2, 0, null, 209, "call"],
+    }, "call$1", null, 2, 0, null, 210, "call"],
     $isFunction: true
   },
   NodeChange: {
     "^": "Object;type>,node<,oldProps<,newProps<,oldListeners,newListeners"
   },
   registerComponent_closure: {
-    "^": "Closure:210;factory_0",
+    "^": "Closure:211;factory_0",
     call$4$children$key$listeners$props: [function(children, key, listeners, props) {
       $.get$logger0().finest$1("Component description factory called");
       return new V.ComponentDescription(this.factory_0, props, V._processChildren(children), key, listeners);
@@ -10535,7 +10546,7 @@ var $$ = {};
       return this.call$4$children$key$listeners$props(null, key, null, props);
     }, "call$2$key$props", function(children) {
       return this.call$4$children$key$listeners$props(children, null, null, null);
-    }, "call$1$children", "call$4$children$key$listeners$props", null, null, null, null, null, null, null, null, 0, 9, null, 61, 61, 61, 61, 168, 163, 24, 104, "call"],
+    }, "call$1$children", "call$4$children$key$listeners$props", null, null, null, null, null, null, null, null, 0, 9, null, 61, 61, 61, 61, 169, 164, 24, 104, "call"],
     $isFunction: true
   },
   DomComponent: {
@@ -10570,7 +10581,7 @@ var $$ = {};
       }}
   },
   _registerDomComponent_closure: {
-    "^": "Closure:211;tagname_0,pair_1,svg_2",
+    "^": "Closure:212;tagname_0,pair_1,svg_2",
     call$2$children$props: [function(children, props) {
       return V.DomComponent$(children, this.pair_1, props, this.svg_2, this.tagname_0);
     }, function(props) {
@@ -10579,7 +10590,7 @@ var $$ = {};
       return this.call$2$children$props(null, null);
     }, "call$0", function(children) {
       return this.call$2$children$props(children, null);
-    }, "call$1$children", "call$2$children$props", null, null, null, null, 0, 5, null, 61, 61, 168, 163, "call"],
+    }, "call$1$children", "call$2$children$props", null, null, null, null, 0, 5, null, 61, 61, 169, 164, "call"],
     $isFunction: true
   },
   _processChildren_closure: {
@@ -10591,7 +10602,7 @@ var $$ = {};
         this.newChildren_0.push($.get$_domTextComponentDescriptionFactory().call$1$props(child));
       else
         throw H.wrapException("Children should contain only instance of ComponentDescription or String");
-    }, "call$1", null, 2, 0, null, 209, "call"],
+    }, "call$1", null, 2, 0, null, 210, "call"],
     $isFunction: true
   },
   TextareaComponent: {
@@ -10601,7 +10612,7 @@ var $$ = {};
     }
   },
   closure2: {
-    "^": "Closure:212;",
+    "^": "Closure:213;",
     call$2$children$props: [function(children, props) {
       var t1 = new V.TextareaComponent("textarea", true, props, false, null, null, P.StreamController_StreamController(null, null, null, null, false, J.JSBool));
       t1.DomComponent$5$children$pair$props$svg$tagName(null, null, props, false, "textarea");
@@ -10612,7 +10623,7 @@ var $$ = {};
       return this.call$2$children$props(null, null);
     }, "call$0", function(children) {
       return this.call$2$children$props(children, null);
-    }, "call$1$children", "call$2$children$props", null, null, null, null, 0, 5, null, 61, 61, 168, 163, "call"],
+    }, "call$1$children", "call$2$children$props", null, null, null, null, 0, 5, null, 61, 61, 169, 164, "call"],
     $isFunction: true
   },
   DomTextComponent: {
@@ -10620,7 +10631,7 @@ var $$ = {};
     $isDomTextComponent: true
   },
   closure1: {
-    "^": "Closure:213;",
+    "^": "Closure:214;",
     call$2$children$props: [function(children, props) {
       return new V.DomTextComponent(props, null, P.StreamController_StreamController(null, null, null, null, false, J.JSBool));
     }, function(props) {
@@ -10629,7 +10640,7 @@ var $$ = {};
       return this.call$2$children$props(null, null);
     }, "call$0", function(children) {
       return this.call$2$children$props(children, null);
-    }, "call$1$children", "call$2$children$props", null, null, null, null, 0, 5, null, 61, 61, 168, 163, "call"],
+    }, "call$1$children", "call$2$children$props", null, null, null, null, 0, 5, null, 61, 61, 169, 164, "call"],
     $isFunction: true
   },
   NodeChangeType: {
@@ -10687,10 +10698,10 @@ var $$ = {};
       N.Component0.prototype.redraw$1.call(this, null);
     }, function() {
       return this.redraw$1(false);
-    }, "redraw$0", "call$1", "call$0", "get$redraw", 0, 2, 214, 137, 215]
+    }, "redraw$0", "call$1", "call$0", "get$redraw", 0, 2, 215, 137, 216]
   },
   closure0: {
-    "^": "Closure:216;",
+    "^": "Closure:217;",
     call$2$children$props: [function(children, props) {
       var t1 = P.StreamController_StreamController(null, null, null, null, false, J.JSBool);
       t1 = new R.BenchmarkComponent(props, null, null, null, P.StreamController_StreamController(null, null, null, null, true, null), null, null, null, null, null, null, children, t1);
@@ -10702,11 +10713,11 @@ var $$ = {};
       return this.call$2$children$props(null, null);
     }, "call$0", function(children) {
       return this.call$2$children$props(children, null);
-    }, "call$1$children", "call$2$children$props", null, null, null, null, 0, 5, null, 61, 61, 168, 163, "call"],
+    }, "call$1$children", "call$2$children$props", null, null, null, null, 0, 5, null, 61, 61, 169, 164, "call"],
     $isFunction: true
   },
   closure: {
-    "^": "Closure:210;",
+    "^": "Closure:211;",
     call$4$children$key$listeners$props: [function(children, key, listeners, props) {
       var t1 = $.benchmark;
       t1.toRender = t1.toRender + 1;
@@ -10725,7 +10736,7 @@ var $$ = {};
       return this.call$4$children$key$listeners$props(null, key, null, props);
     }, "call$2$key$props", function(children) {
       return this.call$4$children$key$listeners$props(children, null, null, null);
-    }, "call$1$children", "call$4$children$key$listeners$props", null, null, null, null, null, null, null, null, 0, 9, null, 61, 61, 61, 61, 168, 163, 24, 104, "call"],
+    }, "call$1$children", "call$4$children$key$listeners$props", null, null, null, null, null, null, null, null, 0, 9, null, 61, 61, 61, 61, 169, 164, 24, 104, "call"],
     $isFunction: true
   }
 }],
@@ -10735,7 +10746,7 @@ var $$ = {};
     var eventsMap = H.fillLiteralMap([], P.LinkedHashMap_LinkedHashMap(null, null, null, null, null));
     H.IterableMixinWorkaround_forEach(events, new Z._createEventsMapFromList_closure(eventsMap));
     return eventsMap;
-  }, "call$1", "_createEventsMapFromList$closure", 2, 0, null, 164],
+  }, "call$1", "_createEventsMapFromList$closure", 2, 0, null, 165],
   _processEvent: [function(key, value, node) {
     var t1, $parent, masterRoot, registeredListeners;
     $.get$logger0().fine$1("_processEvent called on key " + H.S(key));
@@ -10764,7 +10775,7 @@ var $$ = {};
   _handleEventType: [function(what) {
     $.get$logger0().fine$1("_handleEventType called with listener " + H.S(what));
     return new Z._handleEventType_closure(what);
-  }, "call$1", "_handleEventType$closure", 2, 0, null, 165],
+  }, "call$1", "_handleEventType$closure", 2, 0, null, 166],
   _mountNode: [function(node, mountRoot, nextNode) {
     var t1, text, component, componentElement, t2, exception;
     $.get$logger0().fine$1("_mountNode called");
@@ -10819,7 +10830,7 @@ var $$ = {};
       H.unwrapException(exception);
     }
 
-  }, "call$3$nextNode", "_mountNode$closure", 4, 3, null, 61, 155, 166, 167],
+  }, "call$3$nextNode", "_mountNode$closure", 4, 3, null, 61, 155, 167, 168],
   _applyAttributes: [function(element, props, listeners, node, oldProps, svg) {
     var t1, t2;
     t1 = {};
@@ -10836,7 +10847,7 @@ var $$ = {};
     J.forEach$1$ax(props, new Z._applyAttributes_closure(t1, element, svg));
     Z._applyEventListeners(listeners, node);
     J.forEach$1$ax(t1.oldProps_0, new Z._applyAttributes_closure0(element));
-  }, "call$6$listeners$node$oldProps$svg", "_applyAttributes$closure", 4, 9, null, 137, 61, 61, 61, 153, 168, 162, 155, 169, 104],
+  }, "call$6$listeners$node$oldProps$svg", "_applyAttributes$closure", 4, 9, null, 137, 61, 61, 61, 153, 169, 163, 155, 170, 104],
   _applyEventListeners: [function(listeners, node) {
     if (listeners != null)
       J.forEach$1$ax(listeners, new Z._applyEventListeners_closure(node));
@@ -10868,7 +10879,7 @@ var $$ = {};
     $.get$logger0().finer$1("_update called");
     Z._updateTrees();
     C.Window_methods.get$animationFrame(window).then$1(Z._update$closure());
-  }, "call$1", "_update$closure", 2, 0, 170, 139],
+  }, "call$1", "_update$closure", 2, 0, 171, 139],
   _updateTrees: [function() {
     H.IterableMixinWorkaround_forEach($.get$_rootNodes(), new Z._updateTrees_closure());
   }, "call$0", "_updateTrees$closure", 0, 0, null],
@@ -10881,7 +10892,7 @@ var $$ = {};
       rootNode.update$1$changes(changes);
       H.setRuntimeTypeInfo(new H.ReversedListIterable(changes), [null]).forEach$1(0, new Z._updateTree_closure());
     }
-  }, "call$1", "_updateTree$closure", 2, 0, null, 171],
+  }, "call$1", "_updateTree$closure", 2, 0, null, 172],
   _findFirstDomDescendantAfter: [function($parent, node) {
     var t1, i, result, t2, child;
     $.get$logger0().finest$1("_findFirstDomDescendantAfter called");
@@ -10938,11 +10949,11 @@ var $$ = {};
       if (J.$gt$n(t1.get$length($event), 0))
         $event = J.toUpperCase$0$s(t1.$index($event, 0)) + t1.substring$1($event, 1);
       this.eventsMap_0.$indexSet(0, "on" + H.S($event), J.toLowerCase$0$s($event));
-    }, "call$1", null, 2, 0, null, 217, "call"],
+    }, "call$1", null, 2, 0, null, 218, "call"],
     $isFunction: true
   },
   _handleEventType_closure: {
-    "^": "Closure:218;what_0",
+    "^": "Closure:219;what_0",
     call$1: [function($event) {
       var t1, targetNode, listener;
       t1 = this.what_0;
@@ -10956,25 +10967,25 @@ var $$ = {};
         }
         targetNode = J.get$parent$x(targetNode);
       }
-    }, "call$1", null, 2, 0, null, 217, "call"],
+    }, "call$1", null, 2, 0, null, 218, "call"],
     $isFunction: true
   },
   _mountNode_closure: {
-    "^": "Closure:219;componentElement_0",
+    "^": "Closure:220;componentElement_0",
     call$1: [function(child) {
       return Z._mountNode(child, this.componentElement_0, null);
-    }, "call$1", null, 2, 0, null, 209, "call"],
+    }, "call$1", null, 2, 0, null, 210, "call"],
     $isFunction: true
   },
   _mountNode_closure0: {
-    "^": "Closure:219;mountRoot_1,nextNode_2",
+    "^": "Closure:220;mountRoot_1,nextNode_2",
     call$1: [function(child) {
       Z._mountNode(child, this.mountRoot_1, this.nextNode_2);
-    }, "call$1", null, 2, 0, null, 209, "call"],
+    }, "call$1", null, 2, 0, null, 210, "call"],
     $isFunction: true
   },
   _applyAttributes_closure: {
-    "^": "Closure:175;box_0,element_1,svg_2",
+    "^": "Closure:176;box_0,element_1,svg_2",
     call$2: [function(key, value) {
       var t1, t2;
       t1 = this.svg_2;
@@ -10997,28 +11008,28 @@ var $$ = {};
     $isFunction: true
   },
   _applyAttributes_closure0: {
-    "^": "Closure:175;element_3",
+    "^": "Closure:176;element_3",
     call$2: [function(key, value) {
       J.get$attributes$x(this.element_3).remove$1(0, key);
     }, "call$2", null, 4, 0, null, 24, 19, "call"],
     $isFunction: true
   },
   _applyEventListeners_closure: {
-    "^": "Closure:222;node_0",
+    "^": "Closure:223;node_0",
     call$2: [function(eventType, listener) {
       Z._processEvent(eventType, listener, this.node_0);
-    }, "call$2", null, 4, 0, null, 220, 221, "call"],
+    }, "call$2", null, 4, 0, null, 221, 222, "call"],
     $isFunction: true
   },
   _updateTrees_closure: {
-    "^": "Closure:219;",
+    "^": "Closure:220;",
     call$1: [function(node) {
       Z._updateTree(node);
     }, "call$1", null, 2, 0, null, 155, "call"],
     $isFunction: true
   },
   _updateTree_closure: {
-    "^": "Closure:224;",
+    "^": "Closure:225;",
     call$1: [function(change) {
       var node, t1, element, oldProps, newProps, t2;
       $.get$logger0().finer$1("_applyChange called with type " + H.S(change) + ".type");
@@ -11052,14 +11063,14 @@ var $$ = {};
           break;
       }
       return;
-    }, "call$1", null, 2, 0, null, 223, "call"],
+    }, "call$1", null, 2, 0, null, 224, "call"],
     $isFunction: true
   },
   _moveNode_closure: {
-    "^": "Closure:219;",
+    "^": "Closure:220;",
     call$1: [function(child) {
       return Z._moveNode(child);
-    }, "call$1", null, 2, 0, null, 209, "call"],
+    }, "call$1", null, 2, 0, null, 210, "call"],
     $isFunction: true
   }
 }],
@@ -11071,14 +11082,14 @@ var $$ = {};
     N.Logger_Logger("").get$onRecord().listen$1(new Z.setupDefaultLogHandler_closure());
   }, "call$0", "setupDefaultLogHandler$closure", 0, 0, null],
   setupDefaultLogHandler_closure: {
-    "^": "Closure:226;",
+    "^": "Closure:227;",
     call$1: [function(rec) {
       var t1, errorStr, stackTraceStr;
       t1 = J.getInterceptor$x(rec);
       errorStr = t1.get$error(rec) == null ? "" : " " + H.S(t1.get$error(rec));
       stackTraceStr = rec.get$stackTrace() == null ? "" : " " + H.S(rec.get$stackTrace());
       P.print(rec.get$loggerName() + " " + H.S(t1.get$message(rec)) + " " + errorStr + " " + stackTraceStr);
-    }, "call$1", null, 2, 0, null, 225, "call"],
+    }, "call$1", null, 2, 0, null, 226, "call"],
     $isFunction: true
   }
 }],
@@ -11093,7 +11104,7 @@ var $$ = {};
       else
         result.$indexSet(0, what, $.get$settings().$index(0, what));
     }
-  }, "call$3", "_parseInput$closure", 6, 0, null, 127, 32, 172],
+  }, "call$3", "_parseInput$closure", 6, 0, null, 127, 32, 173],
   initTiles: [function() {
     $._USED = "tiles";
     Z.setupDefaultLogHandler();
@@ -11542,17 +11553,17 @@ var $$ = {};
     }
   },
   initTiles_closure: {
-    "^": "Closure:174;",
+    "^": "Closure:175;",
     call$2: [function(what, where) {
       $.get$tilesBenchmark().start$1(0, "Virtual DOM building");
       $.get$tilesBenchmark().start$1(0, "All rendered");
       V.Node_Node$fromDescription(null, what).update$0();
       $.get$tilesBenchmark().stop$1(0, "Virtual DOM building");
-    }, "call$2", null, 4, 0, null, 165, 227, "call"],
+    }, "call$2", null, 4, 0, null, 166, 228, "call"],
     $isFunction: true
   },
   initTiles_closure0: {
-    "^": "Closure:174;",
+    "^": "Closure:175;",
     call$2: [function(what, where) {
       var node;
       $.get$tilesBenchmark().start$1(0, "Mounting to element");
@@ -11565,39 +11576,39 @@ var $$ = {};
       Z._mountNode(node, where, null);
       $.get$_elementToNode().$indexSet(0, where, node);
       $.get$tilesBenchmark().stop$1(0, "Mounting to element");
-    }, "call$2", null, 4, 0, null, 165, 227, "call"],
+    }, "call$2", null, 4, 0, null, 166, 228, "call"],
     $isFunction: true
   },
   initReact_closure: {
-    "^": "Closure:174;",
+    "^": "Closure:175;",
     call$2: [function(what, where) {
       $.get$reactBenchmark().start$1(0, "Mounting to element");
       $.get$reactBenchmark().start$1(0, "All rendered");
       $.renderComponent.call$2(what, where);
       $.get$reactBenchmark().stop$1(0, "Mounting to element");
-    }, "call$2", null, 4, 0, null, 165, 227, "call"],
+    }, "call$2", null, 4, 0, null, 166, 228, "call"],
     $isFunction: true
   },
   initReact_closure0: {
-    "^": "Closure:228;",
+    "^": "Closure:229;",
     call$1: [function(factory) {
       return new N.initReact__closure($.registerComponent1.call$1(new N.initReact__closure0(factory)));
-    }, "call$1", null, 2, 0, null, 159, "call"],
+    }, "call$1", null, 2, 0, null, 160, "call"],
     $isFunction: true
   },
   initReact__closure0: {
-    "^": "Closure:229;factory_0",
+    "^": "Closure:230;factory_0",
     call$2: [function(props, children) {
       return this.factory_0.call$2$children$props(children, props);
     }, function(props) {
       return this.call$2(props, null);
     }, "call$1", function() {
       return this.call$2(null, null);
-    }, "call$0", "call$2", null, null, null, 0, 4, null, 61, 61, 168, 163, "call"],
+    }, "call$0", "call$2", null, null, null, 0, 4, null, 61, 61, 169, 164, "call"],
     $isFunction: true
   },
   initReact__closure: {
-    "^": "Closure:210;registeredComponent_1",
+    "^": "Closure:211;registeredComponent_1",
     call$4$children$key$listeners$props: [function(children, key, listeners, props) {
       if (!J.getInterceptor(props).$isMap)
         props = H.fillLiteralMap([], P.LinkedHashMap_LinkedHashMap(null, null, null, null, null));
@@ -11619,7 +11630,7 @@ var $$ = {};
       return this.call$4$children$key$listeners$props(null, key, null, props);
     }, "call$2$key$props", function(children) {
       return this.call$4$children$key$listeners$props(children, null, null, null);
-    }, "call$1$children", "call$4$children$key$listeners$props", null, null, null, null, null, null, null, null, 0, 9, null, 61, 61, 61, 61, 168, 163, 24, 104, "call"],
+    }, "call$1$children", "call$4$children$key$listeners$props", null, null, null, null, null, null, null, null, 0, 9, null, 61, 61, 61, 61, 169, 164, 24, 104, "call"],
     $isFunction: true
   },
   Component0: {
@@ -11684,7 +11695,7 @@ var $$ = {};
     }
   },
   _ReactElementToTiles_closure: {
-    "^": "Closure:230;element_0",
+    "^": "Closure:231;element_0",
     call$4$children$key$listeners$props: [function(children, key, listeners, props) {
       if (!J.getInterceptor(props).$isMap)
         props = H.fillLiteralMap([], P.LinkedHashMap_LinkedHashMap(null, null, null, null, null));
@@ -11706,7 +11717,7 @@ var $$ = {};
       return this.call$4$children$key$listeners$props(null, key, null, props);
     }, "call$2$key$props", function(children) {
       return this.call$4$children$key$listeners$props(children, null, null, null);
-    }, "call$1$children", "call$4$children$key$listeners$props", null, null, null, null, null, null, null, null, 0, 9, null, 61, 61, 61, 61, 168, 163, 24, 104, "call"],
+    }, "call$1$children", "call$4$children$key$listeners$props", null, null, null, null, null, null, null, null, 0, 9, null, 61, 61, 61, 61, 169, 164, 24, 104, "call"],
     $isFunction: true
   }
 }],
@@ -13215,6 +13226,7 @@ false,
 "node",
 "changes",
 "nodes",
+"input",
 {func: "ComponentDescriptionFactory__ComponentFactory", ret: {func: "ComponentDescription___dynamic_dynamic_Map_dynamic", ret: V.ComponentDescription, named: {children: null, key: null, listeners: P.Map, props: null}}, args: [{func: "Component___List_dynamic", ret: V.Component, named: {children: [J.JSArray, V.ComponentDescription], props: null}}]},
 "factory",
 "tagname",

@@ -10,6 +10,7 @@
 . ./bin/functions.sh --source-only
 
 JS=0;
+RUNCOUNT=5;
 
 DIR=$(dirname $0)
 
@@ -32,21 +33,51 @@ runner () {
 	| sed "s/^CONSOLE MESSAGE: line [0-9]*: //g"
 }
 
+get_nth_if_lower () {
+	ORIGIN=$(echo $1)
+	POSITION=$(echo $2)
+	ATPOS=$(echo $ORIGIN | cut -d , -f $POSITION)
+	COMPARISON=$(echo $3)
+	if [ "$COMPARISON" -eq 0 ];
+	then
+		echo $ATPOS;
+	else
+		if [ $COMPARISON -gt $ATPOS ]
+		then
+			echo $ATPOS;
+		else
+			echo $COMPARISON;
+		fi
+	fi
+}
+
 # arguments: library, levels
 analyze () {
+	DOM=0
+	RENDERALL=0
+	UPDATECLEAN=0
+	VIRTUAL=0
+	UPDATEDIRTY=0
+	for i in $(seq 1 $RUNCOUNT)
+	do
+
+		# echo "$(yellow)run $i of $RUNCOUNT$(white)" 1>&2;
 		RESULT=$(runner $1 $2 "false" "DOM");
 
-		DOM=$(echo $RESULT | cut -d , -f 1)
-		RENDERALL=$(echo $RESULT | cut -d , -f 3)
-		UPDATECLEAN=$(echo $RESULT | cut -d , -f 4)
+		DOM=$(get_nth_if_lower $RESULT 1 $DOM)
+		RENDERALL=$(get_nth_if_lower $RESULT 3 $RENDERALL)
+		UPDATECLEAN=$(get_nth_if_lower $RESULT 4 $UPDATECLEAN)
 
-		RESULT=$(runner $1 $2 "false" "virtual");
-		VIRTUAL=$(echo $RESULT | cut -d , -f 2)
+		if [ "$1" = "tiles" ] 
+		then
+			RESULT=$(runner $1 $2 "false" "virtual");
+			VIRTUAL=$(get_nth_if_lower $RESULT 2 $VIRTUAL)
+		fi
 
 		RESULT=$(runner $1 $2 "true" "DOM");
-		UPDATEDIRTY=$(echo $RESULT | cut -d , -f 5)
-
-		echo "$DOM;$VIRTUAL;$RENDERALL;$UPDATECLEAN;$UPDATEDIRTY";
+		UPDATEDIRTY=$(get_nth_if_lower $RESULT 5 $UPDATEDIRTY);
+	done
+	echo "$DOM;$VIRTUAL;$RENDERALL;$UPDATECLEAN;$UPDATEDIRTY";
 }
 
 # arguments: library, levels
@@ -56,7 +87,7 @@ analyze_js_and_dart () {
 	JS=1;
 	RESULTJS=$(analyze $1 $2);
 	JS=0;
-	echo "$RESULTDART; $RESULTJS";
+	echo "$RESULTDART;$RESULTJS";
 }
 
 # arguments: list of levels
@@ -151,45 +182,6 @@ analyze_all  \
 	"[1900]"\
 	"[2000]"\
 	"[2100]"\
-	"[2200]"\
-	"[2300]"\
-	"[2400]"\
-	"[2500]"\
-	"[2600]"\
-	"[2700]"\
-	"[2800]"\
-	"[2900]"\
-	"[3000]"\
-	"[3100]"\
-	"[3200]"\
-	"[3300]"\
-	"[3400]"\
-	"[3500]"\
-	"[3600]"\
-	"[3700]"\
-	"[3800]"\
-	"[3900]"\
-	"[4000]"\
-	"[4100]"\
-	"[4200]"\
-	"[4300]"\
-	"[4400]"\
-	"[4500]"\
-	"[4600]"\
-	"[4700]"\
-	"[4800]"\
-	"[4900]"\
-	"[4000]"\
-	"[5100]"\
-	"[5200]"\
-	"[5300]"\
-	"[5400]"\
-	"[5500]"\
-	"[5600]"\
-	"[5700]"\
-	"[5800]"\
-	"[5900]"\
-	"[6000]"\
 	"[1,1]"\
 	"[100,1]"\
 	"[200,1]"\
@@ -212,45 +204,6 @@ analyze_all  \
 	"[1900,1]"\
 	"[2000,1]"\
 	"[2100,1]"\
-	"[2200,1]"\
-	"[2300,1]"\
-	"[2400,1]"\
-	"[2500,1]"\
-	"[2600,1]"\
-	"[2700,1]"\
-	"[2800,1]"\
-	"[2900,1]"\
-	"[3000,1]"\
-	"[3100,1]"\
-	"[3200,1]"\
-	"[3300,1]"\
-	"[3400,1]"\
-	"[3500,1]"\
-	"[3600,1]"\
-	"[3700,1]"\
-	"[3800,1]"\
-	"[3900,1]"\
-	"[4000,1]"\
-	"[4100,1]"\
-	"[4200,1]"\
-	"[4300,1]"\
-	"[4400,1]"\
-	"[4500,1]"\
-	"[4600,1]"\
-	"[4700,1]"\
-	"[4800,1]"\
-	"[4900,1]"\
-	"[4000,1]"\
-	"[5100,1]"\
-	"[5200,1]"\
-	"[5300,1]"\
-	"[5400,1]"\
-	"[5500,1]"\
-	"[5600,1]"\
-	"[5700,1]"\
-	"[5800,1]"\
-	"[5900,1]"\
-	"[6000,1]"\
 	"[2]"\
 	"[2,2]"\
 	"[2,2,2]"\
@@ -262,21 +215,18 @@ analyze_all  \
 	"[2,2,2,2,2,2,2,2,2]"\
 	"[2,2,2,2,2,2,2,2,2,2]"\
 	"[2,2,2,2,2,2,2,2,2,2,2]"\
-	"[2,2,2,2,2,2,2,2,2,2,2,2]"\
-	"[2,2,2,2,2,2,2,2,2,2,2,2,2]"\
-	"[8192]"\
-	"[128,64]"\
-	"[32,16,16]"\
-	"[16,8,8,8]"\
-	"[8,8,8,4,4]"\
-	"[8,4,4,4,4,4]"\
-	"[4,4,4,4,4,4,2]"\
-	"[4,4,4,4,4,2,2,2]"\
-	"[4,4,4,4,2,2,2,2,2]"\
-	"[4,4,4,2,2,2,2,2,2,2]"\
-	"[4,4,2,2,2,2,2,2,2,2,2]"\
-	"[4,2,2,2,2,2,2,2,2,2,2,2]"\
-	"[2,2,2,2,2,2,2,2,2,2,2,2,2]"\
+	"[2048]"\
+	"[64,32]"\
+	"[16,16,8]"\
+	"[8,8,8,4]"\
+	"[8,8,8,4]"\
+	"[8,4,4,4,4]"\
+	"[4,4,4,4,4,2]"\
+	"[4,4,4,4,2,2,2]"\
+	"[4,4,4,2,2,2,2,2]"\
+	"[4,4,2,2,2,2,2,2,2]"\
+	"[4,2,2,2,2,2,2,2,2,2]"\
+	"[2,2,2,2,2,2,2,2,2,2,2]"\
 	"[2]"\
 	"[4]"\
 	"[8]"\
@@ -287,8 +237,5 @@ analyze_all  \
 	"[256]"\
 	"[512]"\
 	"[1024]"\
-	"[2048]"\
-	"[4096]"\
-	"[8192]"\
-	"[7,6,5,4,3,2,1]"\
-	"[1,2,3,4,5,6,7]"
+	"[2048]"
+

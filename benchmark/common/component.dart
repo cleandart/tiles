@@ -8,7 +8,7 @@ bool redrawing = false;
 
 class BenchmarkComponent extends Component {
   Map props;
-  
+
   String prefix;
   String me;
   num level;
@@ -16,7 +16,7 @@ class BenchmarkComponent extends Component {
   BenchmarkComponent([this.props, children]): super(null, children) {
     me = "";
   }
-  
+
   render() {
     List levels = props["levels"];
     level = props["level"];
@@ -49,14 +49,14 @@ class BenchmarkComponent extends Component {
         benchmark.stop(Benchmark.ALLRENDERED);
       }
     }
-    
+
     if (level == 0) {
       update = this.redraw;
     }
 
     return div(children: children);
   }
-  
+
   redraw([bool dirty = false]) {
     redrawing = true;
     if (dirty) {
@@ -64,7 +64,7 @@ class BenchmarkComponent extends Component {
     }
     super.redraw();
   }
-  
+
 }
 
 var registeredComponent = registerComponent(({props, children}) => new BenchmarkComponent(props, children));
