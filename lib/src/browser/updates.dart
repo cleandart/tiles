@@ -207,8 +207,8 @@ _moveNode(Node node) {
  */
 _removeNodeFromDom(Node node) {
   logger.finer("_removeNodeFromDom called");
-  if (node.component is DomComponent) {
-    html.Element element = _nodeToElement[node];
+  if (node.component is DomComponent || node.component is DomTextComponent) {
+    html.Node element = _nodeToElement[node];
 
     /**
      * remove all relations and notify component about unmount
