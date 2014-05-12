@@ -116,9 +116,9 @@ _handleEventType(String what) {
     while (targetNode != null) {
       if (targetNode.listeners != null) {
         EventListener listener;
-  
+
         listener = targetNode.listeners[what];
-  
+
         if (listener != null && listener(targetNode.component, event) == false) {
           break;
         }
