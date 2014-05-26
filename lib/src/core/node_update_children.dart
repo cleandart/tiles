@@ -13,6 +13,7 @@ _updateChildren (Node node, {List<NodeChange> changes}) {
    * get old children from node, next children descriptions from component and prepare next children map
    */
   Map<dynamic, Node> oldChildren = _createChildrenMap(node.children);
+  Map<dynamic, num> oldChildrenPositions = _createPositionMap(oldChildren.keys);
   List<Node> nextChildren = [];
   List<ComponentDescription> descriptions = _getChildrenFromComponent(node.component);
 
@@ -36,7 +37,9 @@ _updateChildren (Node node, {List<NodeChange> changes}) {
       nextChild = oldChild;
       Map oldListeners = nextChild.listeners;
       nextChild.apply(props: description.props, children: description.children, listeners: description.listeners);
-      _addChanges(new NodeChange(NodeChangeType.MOVED, nextChild), changes);
+      if (i != oldChildrenPositions[key]) {
+        _addChanges(new NodeChange(NodeChangeType.MOVED, nextChild), changes);
+      }
 
       nextChild.update(changes: changes, force: true, oldListeners: oldListeners);
       oldChildren.remove(key);
@@ -106,5 +109,15 @@ List<ComponentDescription> _getChildrenFromComponent(Component component) {
      */
     throw "render should return ComponentDescription or List<ComponentDescription>";
   }
+}
+
+Map<dynamic, num> _createPositionMap(Iterable<dynamic> input) {
+  Map<dynamic, num> result = {};
+  var i = 0;
+  for (var value in input) {
+    result[value] = i;
+    ++i;
+  }
+  return result;
 }
 

@@ -137,7 +137,7 @@ main() {
 
         updateNode();
         expect(changes.isEmpty, isFalse);
-        expect(changes.length, equals(3)); // both, node and it's child is updated
+        expect(changes.length, equals(2)); // both, node and it's child is updated
 
         expect(node.children.first, equals(oldNode));
 
@@ -353,7 +353,7 @@ main() {
 
           updateNode();
 
-          expect(countChangeTypes(changes, NodeChangeType.MOVED), equals(6));
+          expect(countChangeTypes(changes, NodeChangeType.MOVED), equals(2));
           expect(countChangeTypes(changes, NodeChangeType.UPDATED), equals(7));
           expect(countChangeTypes(changes, NodeChangeType.CREATED), equals(2));
           expect(countChangeTypes(changes, NodeChangeType.DELETED), equals(2));
@@ -421,7 +421,7 @@ main() {
 
           expect(node.children.first.listeners, equals(listeners2));
 
-          expect(changes.length, equals(3));
+          expect(changes.length, equals(2));
           expect(changes.last.node, equals(node.children.first));
           expect(changes.last.type, equals(NodeChangeType.UPDATED));
           expect(changes.last.oldListeners, equals(listeners1));
