@@ -8,6 +8,7 @@ dependencies:
 dev_dependencies:
   browser: any
   meta: any
+  mock: any
   react: any
   unittest: any
   useful: any

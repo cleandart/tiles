@@ -1,7 +1,7 @@
 library tiles_node_update_children_test;
 
 import 'package:unittest/unittest.dart';
-import 'package:unittest/mock.dart';
+import 'package:mock/mock.dart';
 import 'package:tiles/tiles.dart';
 import '../mocks.dart';
 

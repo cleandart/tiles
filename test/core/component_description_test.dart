@@ -3,7 +3,7 @@ library tiles_compoenent_description_test;
 import 'package:unittest/unittest.dart';
 import 'package:tiles/tiles.dart';
 import '../mocks.dart';
-import 'package:unittest/mock.dart';
+import 'package:mock/mock.dart';
 
 main() {
   group("(ComponentDescription)", () {

@@ -4,7 +4,7 @@ import 'package:unittest/unittest.dart';
 import 'package:tiles/tiles.dart';
 import '../mocks.dart';
 import 'dart:math';
-import 'package:unittest/mock.dart';
+import 'package:mock/mock.dart';
 
 main() {
 
