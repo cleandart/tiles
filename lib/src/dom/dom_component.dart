@@ -38,7 +38,7 @@ class DomComponent extends Component {
 final Set<String> allowedAttrs = new Set.from(["accept", "accessKey", "action", "allowFullScreen", "allowTransparency", "alt", "autoCapitalize",
   "autoComplete", "autoFocus", "autoPlay", "cellPadding", "cellSpacing", "charSet", "checked",
   "class", "cols", "colSpan", "content", "contentEditable", "contextMenu", "controls", "data", "dateTime",
-  "dir", "disabled", "draggable", "encType", "form", "frameBorder", "height", "hidden", "href", "htmlFor",
+  "dir", "disabled", "draggable", "encType", "for", "form", "frameBorder", "height", "hidden", "href", "htmlFor",
   "httpEquiv", "icon", "id", "label", "lang", "list", "loop", "max", "maxLength", "method", "min", "multiple", "name",
   "pattern", "placeholder", "poster", "preload", "radioGroup", "readOnly", "rel", "required", "role", "rows",
   "rowSpan", "scrollLeft", "scrollTop", "selected", "size", "spellCheck", "src", "step", "style", "tabIndex",
