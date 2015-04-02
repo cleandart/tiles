@@ -2,6 +2,7 @@
 packages
 .project
 pubspec.lock
+.pub
 
 ######################
 # testing suites

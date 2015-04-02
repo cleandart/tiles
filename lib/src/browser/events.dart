@@ -61,7 +61,7 @@ final Map<String, String> allowedEvents = _createEventsMapFromList(["keyDown",
   "doubleClick", "drag", "dragEnd", "dragEnter", "dragExit", "dragLeave",
   "dragOver", "dragStart", "drop", "mouseDown", "mouseEnter", "mouseLeave",
   "mouseMove", "mouseOut", "mouseOver", "mouseUp", "touchCancel", "touchEnd",
-  "touchMove", "touchStart", "scroll", "wheel",
+  "touchMove", "touchStart", "scroll", "wheel", "paste",
 ]);
 
 /**
