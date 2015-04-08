@@ -36,8 +36,11 @@ initTilesBrowserConfiguration() {
  */
 _update(num data) {
   logger.finer("_update called");
-  _updateTrees();
-  html.window.animationFrame.then(_update);
+  try {
+    _updateTrees();
+  } finally {
+    html.window.animationFrame.then(_update);
+  }
 }
 
 /**
@@ -243,4 +246,3 @@ _removeNodeFromDom(Node node) {
     }
   }
 }
-
