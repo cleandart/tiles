@@ -128,6 +128,18 @@ main() {
       });
 
     });
+    
+    test("should accept iterable as result of render", () {
+      Iterable iterable = [description].reversed;
+      component = new ComponentMock();
+      component.when(callsTo("render")).alwaysReturn(iterable);
+      component.when(callsTo("shouldUpdate")).alwaysReturn(true);
+
+      createNode();
+      
+      node.isDirty = true;
+      node.update();
+    });
 
     group("(_updateChildren)", () {
       test("update - if factory is the same, child will be the same", () {
