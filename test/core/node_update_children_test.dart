@@ -128,7 +128,7 @@ main() {
       });
 
     });
-    
+
     test("should accept iterable as result of render", () {
       Iterable iterable = [description].reversed;
       component = new ComponentMock();
@@ -136,7 +136,7 @@ main() {
       component.when(callsTo("shouldUpdate")).alwaysReturn(true);
 
       createNode();
-      
+
       node.isDirty = true;
       node.update();
     });
