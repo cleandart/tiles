@@ -1,4 +1,5 @@
 library tiles_component_test;
+
 import 'package:unittest/unittest.dart';
 import 'package:mock/mock.dart';
 import 'package:tiles/tiles.dart';
@@ -6,7 +7,6 @@ import '../mocks.dart';
 import 'dart:async';
 
 main() {
-
   group("(Component)", () {
     dynamic props, otherProps;
     Component component;
@@ -57,7 +57,7 @@ main() {
     });
 
     test("shouldUpdate return by default true", () {
-       expect(component.shouldUpdate(otherProps, props), isTrue);
+      expect(component.shouldUpdate(otherProps, props), isTrue);
     });
 
     test("needUpdate stream is stream", () {
@@ -94,15 +94,16 @@ main() {
 
     test("default redraw is not immediate", () {
       component.redraw();
-      component.needUpdate.listen(expectAsync((now) {if (now == true) throw 0;}, count: 1));
+      component.needUpdate.listen(expectAsync((now) {
+        if (now == true) throw 0;
+      }, count: 1));
     });
 
     test("immediate redraw add event with true argument", () {
       component.redraw(true);
-      component.needUpdate.listen(expectAsync((now) {if (now != true) throw 0;}, count: 1));
+      component.needUpdate.listen(expectAsync((now) {
+        if (now != true) throw 0;
+      }, count: 1));
     });
-
-
   });
-
 }

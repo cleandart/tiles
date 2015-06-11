@@ -13,7 +13,7 @@ class BenchmarkComponent extends Component {
   String me;
   num level;
 
-  BenchmarkComponent([this.props, children]): super(null, children) {
+  BenchmarkComponent([this.props, children]) : super(null, children) {
     me = "";
   }
 
@@ -29,17 +29,19 @@ class BenchmarkComponent extends Component {
     num number = levels[level];
 
     var children = [];
-    if (levels.length == level+1) {
+    if (levels.length == level + 1) {
       for (var i = 0; i < number; ++i) {
         children.add(div(children: "i am $prefix.$i", key: i));
       }
     } else {
       for (var i = 0; i < number; ++i) {
-        children.add(component(props: {
+        children.add(component(
+            props: {
           "levels": levels,
           "level": level + 1,
           "prefix": prefix + ".$i"
-        }, key: "child$i"));
+        },
+            key: "child$i"));
       }
     }
 
@@ -64,12 +66,13 @@ class BenchmarkComponent extends Component {
     }
     super.redraw();
   }
-
 }
 
-var registeredComponent = registerComponent(({props, children}) => new BenchmarkComponent(props, children));
+var registeredComponent = registerComponent(
+    ({props, children}) => new BenchmarkComponent(props, children));
 
 var component = ({props, children, key, Map listeners}) {
   ++benchmark.toRender;
-  return registeredComponent(props: props, children: children, key: key, listeners: listeners);
+  return registeredComponent(
+      props: props, children: children, key: key, listeners: listeners);
 };

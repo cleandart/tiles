@@ -6,18 +6,16 @@ import 'package:unittest/unittest.dart';
 import '../mocks.dart';
 //import 'package:tiles/tiles.dart';
 
-
 main() {
-
   group("(Dom Special Element)", () {
-
     group("(TEXTAREA)", () {
       TextareaComponent textareaComponent;
 
       String value = "value";
 
       setUp(() {
-        textareaComponent = textarea(props: {"value": value, "type": "attrValue"}).createComponent();
+        textareaComponent = textarea(
+            props: {"value": value, "type": "attrValue"}).createComponent();
       });
 
       test("should be DomComponent", () {
@@ -40,7 +38,6 @@ main() {
 
         expect(textareaComponent.render(), isNull);
       });
-
     });
   });
 }

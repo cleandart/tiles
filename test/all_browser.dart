@@ -9,7 +9,7 @@ import 'browser/special_attributes_test.dart' as specialAttributes;
 import 'browser/elements.dart' as elements;
 import 'package:unittest/html_individual_config.dart';
 
-main () {
+main() {
   useHtmlIndividualConfiguration();
   mountComponent.main();
   mountLifecycle.main();

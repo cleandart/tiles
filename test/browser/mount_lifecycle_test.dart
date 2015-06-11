@@ -36,11 +36,11 @@ main() {
       description.when(callsTo("createComponent")).alwaysReturn(component);
 
       StreamController controller = new StreamController();
-      component.when(callsTo("get needUpdate"))
-        .alwaysReturn(controller.stream);
+      component.when(callsTo("get needUpdate")).alwaysReturn(controller.stream);
 
-      component.when(callsTo("redraw"))
-        .alwaysCall(([bool what]) => controller.add(what));
+      component
+          .when(callsTo("redraw"))
+          .alwaysCall(([bool what]) => controller.add(what));
 
       querySelector("body").append(mountRoot);
     });
@@ -51,7 +51,9 @@ main() {
       component.getLogs(callsTo("didMount")).verify(happenedOnce);
     });
 
-    test("should call shouldUpdate, render and didUpdate when node is marked as dirty", () {
+    test(
+        "should call shouldUpdate, render and didUpdate when node is marked as dirty",
+        () {
       mountComponent(description, mountRoot);
 
       component.redraw();
@@ -83,28 +85,40 @@ main() {
 
     group("(core complex)", () {
       ComponentMock c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11;
-      ComponentDescriptionMock dc1, dc2, dc3, dc4, dc5, dc6, dc7, dc8, dc9, dc10, dc11;
+      ComponentDescriptionMock dc1,
+          dc2,
+          dc3,
+          dc4,
+          dc5,
+          dc6,
+          dc7,
+          dc8,
+          dc9,
+          dc10,
+          dc11;
 
-      createDefaultDescription (ComponentMock component) {
+      createDefaultDescription(ComponentMock component) {
         ComponentDescriptionMock description = new ComponentDescriptionMock();
         description.when(callsTo("createComponent")).alwaysReturn(component);
         return description;
       }
 
-      createCleanComponent () {
+      createCleanComponent() {
         ComponentMock component = new ComponentMock();
 
         StreamController controller = new StreamController();
-        component.when(callsTo("get needUpdate"))
-          .alwaysReturn(controller.stream);
+        component
+            .when(callsTo("get needUpdate"))
+            .alwaysReturn(controller.stream);
 
-        component.when(callsTo("redraw"))
-          .alwaysCall(([bool what]) => controller.add(what));
+        component
+            .when(callsTo("redraw"))
+            .alwaysCall(([bool what]) => controller.add(what));
 
         return component;
       }
 
-      createDefaultComponent ([List<ComponentDescriptionMock> whatToRender]) {
+      createDefaultComponent([List<ComponentDescriptionMock> whatToRender]) {
         ComponentMock component = createCleanComponent();
 
         component.when(callsTo("shouldUpdate")).alwaysReturn(true);
@@ -135,13 +149,26 @@ main() {
       }
 
       shouldHappenedOnce(String what) {
-        shouldHappened([c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11], what, happenedOnce);
+        shouldHappened(
+            [c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11], what, happenedOnce);
       }
       shouldNeverHappened(String what) {
-        shouldHappened([c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11], what, neverHappened);
+        shouldHappened([
+          c1,
+          c2,
+          c3,
+          c4,
+          c5,
+          c6,
+          c7,
+          c8,
+          c9,
+          c10,
+          c11
+        ], what, neverHappened);
       }
 
-      createStructure () {
+      createStructure() {
         /**
          * Structure
          *            c1
@@ -184,10 +211,8 @@ main() {
       setup() {
         createStructure();
         mountComponent(dc1, mountRoot);
-
       }
       setUp(setup);
-
 
       test("should be every render called once in more complex structure", () {
         shouldHappenedOnce("render");
@@ -218,8 +243,19 @@ main() {
       test("should unmount everything on unmountComponent", () {
         unmountComponent(mountRoot);
 
-        shouldHappened([c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11], "willUnmount", happenedOnce);
-
+        shouldHappened([
+          c1,
+          c2,
+          c3,
+          c4,
+          c5,
+          c6,
+          c7,
+          c8,
+          c9,
+          c10,
+          c11
+        ], "willUnmount", happenedOnce);
       });
 
       test("should unmount whole subtree when one component remove child", () {
@@ -228,9 +264,7 @@ main() {
         createStructure();
         c1 = createCleanComponent();
         c1.when(callsTo("shouldUpdate")).alwaysReturn(true);
-        c1.when(callsTo("render"))
-          .thenReturn([dc2, dc3])
-          .thenReturn([dc2]);
+        c1.when(callsTo("render")).thenReturn([dc2, dc3]).thenReturn([dc2]);
         dc1 = createDefaultDescription(c1);
         mountComponent(dc1, mountRoot);
 
@@ -241,23 +275,22 @@ main() {
 
         window.animationFrame.then(expectAsync((data) {
           var stilMounted = [c1, c2, c4, c5, c7, c8, c9];
-          var unmounted = [c3, c6,c10, c11];
+          var unmounted = [c3, c6, c10, c11];
           shouldHappened(stilMounted, "didUpdate", happenedOnce);
           shouldHappened(unmounted, "didUpdate", neverHappened);
           shouldHappened(stilMounted, "willUnmount", neverHappened);
           shouldHappened(unmounted, "willUnmount", happenedOnce);
         }));
-
       });
-      test("should didMount new whole subtree when one component add child child", () {
+      test(
+          "should didMount new whole subtree when one component add child child",
+          () {
         unmountComponent(mountRoot);
 
         createStructure();
         c1 = createCleanComponent();
         c1.when(callsTo("shouldUpdate")).alwaysReturn(true);
-        c1.when(callsTo("render"))
-          .thenReturn([dc2])
-          .thenReturn([dc2, dc3]);
+        c1.when(callsTo("render")).thenReturn([dc2]).thenReturn([dc2, dc3]);
         dc1 = createDefaultDescription(c1);
         mountComponent(dc1, mountRoot);
 
@@ -267,13 +300,12 @@ main() {
 
         window.animationFrame.then(expectAsync((data) {
           var stilMounted = [c1, c2, c4, c5, c7, c8, c9];
-          var mounted = [c3, c6,c10, c11];
+          var mounted = [c3, c6, c10, c11];
           shouldHappened(stilMounted, "didUpdate", happenedOnce);
           shouldHappened(mounted, "didUpdate", neverHappened);
           shouldHappened(stilMounted, "didMount", neverHappened);
           shouldHappened(mounted, "didMount", happenedOnce);
         }));
-
       });
       /**
        * Structure
@@ -285,7 +317,6 @@ main() {
        *     /     /  \      /  \
        *   c7     c8   c9   c10  c11
        */
-
 
     });
   });

@@ -25,7 +25,6 @@ initTilesBrowserConfiguration() {
 
     throw "Browser configuration should not be initialized twice";
   }
-
 }
 
 /**
@@ -160,7 +159,11 @@ _applyUpdatedChange(NodeChange change) {
     /**
      * change or remove old attributes
      */
-    _applyAttributes(element, newProps, svg: component.svg, node: change.node, oldProps: oldProps, listeners: change.node.listeners);
+    _applyAttributes(element, newProps,
+        svg: component.svg,
+        node: change.node,
+        oldProps: oldProps,
+        listeners: change.node.listeners);
   } else if (change.node.component is DomTextComponent) {
     /**
      * if component is dom text componetn, update text of the element

@@ -12,7 +12,7 @@ import "dom/dom_elements_test.dart" as domElements;
 import "dom/dom_elements_special_test.dart" as domElementsSpecial;
 import "dom/dom_text_component_test.dart" as domTextComponent;
 
-main () {
+main() {
   component.main();
   registerComponent.main();
 

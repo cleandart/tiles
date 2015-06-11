@@ -5,8 +5,7 @@ part of tiles;
  * it will be "packed" into DomTextComponent in synthetic DOM.
  */
 class DomTextComponent extends Component {
-
-  DomTextComponent(String props): super(props);
+  DomTextComponent(String props) : super(props);
 
   /**
    * getter for escaped props to easy use for both,
@@ -15,4 +14,5 @@ class DomTextComponent extends Component {
 }
 
 ComponentDescriptionFactory _domTextComponentDescriptionFactory =
-  registerComponent(({String props, children}) => new DomTextComponent(props));
+    registerComponent(
+        ({String props, children}) => new DomTextComponent(props));

@@ -1,13 +1,13 @@
 part of tiles;
 
-class DummyList{
+class DummyList {
   const DummyList();
   add(var elem) {}
 }
 
 // TODO: make changes parameter named
 // TODO: is there any reason, why _updateChildren is not a method of Node class?
-_updateChildren (Node node, {List<NodeChange> changes}) {
+_updateChildren(Node node, {List<NodeChange> changes}) {
   logger.fine("_updateChildren called");
   /**
    * get old children from node, next children descriptions from component and prepare next children map
@@ -15,7 +15,8 @@ _updateChildren (Node node, {List<NodeChange> changes}) {
   Map<dynamic, Node> oldChildren = _createChildrenMap(node.children);
   Map<dynamic, num> oldChildrenPositions = _createPositionMap(oldChildren.keys);
   List<Node> nextChildren = [];
-  Iterable<ComponentDescription> descriptions = _getChildrenFromComponent(node.component);
+  Iterable<ComponentDescription> descriptions =
+      _getChildrenFromComponent(node.component);
 
   logger.finer('component: ${node.component.props}');
 
@@ -36,12 +37,16 @@ _updateChildren (Node node, {List<NodeChange> changes}) {
       logger.finer('same factory, updating props');
       nextChild = oldChild;
       Map oldListeners = nextChild.listeners;
-      nextChild.apply(props: description.props, children: description.children, listeners: description.listeners);
+      nextChild.apply(
+          props: description.props,
+          children: description.children,
+          listeners: description.listeners);
       if (index != oldChildrenPositions[key]) {
         _addChanges(new NodeChange(NodeChangeType.MOVED, nextChild), changes);
       }
 
-      nextChild.update(changes: changes, force: true, oldListeners: oldListeners);
+      nextChild.update(
+          changes: changes, force: true, oldListeners: oldListeners);
       oldChildren.remove(key);
     } else {
       logger.finer('different factory, create & delete');
@@ -68,7 +73,7 @@ _updateChildren (Node node, {List<NodeChange> changes}) {
   node.children = nextChildren;
 }
 
-Map<dynamic, Node> _createChildrenMap (List<Node> nodes) {
+Map<dynamic, Node> _createChildrenMap(List<Node> nodes) {
   logger.finer("_createChildMap");
   Map result = {};
   num index = 0;
@@ -83,7 +88,6 @@ Map<dynamic, Node> _createChildrenMap (List<Node> nodes) {
   logger.finer("_createChildMap created");
   return result;
 }
-
 
 Iterable<ComponentDescription> _getChildrenFromComponent(Component component) {
   logger.finer("_getChildrenFromComponent");
@@ -121,4 +125,3 @@ Map<dynamic, num> _createPositionMap(Iterable<dynamic> input) {
   }
   return result;
 }
-

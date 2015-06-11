@@ -27,4 +27,3 @@ _unmountNode(Node node) {
   });
   _deleteRelations(node, _nodeToElement[node]);
 }
-

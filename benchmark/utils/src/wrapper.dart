@@ -1,8 +1,9 @@
 part of utils;
 
-class Component extends tiles.Component implements  react.Component {
-  Component([props, children]): super(props, children), _needUpdateController = new StreamController(sync: true) {
-  }
+class Component extends tiles.Component implements react.Component {
+  Component([props, children])
+      : super(props, children),
+        _needUpdateController = new StreamController(sync: true) {}
 
   final StreamController _needUpdateController;
 
@@ -12,8 +13,6 @@ class Component extends tiles.Component implements  react.Component {
   Map props;
 
   dynamic _jsRedraw;
-
-
 
   @override
   dynamic ref;
@@ -28,7 +27,6 @@ class Component extends tiles.Component implements  react.Component {
   setState(_) {
     redraw();
   }
-
 
   redraw([now]) {
     if (_USED == _REACT) {
@@ -45,8 +43,7 @@ class Component extends tiles.Component implements  react.Component {
   }
 
   @override
-  componentWillMount() {
-  }
+  componentWillMount() {}
 
   @override
   componentDidMount(_) {
@@ -73,8 +70,7 @@ class Component extends tiles.Component implements  react.Component {
   getInitialState() => {};
 
   @override
-  bind(key) {
-  }
+  bind(key) {}
 
   @override
   void componentDidUpdate(prevProps, prevState, rootNode) {
@@ -101,8 +97,6 @@ class Component extends tiles.Component implements  react.Component {
     transferComponentState();
   }
 
-
-
   @override
   Map get prevState => null;
 
@@ -112,30 +106,126 @@ class Component extends tiles.Component implements  react.Component {
   }
 
   @override
-  void transferComponentState() {
-  }
+  void transferComponentState() {}
 }
 
-var mountComponent,
-  registerComponent,
-  createVirtualDOM;
+var mountComponent, registerComponent, createVirtualDOM;
 
 Benchmark benchmark;
 
-var a, abbr, address, area, article, aside, audio, b, base, bdi, bdo, big, blockquote, body, br,
-button, canvas, caption, cite, code, col, colgroup, data, datalist, dd, del, details, dfn,
-div, dl, dt, em, embed, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6,
-head, header, hr, html, i, iframe, img, input, ins, kbd, keygen, label, legend, li, link, main,
-map, mark, menu, menuitem, meta, meter, nav, noscript, object, ol, optgroup, option, output,
-p, param, pre, progress, q, rp, rt, ruby, s, samp, script, section, select, small, source,
-span, strong, style, sub, summary, sup, table, tbody, td, textarea, tfoot, th, thead, time,
-title, tr, track, u, ul, varElement , video, wbr;
+var a,
+    abbr,
+    address,
+    area,
+    article,
+    aside,
+    audio,
+    b,
+    base,
+    bdi,
+    bdo,
+    big,
+    blockquote,
+    body,
+    br,
+    button,
+    canvas,
+    caption,
+    cite,
+    code,
+    col,
+    colgroup,
+    data,
+    datalist,
+    dd,
+    del,
+    details,
+    dfn,
+    div,
+    dl,
+    dt,
+    em,
+    embed,
+    fieldset,
+    figcaption,
+    figure,
+    footer,
+    form,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    head,
+    header,
+    hr,
+    html,
+    i,
+    iframe,
+    img,
+    input,
+    ins,
+    kbd,
+    keygen,
+    label,
+    legend,
+    li,
+    link,
+    main,
+    map,
+    mark,
+    menu,
+    menuitem,
+    meta,
+    meter,
+    nav,
+    noscript,
+    object,
+    ol,
+    optgroup,
+    option,
+    output,
+    p,
+    param,
+    pre,
+    progress,
+    q,
+    rp,
+    rt,
+    ruby,
+    s,
+    samp,
+    script,
+    section,
+    select,
+    small,
+    source,
+    span,
+    strong,
+    style,
+    sub,
+    summary,
+    sup,
+    table,
+    tbody,
+    td,
+    textarea,
+    tfoot,
+    th,
+    thead,
+    time,
+    title,
+    tr,
+    track,
+    u,
+    ul,
+    varElement,
+    video,
+    wbr;
 
 /** SVG elements */
 var circle, g, line, path, polyline, rect, svg, text;
-
-
-
 
 _ReactElementToTiles(element) {
   return ({props, children, key, listeners}) {
@@ -146,7 +236,7 @@ _ReactElementToTiles(element) {
       props.addAll(listeners);
     }
     props["key"] = key;
-   return element(props, children);
+    return element(props, children);
   };
 }
 typedef JsObject _Factory({props, children});

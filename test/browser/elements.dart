@@ -15,7 +15,6 @@ main() {
        * we need to add this element to DOM to test bubbling of events
        */
       querySelector("body").append(mountRoot);
-
     });
 
     test('shold add "cols" and "rows" to textarea', () {
@@ -26,8 +25,6 @@ main() {
       expect(mountRoot.firstChild is TextAreaElement, isTrue);
       expect(textareaEl.cols, equals(3));
       expect(textareaEl.rows, equals(5));
-
     });
-
   });
 }

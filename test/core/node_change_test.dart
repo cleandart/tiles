@@ -7,7 +7,6 @@ import 'dart:math';
 import 'package:mock/mock.dart';
 
 main() {
-
   group("(NodeChange)", () {
     test("constructor", () {
       dynamic oldProps = new Mock();
@@ -15,9 +14,11 @@ main() {
       Node node = new NodeMock();
 
       var rand = new Random();
-      NodeChangeType type = NodeChangeType.values[rand.nextInt(NodeChangeType.values.length)];
+      NodeChangeType type =
+          NodeChangeType.values[rand.nextInt(NodeChangeType.values.length)];
 
-      NodeChange change = new NodeChange(type, node, oldProps: oldProps, newProps: newProps);
+      NodeChange change =
+          new NodeChange(type, node, oldProps: oldProps, newProps: newProps);
 
       expect(change.type, equals(type));
       expect(change.node, equals(node));

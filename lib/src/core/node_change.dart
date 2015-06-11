@@ -8,7 +8,6 @@ class NodeChange {
   final Map oldListeners;
   final Map newListeners;
 
-
-  NodeChange(NodeChangeType this.type, Node this.node, {dynamic this.oldProps, dynamic this.newProps, this.oldListeners, this.newListeners});
-
+  NodeChange(NodeChangeType this.type, Node this.node, {dynamic this.oldProps,
+      dynamic this.newProps, this.oldListeners, this.newListeners});
 }

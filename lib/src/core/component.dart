@@ -27,8 +27,8 @@ class Component {
    *
    * If stream was not passed, it will create own stream controller
    */
-  Component(this.props, [this.children]):
-    this._needUpdateController = new StreamController<bool>() {}
+  Component(this.props, [this.children])
+      : this._needUpdateController = new StreamController<bool>() {}
 
   didMount() {}
 
@@ -48,7 +48,4 @@ class Component {
   redraw([bool now = false]) {
     _needUpdateController.add(now);
   }
-
-
 }
-

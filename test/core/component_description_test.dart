@@ -8,22 +8,25 @@ import 'package:mock/mock.dart';
 main() {
   group("(ComponentDescription)", () {
     ComponentFactory factory = ({props, children}) => new ComponentMock();
-    test("constructor (create with factory, props and children and then check if there is", () {
-
+    test(
+        "constructor (create with factory, props and children and then check if there is",
+        () {
       Component component = new ComponentMock();
       ComponentFactory factory = ({props, children}) => null;
       dynamic props = new Mock();
       var children = [new ComponentDescriptionMock()];
 
-      ComponentDescription description = new ComponentDescription(factory, props: props, children: children);
+      ComponentDescription description =
+          new ComponentDescription(factory, props: props, children: children);
 
       expect(description.factory, equals(factory));
       expect(description.props, equals(props));
       expect(description.children, equals(children));
     });
 
-    test("createComponent should call factory with this.props and this.children", () {
-
+    test(
+        "createComponent should call factory with this.props and this.children",
+        () {
       ComponentMock component = new ComponentMock();
 
       /**
@@ -36,7 +39,8 @@ main() {
       /**
        * factory allways return above component and set called to true
        */
-      ComponentFactory factory = ({dynamic props, List<ComponentDescription> children}) {
+      ComponentFactory factory = ({dynamic props,
+          List<ComponentDescription> children}) {
         called = true;
         testChildren = children;
         testProps = props;
@@ -46,7 +50,8 @@ main() {
       dynamic props = new Mock();
       List<ComponentDescription> children = [new ComponentDescriptionMock()];
 
-      ComponentDescription description = new ComponentDescription(factory, props: props, children: children);
+      ComponentDescription description =
+          new ComponentDescription(factory, props: props, children: children);
 
       expect(description.createComponent(), equals(component));
       expect(testProps, equals(props));
@@ -56,12 +61,16 @@ main() {
 
     test("should have readonly props", () {
       ComponentDescription description = new ComponentDescription(factory);
-      expect(() {description.props = null;}, throws);
+      expect(() {
+        description.props = null;
+      }, throws);
     });
 
     test("should have readonly children", () {
       ComponentDescription description = new ComponentDescription(factory);
-      expect(() {description.children = null;}, throws);
+      expect(() {
+        description.children = null;
+      }, throws);
     });
 
     test("should have no key by default", () {
@@ -72,7 +81,8 @@ main() {
     test("should have key optionali added in constructor", () {
       var key = new Mock();
 
-      ComponentDescription description = new ComponentDescription(factory, key: key);
+      ComponentDescription description =
+          new ComponentDescription(factory, key: key);
 
       expect(description.key, equals(key));
     });
@@ -84,11 +94,10 @@ main() {
 
     test("should have option to add listeners", () {
       Map listeners = {1: new Mock()};
-      ComponentDescription description = new ComponentDescription(factory, listeners: listeners);
+      ComponentDescription description =
+          new ComponentDescription(factory, listeners: listeners);
 
       expect(description.listeners, equals(listeners));
     });
-
   });
-
 }

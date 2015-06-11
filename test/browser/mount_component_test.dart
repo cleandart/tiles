@@ -208,19 +208,29 @@ main() {
       expect(mountRoot.children.first.attributes.containsKey("id"), isFalse);
       expect(mountRoot.children.first.attributes.containsKey("crap"), isFalse);
     });
-    
+
     test("should add attributes with allowed prefixes", () {
-      var props = {"aria-something": "aria", "data-somethingelse": "data", "wrong-else": "wrong"};
+      var props = {
+        "aria-something": "aria",
+        "data-somethingelse": "data",
+        "wrong-else": "wrong"
+      };
 
       mountComponent(div(props: props), mountRoot);
 
-      expect(mountRoot.children.first.attributes.containsKey("aria-something"), isTrue);
-      expect(mountRoot.children.first.attributes["aria-something"], equals("aria"));
-      
-      expect(mountRoot.children.first.attributes.containsKey("data-somethingelse"), isTrue);
-      expect(mountRoot.children.first.attributes["data-somethingelse"], equals("data"));
-      
-      expect(mountRoot.children.first.attributes.containsKey("wrong-else"), isFalse);
+      expect(mountRoot.children.first.attributes.containsKey("aria-something"),
+          isTrue);
+      expect(mountRoot.children.first.attributes["aria-something"],
+          equals("aria"));
+
+      expect(
+          mountRoot.children.first.attributes.containsKey("data-somethingelse"),
+          isTrue);
+      expect(mountRoot.children.first.attributes["data-somethingelse"],
+          equals("data"));
+
+      expect(mountRoot.children.first.attributes.containsKey("wrong-else"),
+          isFalse);
     });
 
     group("(remount)", () {
@@ -262,7 +272,7 @@ main() {
             .when(callsTo("render"))
             .thenReturn(children1)
             .thenReturn(children2);
-        
+
         return description;
       }
 

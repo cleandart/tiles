@@ -1,7 +1,6 @@
 part of utils;
 
 class Benchmark {
-
   num toRender = 0;
   num rendered = 0;
 
@@ -34,7 +33,8 @@ class Benchmark {
     duration.end = stopwatch.elapsedMilliseconds;
   }
 
-  toString() => "${durations[MOUNTING]},${durations[VIRTUALDOMBUILDING]},${durations[ALLRENDERED]},${durations[CLEANUPDATING]},${durations[DIRTYUPDATING]}";
+  toString() =>
+      "${durations[MOUNTING]},${durations[VIRTUALDOMBUILDING]},${durations[ALLRENDERED]},${durations[CLEANUPDATING]},${durations[DIRTYUPDATING]}";
 
   print(var printer) {
     printer(this.toString());
@@ -61,4 +61,3 @@ class _Duration {
     }
   }
 }
-

@@ -161,15 +161,12 @@ initTiles() {
   path = tiles.path;
   polyline = tiles.polyline;
   rect = tiles.rect;
-
-
 }
 
 initReact() {
   _USED = _REACT;
   initGlobal();
   react.setClientConfiguration();
-
 
   mountComponent = (dynamic what, dynamic where) {
     reactBenchmark.start(Benchmark.MOUNTING);
@@ -181,7 +178,8 @@ initReact() {
   createVirtualDOM = mountComponent;
 
   registerComponent = (_Factory factory) {
-    react.ReactComponentFactory reactFactory = ([Map props, dynamic children]) => factory(props: props, children: children);
+    react.ReactComponentFactory reactFactory = ([Map props,
+        dynamic children]) => factory(props: props, children: children);
     var registeredComponent = react.registerComponent(reactFactory);
     return ({props, children, key, Map listeners}) {
       if (!(props is Map)) {
@@ -330,4 +328,3 @@ initReact() {
   polyline = _ReactElementToTiles(react.polyline);
   rect = _ReactElementToTiles(react.rect);
 }
-

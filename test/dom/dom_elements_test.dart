@@ -6,19 +6,19 @@ import 'package:unittest/unittest.dart';
 import '../mocks.dart';
 //import 'package:tiles/tiles.dart';
 
-
 main() {
-
   group("(DOM elements)", () {
     var element = div;
     var notPairElement = link;
 
-    test("dom component description factories create factories with different ComponentFactory", () {
+    test(
+        "dom component description factories create factories with different ComponentFactory",
+        () {
       ComponentFactory notPairElementFactory = notPairElement().factory;
       ComponentFactory elementFactory = element().factory;
 
       expect(notPairElementFactory, isNot(equals(elementFactory)));
-     });
+    });
 
     test("test not pair elements (for example link, input, line)", () {
       DomComponent notPairElementComponent = notPairElement().createComponent();
@@ -26,7 +26,8 @@ main() {
     });
 
     test("should accept map as props and save it to props", () {
-      DomComponent elementComponent = element(props: {"attr": "value"}).createComponent();
+      DomComponent elementComponent =
+          element(props: {"attr": "value"}).createComponent();
 
       expect(elementComponent.props["attr"], equals("value"));
     });
@@ -35,7 +36,8 @@ main() {
       ComponentDescription child = new ComponentDescriptionMock();
       List<ComponentDescription> children = [child];
 
-      DomComponent elementComponent = element(children: children).createComponent();
+      DomComponent elementComponent =
+          element(children: children).createComponent();
 
       expect(elementComponent.children, equals(children));
     });
@@ -45,10 +47,12 @@ main() {
     });
 
     test("nested rendering", () {
-      ComponentDescription aa = a(props: {}, children: [div(children: [span(), span()]), div()]);
+      ComponentDescription aa =
+          a(props: {}, children: [div(children: [span(), span()]), div()]);
       Component aaa = aa.createComponent();
 
-      DomComponent innerSpan = aaa.render()[0].createComponent().render()[0].createComponent();
+      DomComponent innerSpan =
+          aaa.render()[0].createComponent().render()[0].createComponent();
 
       expect(innerSpan.tagName, equals("span"));
     });
@@ -76,8 +80,5 @@ main() {
 
       expect(description.listeners, isNotNull);
     });
-
   });
-
 }
-

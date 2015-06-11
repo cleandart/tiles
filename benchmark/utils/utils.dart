@@ -11,9 +11,7 @@ import "dart:async";
 import 'package:logging/logging.dart';
 import "package:useful/useful.dart";
 
-
 part 'src/global.dart';
 part 'src/wrapper.dart';
 part 'src/benchmark.dart';
 part 'src/init.dart';
-

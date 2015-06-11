@@ -27,37 +27,32 @@ main() {
       component = new ComponentMock();
 
       description = new ComponentDescriptionMock();
-      description.when(callsTo("createComponent"))
-        .alwaysReturn(component);
+      description.when(callsTo("createComponent")).alwaysReturn(component);
 
       /**
        * prepare controller which simulates component redraw
        */
       controller = new StreamController();
-      component.when(callsTo("get needUpdate"))
-        .alwaysReturn(controller.stream);
+      component.when(callsTo("get needUpdate")).alwaysReturn(controller.stream);
 
       /**
        * prepare component mock redraw method
        * to work intuitively to easily writable test
        */
-      component.when(callsTo("redraw"))
-        .alwaysCall(([bool what]) => controller.add(what));
+      component
+          .when(callsTo("redraw"))
+          .alwaysCall(([bool what]) => controller.add(what));
       component.when(callsTo("shouldUpdate")).alwaysReturn(true);
     });
 
     group("(simple move)", () {
-
-      test("should just reorder elements, when all 2 child components have keys", () {
-        component.when(callsTo("render"))
-        .thenReturn(div(children: [
-          span(key: "0"),
-          span(key: "1"),
-        ]))
-        .thenReturn(div(children: [
-          span(key: "1"),
-          span(key: "0"),
-        ]));
+      test(
+          "should just reorder elements, when all 2 child components have keys",
+          () {
+        component
+            .when(callsTo("render"))
+            .thenReturn(div(children: [span(key: "0"), span(key: "1"),]))
+            .thenReturn(div(children: [span(key: "1"), span(key: "0"),]));
 
         mountComponent(description, mountRoot);
 
@@ -74,12 +69,13 @@ main() {
           expect(divEl.firstChild, equals(second));
           expect(divEl.lastChild, equals(first));
         }));
-
       });
 
       test("should reorder longer list of children correctly", () {
-        component.when(callsTo("render"))
-        .thenReturn(div(children: [
+        component
+            .when(callsTo("render"))
+            .thenReturn(div(
+                children: [
           span(props: {"id": 0}, key: "0"),
           span(props: {"id": 1}, key: "1"),
           span(props: {"id": 2}, key: "2"),
@@ -88,7 +84,8 @@ main() {
           span(props: {"id": 5}, key: "5"),
           span(props: {"id": 6}, key: "6"),
         ]))
-        .thenReturn(div(children: [
+            .thenReturn(div(
+                children: [
           span(props: {"id": 0}, key: "0"),
           span(props: {"id": 3}, key: "3"),
           span(props: {"id": 2}, key: "2"),
@@ -102,8 +99,7 @@ main() {
 
         Element divEl = mountRoot.firstChild;
 
-        List<Element> elements = []
-          ..addAll(divEl.children);
+        List<Element> elements = []..addAll(divEl.children);
 
         component.redraw();
 
@@ -120,9 +116,12 @@ main() {
         }));
       });
 
-    test("should reorder longer list of children partial with keys correctly", () {
-        component.when(callsTo("render"))
-        .thenReturn(div(children: [
+      test("should reorder longer list of children partial with keys correctly",
+          () {
+        component
+            .when(callsTo("render"))
+            .thenReturn(div(
+                children: [
           span(),
           span(props: {"id": 1}, key: "1"),
           span(),
@@ -131,8 +130,9 @@ main() {
           span(props: {"id": 5}, key: "5"),
           span(),
         ]))
-        .thenReturn(div(children: [
-                               span(),
+            .thenReturn(div(
+                children: [
+          span(),
           span(props: {"id": 3}, key: "3"),
           span(),
           span(props: {"id": 4}, key: "4"),
@@ -145,8 +145,7 @@ main() {
 
         Element divEl = mountRoot.firstChild;
 
-        List<Element> elements = []
-          ..addAll(divEl.children);
+        List<Element> elements = []..addAll(divEl.children);
 
         component.redraw();
 
@@ -164,13 +163,16 @@ main() {
       });
 
       test("should reorder correctly with new keys", () {
-        component.when(callsTo("render"))
-        .thenReturn(div(children: [
+        component
+            .when(callsTo("render"))
+            .thenReturn(div(
+                children: [
           span(props: {"id": 0}, key: "0"),
           span(props: {"id": 1}, key: "1"),
           span(),
         ]))
-        .thenReturn(div(children: [
+            .thenReturn(div(
+                children: [
           span(props: {"id": 1}, key: "1"),
           span(props: {"id": 2}, key: "2"),
           span(props: {"id": 0}, key: "0"),
@@ -180,8 +182,7 @@ main() {
 
         Element divEl = mountRoot.firstChild;
 
-        List<Element> elements = []
-          ..addAll(divEl.children);
+        List<Element> elements = []..addAll(divEl.children);
 
         component.redraw();
 
@@ -207,43 +208,40 @@ main() {
 
         customDescription1 = new ComponentDescriptionMock();
         customDescription2 = new ComponentDescriptionMock();
-        customDescription1.when(callsTo("createComponent"))
-          .alwaysReturn(customComponent1);
-        customDescription2.when(callsTo("createComponent"))
-          .alwaysReturn(customComponent2);
+        customDescription1
+            .when(callsTo("createComponent"))
+            .alwaysReturn(customComponent1);
+        customDescription2
+            .when(callsTo("createComponent"))
+            .alwaysReturn(customComponent2);
         customDescription1.when(callsTo("get key")).alwaysReturn("key1");
         customDescription2.when(callsTo("get key")).alwaysReturn("key2");
         customComponent1.when(callsTo("shouldUpdate")).alwaysReturn(true);
         customComponent2.when(callsTo("shouldUpdate")).alwaysReturn(true);
-
       });
 
       test("should move child nodes of moved custom node", () {
         customDescription1 = new ComponentDescriptionMock();
-        customDescription1.when(callsTo("createComponent")).alwaysReturn(customComponent1);
+        customDescription1
+            .when(callsTo("createComponent"))
+            .alwaysReturn(customComponent1);
         customDescription1.when(callsTo("get key")).alwaysReturn("key");
 
-        customComponent1.when(callsTo("render"))
-          .thenReturn([div(), span()], 2);
+        customComponent1.when(callsTo("render")).thenReturn([div(), span()], 2);
 
-        component.when(callsTo("render"))
-          .thenReturn([
-            img(key: "img"),
-            input(key: "input"),
-            customDescription1
-          ])
-          .thenReturn([
-            img(key: "img"),
-            customDescription1,
-            input(key: "input"),
-          ]);
+        component
+            .when(callsTo("render"))
+            .thenReturn(
+                [img(key: "img"), input(key: "input"), customDescription1])
+            .thenReturn(
+                [img(key: "img"), customDescription1, input(key: "input"),]);
 
         mountComponent(description, mountRoot);
 
-        Element image  = mountRoot.children[0];
+        Element image = mountRoot.children[0];
         Element inputt = mountRoot.children[1];
-        Element divv   = mountRoot.children[2];
-        Element spann  = mountRoot.children[3];
+        Element divv = mountRoot.children[2];
+        Element spann = mountRoot.children[3];
 
         expect(mountRoot.children.length, equals(4));
         expect(mountRoot.children[0] is ImageElement, isTrue);
@@ -261,19 +259,23 @@ main() {
           expect(mountRoot.children[3] is InputElement, isTrue);
         }));
       });
-      test("should move child nodes of moved custom component and inside of the component", () {
-        customComponent1.when(callsTo("render"))
-          .thenReturn([span(key: "SPAN"), div(key: "DIV"), ])
-        .thenReturn([div(key: "DIV"), span(key: "SPAN"), ]);
+      test(
+          "should move child nodes of moved custom component and inside of the component",
+          () {
+        customComponent1
+            .when(callsTo("render"))
+            .thenReturn([span(key: "SPAN"), div(key: "DIV"),])
+            .thenReturn([div(key: "DIV"), span(key: "SPAN"),]);
 
-        component.when(callsTo("render"))
-          .thenReturn([img(), input(), customDescription1])
-          .thenReturn([img(), customDescription1, input()]);
+        component
+            .when(callsTo("render"))
+            .thenReturn([img(), input(), customDescription1])
+            .thenReturn([img(), customDescription1, input()]);
 
         mountComponent(description, mountRoot);
 
-        Element spann  = mountRoot.children[2];
-        Element divv   = mountRoot.children[3];
+        Element spann = mountRoot.children[2];
+        Element divv = mountRoot.children[3];
 
         component.redraw();
 
@@ -284,22 +286,21 @@ main() {
       });
 
       test("should move more than one custom components correctly", () {
-        customComponent1.when(callsTo("render"))
-          .alwaysReturn([span(), div()]);
+        customComponent1.when(callsTo("render")).alwaysReturn([span(), div()]);
 
-        customComponent2.when(callsTo("render"))
-          .alwaysReturn([span(), div()]);
+        customComponent2.when(callsTo("render")).alwaysReturn([span(), div()]);
 
-        component.when(callsTo("render"))
-          .thenReturn([customDescription1, customDescription2])
-          .thenReturn([customDescription2, customDescription1]);
+        component
+            .when(callsTo("render"))
+            .thenReturn([customDescription1, customDescription2])
+            .thenReturn([customDescription2, customDescription1]);
 
         mountComponent(description, mountRoot);
 
-        Element span1  = mountRoot.children[0];
-        Element div1   = mountRoot.children[1];
-        Element span2  = mountRoot.children[2];
-        Element div2   = mountRoot.children[3];
+        Element span1 = mountRoot.children[0];
+        Element div1 = mountRoot.children[1];
+        Element span2 = mountRoot.children[2];
+        Element div2 = mountRoot.children[3];
 
         component.redraw();
 
@@ -309,34 +310,29 @@ main() {
           expect(mountRoot.children[2], equals(span1));
           expect(mountRoot.children[3], equals(div1));
         }));
-
       });
 
-      test("should move more than one custom components correctly with move of insde components", () {
-        customComponent1.when(callsTo("render"))
-          .thenReturn([
-            span(key: "span1"),
-            div(key: "div1"),
-          ])
-          .thenReturn([
-            div(key: "div1"),
-            span(key: "span1"),
-          ]);
+      test(
+          "should move more than one custom components correctly with move of insde components",
+          () {
+        customComponent1
+            .when(callsTo("render"))
+            .thenReturn([span(key: "span1"), div(key: "div1"),])
+            .thenReturn([div(key: "div1"), span(key: "span1"),]);
 
-        customComponent2.when(callsTo("render"))
-          .alwaysReturn([span(), div()]);
+        customComponent2.when(callsTo("render")).alwaysReturn([span(), div()]);
 
-
-        component.when(callsTo("render"))
-          .thenReturn([customDescription1, customDescription2])
-          .thenReturn([customDescription2, customDescription1]);
+        component
+            .when(callsTo("render"))
+            .thenReturn([customDescription1, customDescription2])
+            .thenReturn([customDescription2, customDescription1]);
 
         mountComponent(description, mountRoot);
 
-        Element span1  = mountRoot.children[0];
-        Element div1   = mountRoot.children[1];
-        Element span2  = mountRoot.children[2];
-        Element div2   = mountRoot.children[3];
+        Element span1 = mountRoot.children[0];
+        Element div1 = mountRoot.children[1];
+        Element span2 = mountRoot.children[2];
+        Element div2 = mountRoot.children[3];
 
         component.redraw();
 
@@ -346,7 +342,6 @@ main() {
           expect(mountRoot.children[2], equals(div1));
           expect(mountRoot.children[3], equals(span1));
         }));
-
       });
     });
   });

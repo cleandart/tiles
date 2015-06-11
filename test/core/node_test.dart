@@ -6,7 +6,6 @@ import 'package:tiles/tiles.dart';
 import '../mocks.dart';
 import 'dart:async';
 
-
 main() {
 
 //  var component = new ComponentMock()
@@ -47,10 +46,11 @@ main() {
 
       node.update();
       expect(node.isDirty, equals(false));
-
     });
 
-    test("should listen to components need update stream and set self as dirty if component need update", () {
+    test(
+        "should listen to components need update stream and set self as dirty if component need update",
+        () {
       StreamController<bool> controller = new StreamController();
       ComponentMock component = new ComponentMock();
       component.when(callsTo("get needUpdate")).alwaysReturn(controller.stream);
@@ -66,9 +66,12 @@ main() {
       });
     });
 
-    test("should accept ComponentDescription not in list from component.render()", () {
+    test(
+        "should accept ComponentDescription not in list from component.render()",
+        () {
       ComponentMock component = new ComponentMock();
-      component.when(callsTo("render")).alwaysReturn(new ComponentDescription(({dynamic props, children}) => new ComponentMock()));
+      component.when(callsTo("render")).alwaysReturn(new ComponentDescription(
+          ({dynamic props, children}) => new ComponentMock()));
 
       Node node = new Node(null, component, factory);
       node.update();
@@ -87,7 +90,8 @@ main() {
       var props = new Mock();
       var children = [new ComponentMock()];
 
-      ComponentDescription description = new ComponentDescription(factory, props: props, children: children, key: key, listeners: listeners);
+      ComponentDescription description = new ComponentDescription(factory,
+          props: props, children: children, key: key, listeners: listeners);
 
       Node node = new Node.fromDescription(null, description);
 
@@ -101,21 +105,20 @@ main() {
 
     test("should create node with listeners, when in constructor", () {
       var listeners = {1: new Mock()};
-      Node node = new Node(null, new ComponentMock(), null, listeners: listeners);
+      Node node =
+          new Node(null, new ComponentMock(), null, listeners: listeners);
 
       expect(node.listeners, equals(listeners));
     });
 
     test("should add new listeners, when applied", () {
-      Node node = new Node(null, new ComponentMock(), ({props, children}) => null);
+      Node node =
+          new Node(null, new ComponentMock(), ({props, children}) => null);
       expect(node.listeners, equals(null));
 
       node.apply(listeners: {});
 
       expect(node.listeners, equals({}));
-
     });
-
   });
-
 }

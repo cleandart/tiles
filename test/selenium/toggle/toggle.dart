@@ -19,10 +19,9 @@ main() {
   mountComponent(wordView(), container);
 }
 
-
 class WordView extends Component {
   bool expanded = true;
-  WordView([props, children]): super(props, children);
+  WordView([props, children]) : super(props, children);
 
   render() {
     var toggleButton = div(
@@ -30,17 +29,11 @@ class WordView extends Component {
         listeners: {'onClick': toggle},
         children: ["+"]);
     if (expanded) {
-      var lex = div(
-        props: {"id": "expanded"},
-        children: ['expanded']);
-      var lexArea = div(
-        props: {"id": "expandedLex"},
-        children: [lex]);
+      var lex = div(props: {"id": "expanded"}, children: ['expanded']);
+      var lexArea = div(props: {"id": "expandedLex"}, children: [lex]);
       return div(children: [toggleButton, lexArea]);
     } else {
-      var lex = div(
-        props: {"id": "collapsed"},
-        children: ['collapsed']);
+      var lex = div(props: {"id": "collapsed"}, children: ['collapsed']);
       return div(children: [toggleButton, lex]);
     }
   }
@@ -52,6 +45,6 @@ class WordView extends Component {
   }
 }
 
-Component _wordViewCtor({var props, List<ComponentDescription> children}) => new WordView(props, children);
+Component _wordViewCtor({var props, List<ComponentDescription> children}) =>
+    new WordView(props, children);
 var wordView = registerComponent(_wordViewCtor);
-

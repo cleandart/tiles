@@ -1,4 +1,5 @@
 library tiles_lifecycle_test;
+
 import 'package:unittest/unittest.dart';
 import 'package:mock/mock.dart';
 import 'package:tiles/tiles.dart';
@@ -15,7 +16,6 @@ main() {
 
       node = new Node(null, component, null);
       node.update();
-
     });
 
     eraseComponent() {
@@ -23,7 +23,6 @@ main() {
 
       node = new Node(null, component, null);
       node.update();
-
     }
 
     updateNode() {
@@ -33,7 +32,6 @@ main() {
 
     group("(render)", () {
       test("should call render once on create and update node", () {
-
         component.getLogs(callsTo("render")).verify(happenedExactly(1));
       });
     });
@@ -42,7 +40,9 @@ main() {
       test("should call willReceiveProps once on node apply", () {
         node.apply();
 
-        component.getLogs(callsTo("willReceiveProps")).verify(happenedExactly(1));
+        component
+            .getLogs(callsTo("willReceiveProps"))
+            .verify(happenedExactly(1));
       });
     });
 
@@ -74,7 +74,9 @@ main() {
          * fake props functionality
          */
         var props;
-        component.when(callsTo("set props")).alwaysCall((_props) => props = _props);
+        component
+            .when(callsTo("set props"))
+            .alwaysCall((_props) => props = _props);
         component.when(callsTo("get props")).alwaysCall(() => props);
 
         /**
@@ -86,12 +88,13 @@ main() {
         /**
          * expect called of shouldUpdate with correct values
          */
-        component.when(callsTo("shouldUpdate")).thenCall(expectAsync((nextProps, oldProps) {
-            expect(oldProps, equals("oldProps"));
-            expect(nextProps, equals("nextProps"));
-            expect(props, equals(nextProps));
-            return true;
-          }));
+        component.when(callsTo("shouldUpdate")).thenCall(
+            expectAsync((nextProps, oldProps) {
+          expect(oldProps, equals("oldProps"));
+          expect(nextProps, equals("nextProps"));
+          expect(props, equals(nextProps));
+          return true;
+        }));
 
         updateNode();
       });
@@ -99,15 +102,25 @@ main() {
 
     group("(core complex)", () {
       ComponentMock c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11;
-      ComponentDescriptionMock dc1, dc2, dc3, dc4, dc5, dc6, dc7, dc8, dc9, dc10, dc11;
+      ComponentDescriptionMock dc1,
+          dc2,
+          dc3,
+          dc4,
+          dc5,
+          dc6,
+          dc7,
+          dc8,
+          dc9,
+          dc10,
+          dc11;
       Node n1, n2, n3, n4, n5, n6, n7, n8, n9, n10, n11;
 
-      createDefaultDescription (ComponentMock component) {
+      createDefaultDescription(ComponentMock component) {
         ComponentDescriptionMock description = new ComponentDescriptionMock();
         description.when(callsTo("createComponent")).alwaysReturn(component);
         return description;
       }
-      createDefaultComponent ([List<ComponentDescription> whatToRender]) {
+      createDefaultComponent([List<ComponentDescription> whatToRender]) {
         ComponentMock component = new ComponentMock();
         component.when(callsTo("shouldUpdate")).alwaysReturn(true);
         component.when(callsTo("render")).alwaysReturn(whatToRender);
@@ -135,10 +148,23 @@ main() {
       }
 
       shouldHappenedOnce(String what) {
-        shouldHappened([c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11], what, happenedOnce);
+        shouldHappened(
+            [c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11], what, happenedOnce);
       }
       shouldNeverHappened(String what) {
-        shouldHappened([c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11], what, neverHappened);
+        shouldHappened([
+          c1,
+          c2,
+          c3,
+          c4,
+          c5,
+          c6,
+          c7,
+          c8,
+          c9,
+          c10,
+          c11
+        ], what, neverHappened);
       }
 
       setUp(() {
@@ -228,7 +254,6 @@ main() {
 
         expect(n11.children.length, equals(0));
         expect(n11.component, equals(c11));
-
       });
 
       test("should be every render called once in more complex structure", () {
@@ -261,11 +286,14 @@ main() {
 
         n2.isDirty = true;
         node.update();
-        shouldHappened([c1, c2, c3, c6, c10, c11], "willReceiveProps", neverHappened);
+        shouldHappened(
+            [c1, c2, c3, c6, c10, c11], "willReceiveProps", neverHappened);
         shouldHappened([c4, c5, c7, c8, c9], "willReceiveProps", happenedOnce);
       });
 
-      test("shold call render, shouldUpdate and willReceiveProps on correct places, when 2 nodes are dirty in one route from root to leaf", () {
+      test(
+          "shold call render, shouldUpdate and willReceiveProps on correct places, when 2 nodes are dirty in one route from root to leaf",
+          () {
         clearLogs();
 
         n2.isDirty = true;
@@ -277,11 +305,14 @@ main() {
         shouldHappened([c1, c3, c6, c10, c11], "shouldUpdate", neverHappened);
         shouldHappened([c2, c4, c5, c7, c8, c9], "shouldUpdate", happenedOnce);
 
-        shouldHappened([c1, c2, c3, c6, c10, c11], "willReceiveProps", neverHappened);
+        shouldHappened(
+            [c1, c2, c3, c6, c10, c11], "willReceiveProps", neverHappened);
         shouldHappened([c4, c5, c7, c8, c9], "willReceiveProps", happenedOnce);
       });
 
-      test("should do nothing, if there was nothing dirty, after more times, when something was dirty", () {
+      test(
+          "should do nothing, if there was nothing dirty, after more times, when something was dirty",
+          () {
         node.isDirty = true;
         node.update();
         n2.isDirty = true;
@@ -307,9 +338,6 @@ main() {
        *   c7     c8   c9   c10  c11
        */
 
-
     });
-
   });
 }
-

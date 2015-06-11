@@ -5,16 +5,13 @@ import 'package:mock/mock.dart';
 import 'package:tiles/tiles.dart';
 import '../mocks.dart';
 
-
 main() {
-
   group("(Node)", () {
     ComponentDescriptionMock description;
     ComponentDescriptionMock description2;
 
     ComponentMock componentForDescription = new ComponentMock();
     componentForDescription.when(callsTo("shouldUpdate")).alwaysReturn(true);
-
 
     ComponentMock component;
     Node node;
@@ -24,8 +21,12 @@ main() {
     ComponentDescriptionMock createDefaultDescription() {
       ComponentDescriptionMock description = new ComponentDescriptionMock();
 
-      description.when(callsTo("createComponent")).alwaysReturn(componentForDescription);
-      description.when(callsTo("get factory")).alwaysReturn(({dynamic props, children}) => componentForDescription);
+      description
+          .when(callsTo("createComponent"))
+          .alwaysReturn(componentForDescription);
+      description
+          .when(callsTo("get factory"))
+          .alwaysReturn(({dynamic props, children}) => componentForDescription);
 
       return description;
     }
@@ -39,18 +40,18 @@ main() {
       component.when(callsTo("shouldUpdate")).alwaysReturn(true);
 
       changes = [];
-
     });
 
     eraseComponent() {
       component = new ComponentMock();
       component.when(callsTo("shouldUpdate")).alwaysReturn(true);
-
     }
 
     eraseDescription() {
       description = new ComponentDescriptionMock();
-      description.when(callsTo("createComponent")).alwaysReturn(componentForDescription);
+      description
+          .when(callsTo("createComponent"))
+          .alwaysReturn(componentForDescription);
 
       component = new ComponentMock();
       component.when(callsTo("render")).alwaysReturn([description]);
@@ -60,7 +61,6 @@ main() {
     void createNode() {
       node = new Node(null, component, factory);
       node.update(changes: changes);
-
     }
 
     void updateNode() {
@@ -74,7 +74,9 @@ main() {
       /**
        * test node with component, which render always return description with same factory.
        */
-      test("update - component will return description of one component, node should have one child", () {
+      test(
+          "update - component will return description of one component, node should have one child",
+          () {
         createNode();
 
         /**
@@ -105,10 +107,11 @@ main() {
         changes = [];
         node.update(changes: changes);
         expect(changes, isEmpty);
-
       });
 
-      test("update - node with dirty child, update will return only change of updated child", () {
+      test(
+          "update - node with dirty child, update will return only change of updated child",
+          () {
         createNode();
 
         node.children.first.isDirty = true;
@@ -124,9 +127,7 @@ main() {
         expect(changes.length, equals(1));
         expect(changes.first.node, equals(node.children.first));
         expect(changes.first.type, equals(NodeChangeType.UPDATED));
-
       });
-
     });
 
     test("should accept iterable as result of render", () {
@@ -149,10 +150,10 @@ main() {
 
         updateNode();
         expect(changes.isEmpty, isFalse);
-        expect(changes.length, equals(2)); // both, node and it's child is updated
+        expect(
+            changes.length, equals(2)); // both, node and it's child is updated
 
         expect(node.children.first, equals(oldNode));
-
       });
 
       test("update - when factory is different, child will be replaced", () {
@@ -160,13 +161,17 @@ main() {
         /**
          * return every time new factory
          */
-        ComponentFactory factory1 = ({dynamic props, children}) => componentForDescription;
-        ComponentFactory factory2 = ({dynamic props, children}) => componentForDescription;
-        ComponentFactory factory3 = ({dynamic props, children}) => componentForDescription;
-        description.when(callsTo("get factory"))
-          .thenReturn(factory1)
-          .thenReturn(factory2)
-          .thenReturn(factory3);
+        ComponentFactory factory1 =
+            ({dynamic props, children}) => componentForDescription;
+        ComponentFactory factory2 =
+            ({dynamic props, children}) => componentForDescription;
+        ComponentFactory factory3 =
+            ({dynamic props, children}) => componentForDescription;
+        description
+            .when(callsTo("get factory"))
+            .thenReturn(factory1)
+            .thenReturn(factory2)
+            .thenReturn(factory3);
 
         createNode();
 
@@ -188,14 +193,15 @@ main() {
         expect(node.children.first, isNot(oldChild));
       });
 
-      test("update - when children was removed, remove it and create node change for it", () {
-
+      test(
+          "update - when children was removed, remove it and create node change for it",
+          () {
         eraseComponent();
 
-        component.when(callsTo("render"))
-          .thenReturn([description])
-          .thenReturn([]);
-
+        component
+            .when(callsTo("render"))
+            .thenReturn([description])
+            .thenReturn([]);
 
         createNode();
 
@@ -213,7 +219,6 @@ main() {
          * and that child was removed
          */
         expect(node.children.isEmpty, isTrue);
-
       });
 
       group("(key)", () {
@@ -223,10 +228,10 @@ main() {
         setUp(() {
           eraseComponent();
 
-          component.when(callsTo("render"))
-            .thenReturn([description, description2])
-            .thenReturn([description2, description]);
-
+          component
+              .when(callsTo("render"))
+              .thenReturn([description, description2])
+              .thenReturn([description2, description]);
         });
 
         countChangeTypes(List<NodeChange> changes, NodeChangeType type) {
@@ -245,7 +250,9 @@ main() {
           updateNode();
         }
 
-        test("should replace both node if was returned 2 descriptions in different order each time", () {
+        test(
+            "should replace both node if was returned 2 descriptions in different order each time",
+            () {
           createNode();
 
           expect(node.children.length, equals(2));
@@ -260,10 +267,11 @@ main() {
           expect(node.children.first, isNot(equals(child2)));
           expect(node.children.last, isNot(equals(child1)));
           expect(node.children.last, isNot(equals(child2)));
-
         });
 
-        test("should only change order when return two descriptions with keys in different order", () {
+        test(
+            "should only change order when return two descriptions with keys in different order",
+            () {
           addKey(description);
           addKey(description2);
 
@@ -285,7 +293,9 @@ main() {
           expect(node.children.last, isNot(equals(child2)));
         });
 
-        test("should move child with key and replace one without key where was with key moved", () {
+        test(
+            "should move child with key and replace one without key where was with key moved",
+            () {
           addKey(description);
 
           createNode();
@@ -306,7 +316,9 @@ main() {
           expect(node.children.last, isNot(equals(child2)));
         });
 
-        test("should produce node changes with move, when both of 2 children have keys", () {
+        test(
+            "should produce node changes with move, when both of 2 children have keys",
+            () {
           addKey(description);
           addKey(description2);
 
@@ -316,13 +328,17 @@ main() {
           num countOfCreate = countChangeTypes(changes, NodeChangeType.CREATED);
           num countOfDelete = countChangeTypes(changes, NodeChangeType.DELETED);
 
-          expect(changes.length, equals(5), reason: "there should be 5 changes");
-          expect(countOfMove, equals(2), reason: "two of five updates should be move");
+          expect(changes.length, equals(5),
+              reason: "there should be 5 changes");
+          expect(countOfMove, equals(2),
+              reason: "two of five updates should be move");
           expect(countOfCreate, equals(0));
           expect(countOfDelete, equals(0));
         });
 
-        test("should produce node changes with 1 move and 1 delete and 1 delete, when 1 child have key", () {
+        test(
+            "should produce node changes with 1 move and 1 delete and 1 delete, when 1 child have key",
+            () {
           addKey(description);
 
           createAndUpdateNode();
@@ -331,13 +347,17 @@ main() {
           num countOfCreate = countChangeTypes(changes, NodeChangeType.CREATED);
           num countOfDelete = countChangeTypes(changes, NodeChangeType.DELETED);
 
-          expect(changes.length, equals(5), reason: "there should be 6 changes");
-          expect(countOfMove, equals(1), reason: "1 of 6 updates should be move");
+          expect(changes.length, equals(5),
+              reason: "there should be 6 changes");
+          expect(countOfMove, equals(1),
+              reason: "1 of 6 updates should be move");
           expect(countOfCreate, equals(1));
           expect(countOfDelete, equals(1));
         });
 
-        test("should correctly change more complex structure of children and return correct changes", () {
+        test(
+            "should correctly change more complex structure of children and return correct changes",
+            () {
           eraseComponent();
 
           ComponentDescriptionMock d0 = createDefaultDescription();
@@ -355,9 +375,10 @@ main() {
           ComponentDescriptionMock dk2 = createDefaultDescription();
           addKey(dk2);
 
-          component.when(callsTo("render"))
-            .thenReturn([d0, d1, d2,  d3, dk1, d5,  d6, dk2])
-            .thenReturn([d0, d1, dk2, d3, d4,  dk1, d6, d7]);
+          component
+              .when(callsTo("render"))
+              .thenReturn([d0, d1, d2, d3, dk1, d5, d6, dk2])
+              .thenReturn([d0, d1, dk2, d3, d4, dk1, d6, d7]);
 
           createNode();
 
@@ -397,7 +418,6 @@ main() {
           */
           expect(node.children[2], equals(children[7]));
         });
-
       });
 
       group("(listeners)", () {
@@ -417,9 +437,10 @@ main() {
           component = new ComponentMock();
           component.when(callsTo("shouldUpdate")).alwaysReturn(true);
 
-          component.when(callsTo("render"))
-            .thenReturn(description)
-            .thenReturn(description2);
+          component
+              .when(callsTo("render"))
+              .thenReturn(description)
+              .thenReturn(description2);
 
           node = new Node(null, component, factory);
 
@@ -440,7 +461,6 @@ main() {
           expect(changes.last.newListeners, equals(listeners2));
         });
       });
-
     });
   });
 }

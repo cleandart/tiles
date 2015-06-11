@@ -3,23 +3,22 @@ library tiles_dom_text_component_test;
 import 'package:tiles/tiles.dart';
 import 'package:unittest/unittest.dart';
 
-
 main() {
-
   group("(DOM DomTextComponent)", () {
     DomTextComponent component;
     String text;
     ComponentDescriptionFactory factory;
     ComponentDescription desc;
 
-
     setUp(() {
       text = "text";
       component = new DomTextComponent(text);
-      factory = registerComponent(({props, children}) => new Component(props, children));
+      factory = registerComponent(
+          ({props, children}) => new Component(props, children));
     });
 
-    test("should have working constructor with one String parameter as props", () {
+    test("should have working constructor with one String parameter as props",
+        () {
       component = new DomTextComponent("");
 
       expect(component, isNotNull);
@@ -45,7 +44,8 @@ main() {
       expect(desc.children.length, equals(1));
       expect(desc.children.first.props, equals(text));
       expect(desc.children.first.createComponent() is DomTextComponent, isTrue);
-    };
+    }
+    ;
 
     test("should surround string child passed to DOM element", () {
       desc = span(children: [text]);
@@ -59,13 +59,17 @@ main() {
       _expectTextComponentInChildren(desc);
     });
 
-    test("should surround text passed as children to ComponentDescriptionFactory created by registerComponent", () {
+    test(
+        "should surround text passed as children to ComponentDescriptionFactory created by registerComponent",
+        () {
       desc = factory(children: [text]);
 
       _expectTextComponentInChildren(desc);
     });
 
-    test("should surround text passed as child to ComponentDescriptionFactory created by registerComponent", () {
+    test(
+        "should surround text passed as child to ComponentDescriptionFactory created by registerComponent",
+        () {
       desc = factory(children: text);
 
       _expectTextComponentInChildren(desc);
@@ -76,10 +80,5 @@ main() {
 
       expect(desc.children.last.props, equals(text));
     });
-
-
   });
-
 }
-
-

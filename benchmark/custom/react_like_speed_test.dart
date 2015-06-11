@@ -13,10 +13,8 @@ timeprint(message) {
   stopwatch.reset();
 }
 
-
-class _Div extends react.Component{
-
-  _Div([props, children]): super(props, children);
+class _Div extends react.Component {
+  _Div([props, children]) : super(props, children);
 
   shouldComponentUpdate(nProps, nState) {
     return nProps['key'] != props['key'];
@@ -27,11 +25,11 @@ class _Div extends react.Component{
   }
 }
 
-var Div = react.registerComponent(({props, children}) => new _Div(props, children));
+var Div =
+    react.registerComponent(({props, children}) => new _Div(props, children));
 
-class _Span extends react.Component{
-
-  _Span([props, children]): super(props, children);
+class _Span extends react.Component {
+  _Span([props, children]) : super(props, children);
 
   shouldComponentUpdate(nProps, nState) {
     return nProps['children'][0] != props['children'][0];
@@ -42,24 +40,26 @@ class _Span extends react.Component{
   }
 }
 
-var Span = react.registerComponent(({props, children}) => new _Span(props, children));
+var Span =
+    react.registerComponent(({props, children}) => new _Span(props, children));
 
 class _Hello extends react.Component {
-
-  _Hello([props, children]): super(props, children);
+  _Hello([props, children]) : super(props, children);
 
   render() {
     timeprint("rendering start");
     List<List<String>> data = props['data'];
     var children = [];
     for (var elem in data) {
-      children.add(
-          react.div(props: {'class': 'div(${elem[0]})'}, children: [
-            react.span(props: {'class': 'inner_span_${elem[0]}'}, children: elem[0]),
-            " ",
-            react.span(props: {'class': 'inner_span_${elem[0]}'}, children: elem[1])
-          ], key: elem[0])
-      );
+      children.add(react.div(
+          props: {'class': 'div(${elem[0]})'},
+          children: [
+        react.span(
+            props: {'class': 'inner_span_${elem[0]}'}, children: elem[0]),
+        " ",
+        react.span(props: {'class': 'inner_span_${elem[0]}'}, children: elem[1])
+      ],
+          key: elem[0]));
     }
     var res = react.div(props: {}, children: children);
     timeprint("rendering ends");
@@ -67,7 +67,8 @@ class _Hello extends react.Component {
   }
 }
 
-var Hello = react.registerComponent(({props, children}) => new _Hello(props, children));
+var Hello =
+    react.registerComponent(({props, children}) => new _Hello(props, children));
 
 void main() {
   setupDefaultLogHandler();
@@ -75,14 +76,14 @@ void main() {
   logger.level = Level.WARNING;
 
   react.initTilesBrowserConfiguration();
-  var data=[];
-  for (num i=0; i<1000; i++) {
+  var data = [];
+  for (num i = 0; i < 1000; i++) {
     data.add(["name_$i", "value_$i"]);
   }
   timeprint("virtual dom building starts");
   react.ComponentDescription h = Hello(props: {"data": data}, children: []);
   react.Node node = new react.Node.fromDescription(null, h);
-  for (int i=0; i<100; i++) {
+  for (int i = 0; i < 100; i++) {
     node.update(force: true);
   }
   logger.level = Level.INFO;
@@ -99,4 +100,3 @@ void main() {
 //  window.focus();
 //  window.close();
 }
-

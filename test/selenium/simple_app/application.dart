@@ -12,24 +12,21 @@ main() {
 }
 
 class InputComponent extends Component {
-  InputComponent([props, children]): super(props, children);
+  InputComponent([props, children]) : super(props, children);
 
   String text = "";
 
   render() {
-    return div(props: {}, children: [
-      input(props: {
-        "type": "text",
-        "defaultValue": text,
-        "ref": inputRef
-      }, listeners: {
-        "onKeyUp": inputKeyUp
-      }),
-      label(props: {
-        "id": text
-        }, listeners: {
-          "onClick": labelClick
-        },children: text)
+    return div(
+        props: {},
+        children: [
+      input(
+          props: {"type": "text", "defaultValue": text, "ref": inputRef},
+          listeners: {"onKeyUp": inputKeyUp}),
+      label(
+          props: {"id": text},
+          listeners: {"onClick": labelClick},
+          children: text)
     ]);
   }
 
@@ -54,5 +51,6 @@ class InputComponent extends Component {
   Component myInput;
 }
 
-ComponentDescriptionFactory inputComponent = registerComponent(({props, List<ComponentDescription> children}) => new InputComponent(props, children));
-
+ComponentDescriptionFactory inputComponent = registerComponent(
+    ({props, List<ComponentDescription> children}) =>
+        new InputComponent(props, children));

@@ -27,8 +27,8 @@ typedef void _Ref(Component component);
  */
 mountComponent(ComponentDescription description, html.HtmlElement mountRoot) {
   logger.fine("mountComponent called");
-  
-  if(_isMounted(description, mountRoot)) {
+
+  if (_isMounted(description, mountRoot)) {
     return _remountDescription(description, mountRoot);
   }
 
@@ -48,14 +48,19 @@ mountComponent(ComponentDescription description, html.HtmlElement mountRoot) {
   _elementToNode[mountRoot] = node;
 }
 
-void _remountDescription(ComponentDescription description, html.HtmlElement mountRoot) {
+void _remountDescription(
+    ComponentDescription description, html.HtmlElement mountRoot) {
   Node node = _elementToNode[mountRoot];
-  node.apply(props: description.props, children: description.children, listeners: description.listeners);
+  node.apply(
+      props: description.props,
+      children: description.children,
+      listeners: description.listeners);
   node.isDirty = true;
 }
 
 bool _isMounted(ComponentDescription description, html.HtmlElement mountRoot) {
-  return _elementToNode[mountRoot] != null && _elementToNode[mountRoot].factory == description.factory;
+  return _elementToNode[mountRoot] != null &&
+      _elementToNode[mountRoot].factory == description.factory;
 }
 
 /**
@@ -80,7 +85,6 @@ _mountNode(Node node, html.HtmlElement mountRoot, {Node nextNode}) {
     } else {
       mountRoot.append(text);
     }
-
   } else if (node.component is DomComponent) {
     logger.finer("mounting DomComponent");
     /**
@@ -95,7 +99,8 @@ _mountNode(Node node, html.HtmlElement mountRoot, {Node nextNode}) {
     html.Element componentElement = new html.Element.tag(component.tagName);
     _saveRelations(node, componentElement);
 
-    _applyAttributes(componentElement, component.props, svg: component.svg, node: node, listeners: node.listeners);
+    _applyAttributes(componentElement, component.props,
+        svg: component.svg, node: node, listeners: node.listeners);
     node.children.forEach((Node child) => _mountNode(child, componentElement));
 
     if (nextNode != null) {
@@ -126,9 +131,9 @@ _mountNode(Node node, html.HtmlElement mountRoot, {Node nextNode}) {
    * execute it with the coponent as argument
    */
   try {
-    if (node.component.props != null
-        && node.component.props[_REF] != null
-        && node.component.props[_REF] is _Ref) {
+    if (node.component.props != null &&
+        node.component.props[_REF] != null &&
+        node.component.props[_REF] is _Ref) {
       logger.finest("calling reference");
       node.component.props[_REF](node.component);
     }
@@ -141,10 +146,9 @@ _mountNode(Node node, html.HtmlElement mountRoot, {Node nextNode}) {
  * to element of component from arguments.
  */
 _canAddAttribute(bool svg, String key) {
-  return (!svg && allowedAttrs.contains(key))
-      || (svg && allowedSvgAttributes.contains(key)) 
-      || _matchAllowedPrefix(key);
-
+  return (!svg && allowedAttrs.contains(key)) ||
+      (svg && allowedSvgAttributes.contains(key)) ||
+      _matchAllowedPrefix(key);
 }
 
 /**
@@ -152,7 +156,7 @@ _canAddAttribute(bool svg, String key) {
  */
 bool _matchAllowedPrefix(String key) {
   bool match = false;
-  
+
   allowedAttrsPrefixes.forEach((prefix) {
     if (key.startsWith(prefix)) {
       match = true;
@@ -167,7 +171,8 @@ bool _matchAllowedPrefix(String key) {
  *
  * If oldProps setted, use them to compare new and remove old.
  */
-_applyAttributes(html.Element element, Map props, {bool svg: false, Node node, Map oldProps, Map listeners}) {
+_applyAttributes(html.Element element, Map props,
+    {bool svg: false, Node node, Map oldProps, Map listeners}) {
   logger.fine("_applyAttributes called");
   if (oldProps == null) {
     oldProps = {};
@@ -176,19 +181,18 @@ _applyAttributes(html.Element element, Map props, {bool svg: false, Node node, M
   }
 
   props.forEach((String key, value) {
-        /**
+    /**
          * filter props by allowedAttrs and allowedSvgAttrs
          */
-        if (_canAddAttribute(svg, key)) {
-          if (oldProps[key] != value
-              && element.getAttribute(key) != value) {
-            _applyAttribute(element, key, value);
-          }
-          /**
+    if (_canAddAttribute(svg, key)) {
+      if (oldProps[key] != value && element.getAttribute(key) != value) {
+        _applyAttribute(element, key, value);
+      }
+      /**
            * remove key from oldProps to "mark it" as present in new props
            */
-          oldProps.remove(key);
-        }
+      oldProps.remove(key);
+    }
   });
 
   /**
@@ -196,15 +200,12 @@ _applyAttributes(html.Element element, Map props, {bool svg: false, Node node, M
    */
   _applyEventListeners(listeners, node);
 
-
   /**
    * remove old props not present in new one.
    */
   oldProps.forEach((String key, value) {
     element.attributes.remove(key);
   });
-
-
 }
 
 _applyEventListeners(Map listeners, Node node) {
@@ -251,6 +252,4 @@ void _deleteRelations(Node node, html.Node element) {
   _nodeToElement.remove(node);
   _componentToElement.remove(node.component);
   _elementToNode.remove(element);
-
 }
-

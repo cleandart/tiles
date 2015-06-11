@@ -1,7 +1,7 @@
 part of utils;
 
 Map settings = {
-  "levels": [1,1],
+  "levels": [1, 1],
   "lib": "tiles",
   "environment": "DOM",
   "dirty": false,
@@ -35,7 +35,8 @@ Map getSettingsFromHash() {
 
   Map result = {};
 
-  _parseInput(json, result, ["levels", "library", "environment", "update", "dirty"]);
+  _parseInput(
+      json, result, ["levels", "library", "environment", "update", "dirty"]);
 
   return result;
 }
@@ -48,5 +49,4 @@ _parseInput(dynamic json, Map result, List<String> whats) {
       result[what] = settings[what];
     }
   }
-
 }
