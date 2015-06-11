@@ -175,7 +175,7 @@ then
 
 	test_core;
 	test_browser;
-	test_selenium;
+	# test_selenium;
 else
 	opts=`getopt cbs "$@" 2> /dev/null`
 	if [ $? -ne 0 ] 

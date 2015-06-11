@@ -142,8 +142,24 @@ _mountNode(Node node, html.HtmlElement mountRoot, {Node nextNode}) {
  */
 _canAddAttribute(bool svg, String key) {
   return (!svg && allowedAttrs.contains(key))
-      || (svg && allowedSvgAttributes.contains(key));
+      || (svg && allowedSvgAttributes.contains(key)) 
+      || _matchAllowedPrefix(key);
 
+}
+
+/**
+ * tells if the key match some of allowed prefixes
+ */
+bool _matchAllowedPrefix(String key) {
+  bool match = false;
+  
+  allowedAttrsPrefixes.forEach((prefix) {
+    if (key.startsWith(prefix)) {
+      match = true;
+    }
+  });
+
+  return match;
 }
 
 /**
