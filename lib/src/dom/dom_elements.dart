@@ -153,20 +153,18 @@ ComponentDescriptionFactory a = _registerDomComponent("a"),
     title = _registerDomComponent("title"),
     tr = _registerDomComponent("tr"),
     u = _registerDomComponent("u"),
-    ul = _registerDomComponent("ul")
-    /**
-   * we need to use varElement
-   * because var is reserved keyword
-   */
-    varElement = _registerDomComponent("var"),
-    video = _registerDomComponent("video")
+    ul = _registerDomComponent("ul"),
 
-    /** SVG ELEMENTS */
+    // we need to use varElement because var is reserved keyword
+    varElement = _registerDomComponent("var"),
+    video = _registerDomComponent("video"),
+
+    // SVG ELEMENTS
     g = _registerSvgComponent("g"),
     svg = _registerSvgComponent("svg"),
-    text = _registerSvgComponent("text")
+    text = _registerSvgComponent("text"),
 
-    /** NOT PAIR ELEMENTS */
+    // NOT PAIR ELEMENTS
     area = _registerDomComponent("area", pair: false),
     base = _registerDomComponent("base", pair: false),
     br = _registerDomComponent("br", pair: false),
@@ -178,16 +176,16 @@ ComponentDescriptionFactory a = _registerDomComponent("a"),
     keygen = _registerDomComponent("keygen", pair: false),
     link = _registerDomComponent("link", pair: false),
     meta = _registerDomComponent("meta", pair: false),
-    param = _registerDomComponent("param", pair: false)
-    /**
-   * Command is not in react
-   * param = registerDomComponent("param", false),
-   */
+    param = _registerDomComponent("param", pair: false),
+
+    // Command is not in react
+    // param = registerDomComponent("param", false),
+
     source = _registerDomComponent("source", pair: false),
     track = _registerDomComponent("track", pair: false),
-    wbr = _registerDomComponent("wbr", pair: false)
+    wbr = _registerDomComponent("wbr", pair: false),
 
-    /** SVG NOT PAIR ELEMENTS */
+    // SVG NOT PAIR ELEMENTS
     circle = _registerSvgComponent("circle", pair: false),
     line = _registerSvgComponent("line", pair: false),
     path = _registerSvgComponent("path", pair: false),
