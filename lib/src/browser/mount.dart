@@ -27,6 +27,10 @@ typedef void _Ref(Component component);
  */
 mountComponent(ComponentDescription description, html.HtmlElement mountRoot) {
   logger.fine("mountComponent called");
+  
+  if(_isMounted(description, mountRoot)) {
+    return _remountDescription(description, mountRoot);
+  }
 
   Node node = new Node.fromDescription(null, description);
 
@@ -42,6 +46,16 @@ mountComponent(ComponentDescription description, html.HtmlElement mountRoot) {
    * mount root node to mount root to be able easy unmount node.
    */
   _elementToNode[mountRoot] = node;
+}
+
+void _remountDescription(ComponentDescription description, html.HtmlElement mountRoot) {
+  Node node = _elementToNode[mountRoot];
+  node.apply(props: description.props, children: description.children, listeners: description.listeners);
+  node.isDirty = true;
+}
+
+bool _isMounted(ComponentDescription description, html.HtmlElement mountRoot) {
+  return _elementToNode[mountRoot] != null && _elementToNode[mountRoot].factory == description.factory;
 }
 
 /**

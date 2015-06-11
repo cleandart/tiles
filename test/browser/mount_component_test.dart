@@ -10,7 +10,8 @@ import '../mocks.dart';
 main() {
   group("(browser) (mountComponent)", () {
     Element mountRoot;
-    String imageSource = "http: //github.global.ssl.fastly.net/images/modules/logos_page/GitHub-Mark.png";
+    String imageSource =
+        "http: //github.global.ssl.fastly.net/images/modules/logos_page/GitHub-Mark.png";
 
     ComponentDescriptionMock descriptionWithSpan;
     ComponentDescriptionMock descriptionWithImage;
@@ -35,13 +36,17 @@ main() {
       componentWithSpan.when(callsTo("render")).alwaysReturn([span()]);
 
       descriptionWithSpan = new ComponentDescriptionMock();
-      descriptionWithSpan.when(callsTo("createComponent")).alwaysReturn(componentWithSpan);
+      descriptionWithSpan
+          .when(callsTo("createComponent"))
+          .alwaysReturn(componentWithSpan);
 
       componentWithImage = new ComponentMock();
       componentWithImage.when(callsTo("render")).alwaysReturn([img()]);
 
       descriptionWithImage = new ComponentDescriptionMock();
-      descriptionWithImage.when(callsTo("createComponent")).alwaysReturn(componentWithImage);
+      descriptionWithImage
+          .when(callsTo("createComponent"))
+          .alwaysReturn(componentWithImage);
 
       /**
        * uncomment to see what theese test do in browser
@@ -60,30 +65,35 @@ main() {
       expect(mountRoot.children.first.tagName, equals("DIV"));
     });
 
-
     test("should create div element if mount div()", () {
       mountComponent(div(props: {"class": "divclass"}), mountRoot);
 
       expect(mountRoot.children.length, equals(1));
-      expect(mountRoot.children.first.attributes["class"], contains("divclass"));
+      expect(
+          mountRoot.children.first.attributes["class"], contains("divclass"));
     });
 
-    test("should create 2 level children if passed 2 level of dom components", () {
+    test("should create 2 level children if passed 2 level of dom components",
+        () {
       mountComponent(div(children: div()), mountRoot);
 
       expect(mountRoot.children.length, equals(1));
       expect(mountRoot.children.first.children.length, equals(1));
     });
 
-    test("should create 3 level children if passed 2 level of dom components", () {
+    test("should create 3 level children if passed 2 level of dom components",
+        () {
       mountComponent(div(children: div(children: div())), mountRoot);
 
       expect(mountRoot.children.length, equals(1));
       expect(mountRoot.children.first.children.length, equals(1));
-      expect(mountRoot.children.first.children.first.children.length, equals(1));
+      expect(
+          mountRoot.children.first.children.first.children.length, equals(1));
     });
 
-    test("should create second level with 2 elements if passed such cescriptions", () {
+    test(
+        "should create second level with 2 elements if passed such cescriptions",
+        () {
       mountComponent(div(children: [div(), div()]), mountRoot);
 
       expect(mountRoot.children.length, equals(1));
@@ -99,10 +109,9 @@ main() {
     });
 
     test("should create image if image passed", () {
-      mountComponent(img(props: {
-        "src": imageSource,
-        "style": "height: 500px;",
-          }), mountRoot);
+      mountComponent(
+          img(props: {"src": imageSource, "style": "height: 500px;",}),
+          mountRoot);
 
       expect(mountRoot.children.length, equals(1));
 
@@ -119,8 +128,11 @@ main() {
       expect(mountRoot.children.first.children.isEmpty, isTrue);
     });
 
-    test("should write all children of children into element, if first level children was not dom components", () {
-      mountComponent(div(children: [descriptionWithSpan, descriptionWithImage]), mountRoot);
+    test(
+        "should write all children of children into element, if first level children was not dom components",
+        () {
+      mountComponent(div(children: [descriptionWithSpan, descriptionWithImage]),
+          mountRoot);
 
       expect(mountRoot.children.length, equals(1));
       Element el = mountRoot.children.first;
@@ -131,14 +143,17 @@ main() {
     });
 
     test("should clear element", () {
-      mountRoot.children.addAll([new DivElement(), new ImageElement(), new SpanElement()]);
+      mountRoot.children
+          .addAll([new DivElement(), new ImageElement(), new SpanElement()]);
 
       mountComponent(b(), mountRoot);
 
       expect(mountRoot.children.length, equals(1));
     });
 
-    test("if component have ref callback in props, it should be called with component instance when it is completely mounted", () {
+    test(
+        "if component have ref callback in props, it should be called with component instance when it is completely mounted",
+        () {
       var props = {};
 
       props["ref"] = expectAsync((Component component) {
@@ -158,7 +173,8 @@ main() {
       /**
        * just test, if no exception is thrown
        */
-      expect(() => mountComponent(descriptionWithSpan, mountRoot), isNot(throws));
+      expect(
+          () => mountComponent(descriptionWithSpan, mountRoot), isNot(throws));
     });
 
     test("should work with something weird in props ref", () {
@@ -166,7 +182,8 @@ main() {
       props["ref"] = new Mock();
       componentWithSpan.when(callsTo("get props")).alwaysReturn(props);
 
-      expect(() => mountComponent(descriptionWithSpan, mountRoot), isNot(throws));
+      expect(
+          () => mountComponent(descriptionWithSpan, mountRoot), isNot(throws));
     });
 
     test("should add only allowed attributes", () {
@@ -192,6 +209,71 @@ main() {
       expect(mountRoot.children.first.attributes.containsKey("crap"), isFalse);
     });
 
+    group("(remount)", () {
+      var children1 = div(children: span(props: {"id": "id1"}));
+      var children2 = div(children: span(props: {"id": "id2"}));
+
+      Element divEl;
+      Element spanEl;
+
+      void _saveElements() {
+        divEl = mountRoot.children.first;
+        spanEl = divEl.children.first;
+      }
+
+      void checkRemount(Element mountRoot, Element divEl, Element spanEl) {
+        window.animationFrame.then(expectAsync((_) {
+          expect(mountRoot.children.first, equals(divEl));
+          expect(mountRoot.children.first.children.first, equals(spanEl));
+          expect(mountRoot.children.first.children.first.attributes["id"],
+              equals("id2"));
+        }));
+      }
+
+      ComponentDescription _createMockDescription() {
+        ComponentDescriptionMock description = new ComponentDescriptionMock();
+        ComponentMock component = new ComponentMock();
+
+        var factory = ({props, children}) => component;
+        var listeners = {"onClick": (_, __) {}};
+        var props = {"key": "value"};
+
+        description.when(callsTo("get factory")).alwaysReturn(factory);
+        description.when(callsTo("createComponent")).alwaysReturn(component);
+        description.when(callsTo("get props")).alwaysReturn(props);
+        description.when(callsTo("get listeners")).alwaysReturn(listeners);
+        description.when(callsTo("get children")).alwaysReturn(null);
+
+        component
+            .when(callsTo("render"))
+            .thenReturn(children1)
+            .thenReturn(children2);
+        
+        return description;
+      }
+
+      test("should only remount on second mount of the same dom component", () {
+        mountComponent(children1, mountRoot);
+
+        _saveElements();
+
+        mountComponent(children2, mountRoot);
+
+        checkRemount(mountRoot, divEl, spanEl);
+      });
+
+      test("should only remount on second mount of same custom component", () {
+        ComponentDescriptionMock description = _createMockDescription();
+
+        mountComponent(description, mountRoot);
+
+        _saveElements();
+
+        mountComponent(description, mountRoot);
+
+        checkRemount(mountRoot, divEl, spanEl);
+      });
+    });
   });
 
   group("(browser) (unmountComponent)", () {
@@ -201,7 +283,6 @@ main() {
       querySelector("body").append(mountRoot);
 
       mountComponent(div(), mountRoot);
-
     });
     test("should remove whole markup", () {
       unmountComponent(mountRoot);
@@ -212,27 +293,26 @@ main() {
       ComponentMock component = new ComponentMock();
       component.when(callsTo("render")).alwaysReturn([div()]);
 
-      ComponentDescriptionMock description= new ComponentDescriptionMock();
+      ComponentDescriptionMock description = new ComponentDescriptionMock();
       description.when(callsTo("createComponent")).alwaysReturn(component);
 
       mountComponent(description, mountRoot);
       unmountComponent(mountRoot);
 
       expect(mountRoot.children, isEmpty);
-
     });
 
     test("should remove relation between component and element on unmount", () {
       Component divComponent = new DomComponent(tagName: "div");
-      ComponentDescriptionMock divDescription= new ComponentDescriptionMock();
-      divDescription.when(callsTo("createComponent")).alwaysReturn(divComponent);
-
+      ComponentDescriptionMock divDescription = new ComponentDescriptionMock();
+      divDescription
+          .when(callsTo("createComponent"))
+          .alwaysReturn(divComponent);
 
       mountComponent(divDescription, mountRoot);
       unmountComponent(mountRoot);
 
       expect(getElementForComponent(divComponent), isNull);
-
     });
   });
 }
