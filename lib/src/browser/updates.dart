@@ -161,6 +161,11 @@ _applyUpdatedChange(NodeChange change) {
      * change or remove old attributes
      */
     _applyAttributes(element, newProps, svg: component.svg, node: change.node, oldProps: oldProps, listeners: change.node.listeners);
+    if(component.props.containsKey(_DANGEROUSLYSETINNERHTML)){
+      _dangerouslySetInnerHTML(component, element);
+    }
+
+
   } else if (change.node.component is DomTextComponent) {
     /**
      * if component is dom text componetn, update text of the element

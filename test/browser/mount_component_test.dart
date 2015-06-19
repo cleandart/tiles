@@ -328,5 +328,20 @@ main() {
 
       expect(getElementForComponent(divComponent), isNull);
     });
+    
+    test("should dangorously insert inner HTML", () {
+      mountRoot = new DivElement();
+      mountComponent(div(props:{"dangerouslySetInnerHTML": "<span class='cl'>hello</span>"}), mountRoot);
+      
+      expect(mountRoot.children.first.children.first is SpanElement, isTrue);
+    });
+    
+    test("should throw if want to set inner html and also have childre", () {
+      mountRoot = new DivElement();
+
+      expect(() {
+        mountComponent(div(children: "hello", props:{"dangerouslySetInnerHTML": "<span class='cl'>hello</span>"}), mountRoot);
+      }, throws);
+    });
   });
 }

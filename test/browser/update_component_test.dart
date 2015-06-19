@@ -552,6 +552,82 @@ main() {
         expect(text.text, equals(text2));
       }));
     });
+    
+    group("(dangerouslySetInnerHTML)", () {
+      test("should update dangerously seted inner HTML", () {
+        String text1 = "hello",
+            text2 = "aloha";
+        component.when(callsTo("render"))
+          .thenReturn(div(props: {"dangerouslySetInnerHTML": text1}))
+          .thenReturn(div(props: {"dangerouslySetInnerHTML": text2}));
+
+        mountComponent(description, mountRoot);
+
+        Text text = mountRoot.firstChild.firstChild;
+        expect(text is Text, isTrue);
+        expect(text.text, equals(text1));
+
+        component.redraw();
+
+        window.animationFrame.then(expectAsync((data) {
+          text = mountRoot.firstChild.firstChild;
+          expect(text is Text, isTrue);
+          expect(text.text, equals(text2));
+        }));
+        
+      });
+      
+      test("should update dangerously seted more complex inner HTML", () {
+        String text1 = "<span>hello</span><div>helloo</div>",
+            text2 = "<div>aloha</div><span>alooha</span>";
+        component.when(callsTo("render"))
+          .thenReturn(div(props: {"dangerouslySetInnerHTML": text1}))
+          .thenReturn(div(props: {"dangerouslySetInnerHTML": text2}));
+
+        mountComponent(description, mountRoot);
+
+        Element divel = mountRoot.firstChild.lastChild;
+        Element spanel = mountRoot.firstChild.firstChild;
+        expect(divel is DivElement, isTrue);
+        expect(spanel is SpanElement, isTrue);
+        expect(divel.text, equals("helloo"));
+        expect(spanel.text, equals("hello"));
+
+        component.redraw();
+
+        window.animationFrame.then(expectAsync((data) {
+          divel = mountRoot.firstChild.firstChild;
+          spanel = mountRoot.firstChild.lastChild;
+          expect(divel is DivElement, isTrue);
+          expect(spanel is SpanElement, isTrue);
+          expect(divel.text, equals("aloha"));
+          expect(spanel.text, equals("alooha"));
+
+        }));
+        
+      });      
+
+      test("should create component dangerously seted inner HTML", () {
+        String text = "aloha";
+        component.when(callsTo("render"))
+          .thenReturn(div())
+          .thenReturn(div(children: div(props: {"dangerouslySetInnerHTML": text})));
+
+        mountComponent(description, mountRoot);
+
+        Text innerElement = mountRoot.firstChild.firstChild;
+        expect(innerElement, isNull);
+
+        component.redraw();
+
+        window.animationFrame.then(expectAsync((data) {
+          innerElement = mountRoot.firstChild.firstChild.firstChild;
+          expect(innerElement is Text, isTrue);
+          expect(innerElement.text, equals(text));
+        }));
+      });
+      
+    });
 
   });
 }

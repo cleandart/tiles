@@ -3,6 +3,7 @@ part of tiles_browser;
 const _REF = "ref";
 const _VALUE = "value";
 const _DEFAULTVALUE = "defaultValue";
+const _DANGEROUSLYSETINNERHTML = "dangerouslySetInnerHTML";
 
 /**
  * Map needed when doing updates on dom.
@@ -96,7 +97,11 @@ _mountNode(Node node, html.HtmlElement mountRoot, {Node nextNode}) {
     _saveRelations(node, componentElement);
 
     _applyAttributes(componentElement, component.props, svg: component.svg, node: node, listeners: node.listeners);
-    node.children.forEach((Node child) => _mountNode(child, componentElement));
+    if(component.props.containsKey(_DANGEROUSLYSETINNERHTML)){
+      _dangerouslySetInnerHTML(component, componentElement);
+    } else {
+      node.children.forEach((Node child) => _mountNode(child, componentElement));
+    }
 
     if (nextNode != null) {
       mountRoot.insertBefore(componentElement, _nodeToElement[nextNode]);
@@ -133,6 +138,13 @@ _mountNode(Node node, html.HtmlElement mountRoot, {Node nextNode}) {
       node.component.props[_REF](node.component);
     }
   } catch (e) {}
+}
+
+void _dangerouslySetInnerHTML(DomComponent component, html.Element element) {
+  if(component.children != null) {
+    throw new Exception("Component with dangerously setted inner html should not have childre");
+  }
+  element.setInnerHtml(component.props[_DANGEROUSLYSETINNERHTML]);
 }
 
 /**
