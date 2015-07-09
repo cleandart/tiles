@@ -76,6 +76,10 @@ main() {
 
       expect(description.listeners, isNotNull);
     });
+    
+    test("should accept iterable in children", () {
+      div(children: [1,2,3].map((number) => span(children: "$number")));
+    });
 
   });
 
