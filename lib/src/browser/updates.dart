@@ -36,8 +36,11 @@ initTilesBrowserConfiguration() {
  */
 _update(num data) {
   logger.finer("_update called");
-  _updateTrees();
-  html.window.animationFrame.then(_update);
+  try {
+    _updateTrees();
+  } finally {
+    html.window.animationFrame.then(_update);
+  }
 }
 
 /**
@@ -158,6 +161,11 @@ _applyUpdatedChange(NodeChange change) {
      * change or remove old attributes
      */
     _applyAttributes(element, newProps, svg: component.svg, node: change.node, oldProps: oldProps, listeners: change.node.listeners);
+    if(component.props.containsKey(_DANGEROUSLYSETINNERHTML)){
+      _dangerouslySetInnerHTML(component, element);
+    }
+
+
   } else if (change.node.component is DomTextComponent) {
     /**
      * if component is dom text componetn, update text of the element
@@ -243,4 +251,3 @@ _removeNodeFromDom(Node node) {
     }
   }
 }
-

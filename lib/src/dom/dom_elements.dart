@@ -14,7 +14,7 @@ ComponentDescriptionFactory _registerDomComponent(String tagname, {bool pair, bo
     /**
      * create default factory which create DomComponent
      */
-    factory = ({Map props, List<ComponentDescription> children}) => new DomComponent(props: props, children: children, tagName: tagname, pair: pair, svg: svg);;
+    factory = ({Map props, Iterable<ComponentDescription> children}) => new DomComponent(props: props, children: children, tagName: tagname, pair: pair, svg: svg);;
   }
 
   return registerComponent(factory);
@@ -25,7 +25,7 @@ _processChildren(dynamic children) {
   /**
    * iterage children to recognize string
    */
-  if (!(children is List) && children != null) {
+  if (!(children is Iterable) && children != null) {
     children = [children];
   }
 

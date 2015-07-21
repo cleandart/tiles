@@ -15,17 +15,17 @@ _updateChildren (Node node, {List<NodeChange> changes}) {
   Map<dynamic, Node> oldChildren = _createChildrenMap(node.children);
   Map<dynamic, num> oldChildrenPositions = _createPositionMap(oldChildren.keys);
   List<Node> nextChildren = [];
-  List<ComponentDescription> descriptions = _getChildrenFromComponent(node.component);
+  Iterable<ComponentDescription> descriptions = _getChildrenFromComponent(node.component);
 
   logger.finer('component: ${node.component.props}');
 
-  for (num i = 0; i < descriptions.length; ++i) {
-    dynamic key = descriptions[i].key;
+  var index = 0;
+  descriptions.forEach((ComponentDescription description) {
+    dynamic key = description.key;
     if (key == null) {
-      key = i;
+      key = index;
     }
 
-    ComponentDescription description = descriptions[i];
     Node oldChild = oldChildren[key];
     Node nextChild;
 
@@ -37,7 +37,7 @@ _updateChildren (Node node, {List<NodeChange> changes}) {
       nextChild = oldChild;
       Map oldListeners = nextChild.listeners;
       nextChild.apply(props: description.props, children: description.children, listeners: description.listeners);
-      if (i != oldChildrenPositions[key]) {
+      if (index != oldChildrenPositions[key]) {
         _addChanges(new NodeChange(NodeChangeType.MOVED, nextChild), changes);
       }
 
@@ -58,7 +58,8 @@ _updateChildren (Node node, {List<NodeChange> changes}) {
       }
     }
     nextChildren.add(nextChild);
-  }
+    ++index;
+  });
   for (Node child in oldChildren.values) {
     logger.finer("removin old child");
     _addChanges(new NodeChange(NodeChangeType.DELETED, child), changes);
@@ -84,7 +85,7 @@ Map<dynamic, Node> _createChildrenMap (List<Node> nodes) {
 }
 
 
-List<ComponentDescription> _getChildrenFromComponent(Component component) {
+Iterable<ComponentDescription> _getChildrenFromComponent(Component component) {
   logger.finer("_getChildrenFromComponent");
   var rawChildren = component.render();
   if (rawChildren is ComponentDescription) {
@@ -92,9 +93,9 @@ List<ComponentDescription> _getChildrenFromComponent(Component component) {
      * if render returns componentDescription, construct newChildren list
      */
     return [rawChildren];
-  } else if (rawChildren is List<ComponentDescription>) {
+  } else if (rawChildren is Iterable<ComponentDescription>) {
     /**
-     * if render returns List<componentDescription> set newChildren to it
+     * if render returns Iterable<componentDescription> set newChildren to it
      */
     return rawChildren;
   } else if (rawChildren == null) {
@@ -107,7 +108,7 @@ List<ComponentDescription> _getChildrenFromComponent(Component component) {
     /**
      * if it returns something else, throw exception
      */
-    throw "render should return ComponentDescription or List<ComponentDescription>";
+    throw "render should return ComponentDescription or Iterable<ComponentDescription>";
   }
 }
 

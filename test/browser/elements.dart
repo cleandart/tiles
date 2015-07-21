@@ -1,6 +1,6 @@
 library tiles_browser_elements_test;
 
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 import 'package:tiles/tiles.dart';
 import 'package:tiles/tiles_browser.dart';
 import 'dart:html';

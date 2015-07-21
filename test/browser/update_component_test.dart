@@ -1,7 +1,7 @@
 library tiles_update_component_test;
 
-import 'package:unittest/unittest.dart';
-import 'package:mock/mock.dart';
+import 'package:test/test.dart';
+import 'package:mockito/mockito.dart';
 import 'package:tiles/tiles.dart';
 import 'package:tiles/tiles_browser.dart';
 import 'dart:html';
@@ -33,23 +33,21 @@ main() {
       component = new ComponentMock();
 
       description = new ComponentDescriptionMock();
-      description.when(callsTo("createComponent"))
-        .alwaysReturn(component);
+      when(description.createComponent())
+        .thenReturn(component);
 
       /**
        * prepare controller which simulates component redraw
        */
       controller = new StreamController();
-      component.when(callsTo("get needUpdate"))
-        .alwaysReturn(controller.stream);
+      when(component.needUpdate)
+        .thenReturn(controller.stream);
 
       /**
        * prepare component mock redraw method
        * to work intuitively to easily writable test
        */
-      component.when(callsTo("redraw"))
-        .alwaysCall(([bool what]) => controller.add(what));
-      component.when(callsTo("shouldUpdate")).alwaysReturn(true);
+      when(component.shouldUpdate).thenReturn(true);
 
       /**
        * uncomment to see what theese test do in browser
@@ -58,13 +56,14 @@ main() {
     });
 
     test("should rerender after component called redraw", () {
-      component.when(callsTo("render"))
-        .thenReturn([span()])
-        .thenReturn([img()]);
+      when(component.render())
+        .thenReturn([span()]);
 
       mountComponent(description, mountRoot);
 
-      component.redraw();
+      when(component.render())
+        .thenReturn([img()]);
+      controller.add(true);
 
       window.animationFrame.then(expectAsync((something) {
         expect(mountRoot.children.length, equals(1));
@@ -73,13 +72,8 @@ main() {
     });
 
     test("should replace only inner element, which should be replaced", () {
-      component.when(callsTo("render"))
-        .thenCall(() {
-          return [div(children: span()), div()];
-        })
-        .thenCall(() {
-          return [div(children: img()), div()];
-        });
+      when(component.render())
+        .thenReturn([div(children: span()), div()]);
 
       mountComponent(description, mountRoot);
 
@@ -89,7 +83,9 @@ main() {
 
       var dd = mountRoot.childNodes.first;
 
-      component.redraw();
+      when(component.render())
+        .thenReturn([div(children: img()), div()]);
+      controller.add(true);
 
       window.animationFrame.then(expectAsync((something) {
         expect(mountRoot.children.length, equals(2));
@@ -100,17 +96,14 @@ main() {
     });
 
     test("should replace element at place", () {
-      component.when(callsTo("render"))
-        .thenCall(() {
-          return [div(children: [span(), span()])];
-        })
-        .thenCall(() {
-          return [div(children: [img(), span()])];
-        });
+      when(component.render())
+        .thenReturn([div(children: [span(), span()])]);
 
       mountComponent(description, mountRoot);
 
-      component.redraw();
+      when(component.render())
+        .thenReturn([div(children: [img(), span()])]);
+      controller.add(true);
 
       Element sp = mountRoot.children.first.children.last;
 
@@ -121,17 +114,14 @@ main() {
     });
 
     test("should replace 2 elements at place", () {
-      component.when(callsTo("render"))
-        .thenCall(() {
-          return [div(children: [span(), span(), span()])];
-        })
-        .thenCall(() {
-          return [div(children: [div(), img(), span()])];
-        });
+      when(component.render())
+        .thenReturn([div(children: [span(), span(), span()])]);
 
       mountComponent(description, mountRoot);
 
-      component.redraw();
+      when(component.render())
+        .thenReturn([div(children: [div(), img(), span()])]);
+      controller.add(true);
 
       Element sp = mountRoot.children.first.children.last;
 
@@ -143,9 +133,8 @@ main() {
     });
 
     test("should replace elements properly in more complicated example", () {
-      component.when(callsTo("render"))
-        .thenCall(() {
-          return [div(children: [
+      when(component.render())
+        .thenReturn([div(children: [
                     span(),
                     span(),
                     span(children: div(children: [
@@ -155,10 +144,12 @@ main() {
                         a()
                       ])),
                     span()
-                 ])];
-        })
-        .thenCall(() {
-          return [div(children: [
+                 ])]);
+
+      mountComponent(description, mountRoot);
+
+      when(component.render())
+        .thenReturn([div(children: [
                     div(),
                     img(),
                     span(children: div(children: [
@@ -168,12 +159,8 @@ main() {
                         b()
                       ])),
                     form()
-                ])];
-        });
-
-      mountComponent(description, mountRoot);
-
-      component.redraw();
+                ])]);
+      controller.add(true);
 
       Element sp = mountRoot.children.first.children[2];
 
@@ -202,16 +189,17 @@ main() {
           id = "myId";
       int height = 12;
 
-      component.when(callsTo("render"))
-        .thenReturn([span(props: {"class": myClass, "id": id})])
-        .thenReturn([span(props: {"class": myOtherClass, "height": height})]);
+      when(component.render())
+        .thenReturn([span(props: {"class": myClass, "id": id})]);
 
       mountComponent(description, mountRoot);
 
       expect(mountRoot.children.first.getAttribute("class"), equals(myClass));
       expect(mountRoot.children.first.getAttribute("id"), equals(id));
       expect(mountRoot.children.first.attributes.containsKey("height"), isFalse, reason: "should not contain height");
-      component.redraw();
+      controller.add(true);
+      when(component.render())
+        .thenReturn([span(props: {"class": myOtherClass, "height": height})]);
 
       window.animationFrame.then(expectAsync((data) {
         expect(mountRoot.children.first.getAttribute("class"), equals(myOtherClass), reason: "class should change");
@@ -224,13 +212,14 @@ main() {
       /**
        * one html attribute, one svg and one non of them
        */
-      component.when(callsTo("render"))
-        .thenReturn([span(props: {})])
-        .thenReturn([span(props: {"class": "class", "text": "text", "crap": "crap"})]);
+      when(component.render())
+        .thenReturn([span(props: {})]);
 
       mountComponent(description, mountRoot);
 
-      component.redraw();
+      controller.add(true);
+      when(component.render())
+        .thenReturn([span(props: {"class": "class", "text": "text", "crap": "crap"})]);
 
       window.animationFrame.then(expectAsync((data) {
         expect(mountRoot.children.first.attributes.containsKey("crap"), isFalse);
@@ -243,13 +232,14 @@ main() {
       /**
        * one html attribute, one svg and one non of them
        */
-      component.when(callsTo("render"))
-        .thenReturn([span(props: {"id": "id", "d": "d", "crap": "crap"})])
-        .thenReturn([span(props: {"id": "id2", "d": "d2", "crap": "crap2"})]);
+      when(component.render())
+        .thenReturn([span(props: {"id": "id", "d": "d", "crap": "crap"})]);
 
       mountComponent(description, mountRoot);
 
-      component.redraw();
+      controller.add(true);
+      when(component.render())
+        .thenReturn([span(props: {"id": "id2", "d": "d2", "crap": "crap2"})]);
 
       window.animationFrame.then(expectAsync((data) {
         expect(mountRoot.children.first.attributes.containsKey("crap"), isFalse);
@@ -262,13 +252,14 @@ main() {
       /**
        * one html attribute, one svg and one non of them
        */
-      component.when(callsTo("render"))
-        .thenReturn([svg(props: {})])
-        .thenReturn([svg(props: {"id": "id2", "d": "d2", "crap": "crap"})]);
+      when(component.render())
+        .thenReturn([svg(props: {})]);
 
       mountComponent(description, mountRoot);
 
-      component.redraw();
+    controller.add(true);
+    when(component.render())
+      .thenReturn([svg(props: {"id": "id2", "d": "d2", "crap": "crap"})]);
 
       window.animationFrame.then(expectAsync((data) {
         expect(mountRoot.children.first.attributes.containsKey("crap"), isFalse);
@@ -281,13 +272,14 @@ main() {
       /**
        * one html attribute, one svg and one non of them
        */
-      component.when(callsTo("render"))
-        .thenReturn([svg(props: {"id": "id", "d": "d", "crap": "crap"})])
-        .thenReturn([svg(props: {"id": "id2", "d": "d2", "crap": "crap2"})]);
+      when(component.render())
+        .thenReturn([svg(props: {"id": "id", "d": "d", "crap": "crap"})]);
 
       mountComponent(description, mountRoot);
 
-      component.redraw();
+    controller.add(true);
+      when(component.render())
+        .thenReturn([svg(props: {"id": "id2", "d": "d2", "crap": "crap2"})]);
 
       window.animationFrame.then(expectAsync((data) {
         expect(mountRoot.children.first.attributes.containsKey("crap"), isFalse);
@@ -300,15 +292,16 @@ main() {
       String myClass = "myclass";
       int height = 12;
 
-      component.when(callsTo("render"))
-        .thenReturn([span()])
-        .thenReturn([span(props: {"class": myClass, "height": height})]);
+      when(component.render())
+        .thenReturn([span()]);
 
       mountComponent(description, mountRoot);
 
       expect(mountRoot.children.first.attributes, isEmpty);
 
-      component.redraw();
+    controller.add(true);
+      when(component.render())
+        .thenReturn([span(props: {"class": myClass, "height": height})]);
 
       window.animationFrame.then(expectAsync((data) {
         expect(mountRoot.children.first.getAttribute("class"), equals(myClass), reason: "class should change");
@@ -320,16 +313,17 @@ main() {
       String myClass = "myclass";
       int height = 12;
 
-      component.when(callsTo("render"))
-        .thenReturn([span(props: {"class": myClass, "height": height})])
-        .thenReturn([span()]);
+      when(component.render())
+        .thenReturn([span(props: {"class": myClass, "height": height})]);
 
       mountComponent(description, mountRoot);
 
       expect(mountRoot.children.first.getAttribute("class"), equals(myClass), reason: "class should change");
       expect(mountRoot.children.first.getAttribute("height"), equals(height.toString()), reason: "haight should be added");
 
-      component.redraw();
+    controller.add(true);
+      when(component.render())
+        .thenReturn([span()]);
 
       window.animationFrame.then(expectAsync((data) {
         expect(mountRoot.children.first.attributes, isEmpty);
@@ -338,28 +332,33 @@ main() {
 
     test("should remove all children of removed not dom component", () {
       ComponentMock componentWithSpan = new ComponentMock();
-      componentWithSpan.when(callsTo("render")).alwaysReturn([span()]);
+      when(componentWithSpan.render()).thenReturn([span()]);
 
-      componentWithSpan.when(callsTo("shouldUpdate")).alwaysReturn(true);
+      when(componentWithSpan.shouldUpdate(any, any)).thenReturn(true);
 
       ComponentDescriptionMock descriptionWithSpan = new ComponentDescriptionMock();
-      descriptionWithSpan.when(callsTo("createComponent")).alwaysReturn(componentWithSpan);
+      when(descriptionWithSpan.createComponent()).thenReturn(componentWithSpan);
 
-      component.when(callsTo("render"))
-        .thenReturn([descriptionWithSpan])
-        .thenReturn([]);
+      when(component.render())
+        .thenReturn([descriptionWithSpan]);
 
       mountComponent(description, mountRoot);
 
       expect(mountRoot.children.length, equals(1));
       expect(mountRoot.children.first.children.length, equals(0));
 
-      component.redraw();
+    controller.add(true);
+      when(component.render())
+        .thenReturn([]);
 
       window.animationFrame.then(expectAsync((data) {
         expect(mountRoot.children.length, equals(0));
       }));
     });
+
+    ComponentMock cmp1;
+    ComponentMock cmp2;
+    ComponentMock cmp3;
 
     ComponentDescriptionMock prepareTestCase() {
       /*
@@ -371,41 +370,54 @@ main() {
        *
        * However, we need to ensure, that div3 is inserted after div2. What if Cmp2 is updated, Cmp3 is not and div2 ends after div4?
        */
-      ComponentMock cmp1 = new ComponentMock();
-      cmp1.when(callsTo("get needUpdate"))
-        .alwaysReturn(controller.stream);
-      cmp1.when(callsTo("redraw"))
-        .alwaysCall(([bool what]) => controller.add(what));
-      cmp1.when(callsTo("shouldUpdate")).alwaysReturn(true);
+      cmp1 = new ComponentMock();
+      when(cmp1.needUpdate)
+        .thenReturn(controller.stream);
+      when(cmp1.shouldUpdate(any, any)).thenReturn(true);
 
 
       ComponentDescriptionMock desc1 = new ComponentDescriptionMock();
-      desc1.when(callsTo("createComponent")).alwaysReturn(cmp1);
+      when(desc1.createComponent()).thenReturn(cmp1);
 
 
-      ComponentMock cmp2 = new ComponentMock();
-      cmp2.when(callsTo("shouldUpdate")).alwaysReturn(true);
+      cmp2 = new ComponentMock();
+      when(cmp2.shouldUpdate).thenReturn(true);
       ComponentDescriptionMock desc2 = new ComponentDescriptionMock();
-      desc2.when(callsTo("createComponent")).alwaysReturn(cmp2);
+      when(desc2.createComponent()).thenReturn(cmp2);
 
-      ComponentMock cmp3 = new ComponentMock();
-      cmp3.when(callsTo("shouldUpdate")).alwaysReturn(true);
+      cmp3 = new ComponentMock();
+      when(cmp3.shouldUpdate).thenReturn(true);
       ComponentDescriptionMock desc3 = new ComponentDescriptionMock();
-      desc3.when(callsTo("createComponent")).alwaysReturn(cmp3);
+      when(desc3.createComponent()).thenReturn(cmp3);
 
-      cmp1.when(callsTo("render")).alwaysReturn([desc2, desc3]);
-      cmp2.when(callsTo("render"))
-        .thenReturn([div(props: {"id": "div1"}), div(props: {"id": "div2"})])  /*div1, div2*/
-        .thenReturn([div(props: {"id": "div1"}), div(props: {"id": "div2"})])
-        .thenReturn([div(props: {"id": "div1"}), div(props: {"id": "div2"})])
-        .thenReturn([div(props: {"id": "div1"}), span()]); // replace div2 by span
-      cmp3.when(callsTo("render"))
-        .thenReturn([div(props: {"id": "div3"}), div(props: {"id": "div4"})])
-        .thenReturn([div(props: {"id": "div3.1"}), div(props: {"id": "div4"})])
-        .thenReturn([span(), div()])
-        .thenReturn([span(), div()]);
+      when(cmp1.render()).thenReturn([desc2, desc3]);
+      when(cmp2.render())
+        .thenReturn([div(props: {"id": "div1"}), div(props: {"id": "div2"})]);  /*div1, div2*/
+      when(cmp3.render())
+        .thenReturn([div(props: {"id": "div3"}), div(props: {"id": "div4"})]);
 
       return desc1;
+    }
+    
+    turn2() {
+      when(cmp2.render())
+        .thenReturn([div(props: {"id": "div1"}), div(props: {"id": "div2"})]);
+      when(cmp3.render())
+        .thenReturn([div(props: {"id": "div3.1"}), div(props: {"id": "div4"})]);
+    }
+
+    turn3() {
+      when(cmp2.render())
+        .thenReturn([div(props: {"id": "div1"}), div(props: {"id": "div2"})]);
+      when(cmp3.render())
+        .thenReturn([span(), div()]);
+    }
+
+    turn4() {
+      when(cmp2.render())
+        .thenReturn([div(props: {"id": "div1"}), span()]); // replace div2 by span
+      when(cmp3.render())
+        .thenReturn([span(), div()]);
     }
 
     test("should only update div attributes when all children are stil div", () {
@@ -423,7 +435,8 @@ main() {
       /**
        * update just id of div3 after first update
        */
-      description.createComponent().redraw();
+      controller.add(true);
+      turn2();
 
       window.animationFrame.then(expectAsync((data) {
         expect(mountRoot.children.length, equals(4));
@@ -452,11 +465,13 @@ main() {
       /**
        * update twice to replace div3 by span
        */
-      description.createComponent().redraw();
+      controller.add(true);
+      turn2();
 
       window.animationFrame.then(expectAsync((data) {
-        description.createComponent().redraw();
-
+        controller.add(true);
+        turn3();
+        
         window.animationFrame.then(expectAsync((data) {
           expect(mountRoot.children.length, equals(4));
 
@@ -486,12 +501,15 @@ main() {
       /**
        * update twice to replace div3 by span
        */
-      description.createComponent().redraw();
+      controller.add(true);
+      turn2();
       window.animationFrame.then(expectAsync((data) {
-        description.createComponent().redraw();
+        controller.add(true);
+        turn3();
 
         window.animationFrame.then(expectAsync((data) {
-          description.createComponent().redraw();
+          controller.add(true);
+          turn4();
 
           window.animationFrame.then(expectAsync((data) {
             expect(mountRoot.children.length, equals(4));
@@ -510,11 +528,10 @@ main() {
     test("should remove relations between component(node) and element", () {
       Component spanComponent = span().createComponent();
       ComponentDescriptionMock spanDescription = new ComponentDescriptionMock();
-      spanDescription.when(callsTo("createComponent")).alwaysReturn(spanComponent);
+      when(spanDescription.createComponent()).thenReturn(spanComponent);
 
-      component.when(callsTo("render"))
-        .thenReturn([spanDescription])
-        .thenReturn([]);
+      when(component.render())
+        .thenReturn([spanDescription]);
 
       mountComponent(description, mountRoot);
 
@@ -523,7 +540,9 @@ main() {
 
       Element spanElement = mountRoot.firstChild;
 
-      component.redraw();
+      controller.add(true);
+      when(component.render())
+        .thenReturn([]);
 
       window.animationFrame.then(expectAsync((data) {
         expect(mountRoot.firstChild, isNull, reason: "mountRoot should be empty");
@@ -535,9 +554,8 @@ main() {
     test("should change text inside of html when update of text component ", () {
       String text1 = "hello",
           text2 = "aloha";
-      component.when(callsTo("render"))
-        .thenReturn(div(children: text1))
-        .thenReturn(div(children: text2));
+      when(component.render())
+        .thenReturn(div(children: text1));
 
       mountComponent(description, mountRoot);
 
@@ -545,12 +563,93 @@ main() {
       expect(text is Text, isTrue);
       expect(text.text, equals(text1));
 
-      component.redraw();
+      controller.add(true);
+      when(component.render())
+          .thenReturn(div(children: text2));
 
       window.animationFrame.then(expectAsync((data) {
         expect(mountRoot.firstChild.firstChild, equals(text));
         expect(text.text, equals(text2));
       }));
+    });
+    
+    group("(dangerouslySetInnerHTML)", () {
+      test("should update dangerously seted inner HTML", () {
+        String text1 = "hello",
+            text2 = "aloha";
+        when(component.render())
+          .thenReturn(div(props: {"dangerouslySetInnerHTML": text1}));
+
+        mountComponent(description, mountRoot);
+
+        Text text = mountRoot.firstChild.firstChild;
+        expect(text is Text, isTrue);
+        expect(text.text, equals(text1));
+
+        controller.add(true);
+        when(component.render())
+          .thenReturn(div(props: {"dangerouslySetInnerHTML": text2}));
+
+        window.animationFrame.then(expectAsync((data) {
+          text = mountRoot.firstChild.firstChild;
+          expect(text is Text, isTrue);
+          expect(text.text, equals(text2));
+        }));
+        
+      });
+      
+      test("should update dangerously seted more complex inner HTML", () {
+        String text1 = "<span>hello</span><div>helloo</div>",
+            text2 = "<div>aloha</div><span>alooha</span>";
+        when(component.render())
+          .thenReturn(div(props: {"dangerouslySetInnerHTML": text1}));
+
+        mountComponent(description, mountRoot);
+
+        Element divel = mountRoot.firstChild.lastChild;
+        Element spanel = mountRoot.firstChild.firstChild;
+        expect(divel is DivElement, isTrue);
+        expect(spanel is SpanElement, isTrue);
+        expect(divel.text, equals("helloo"));
+        expect(spanel.text, equals("hello"));
+
+        controller.add(true);
+        when(component.render())
+          .thenReturn(div(props: {"dangerouslySetInnerHTML": text2}));
+
+        window.animationFrame.then(expectAsync((data) {
+          divel = mountRoot.firstChild.firstChild;
+          spanel = mountRoot.firstChild.lastChild;
+          expect(divel is DivElement, isTrue);
+          expect(spanel is SpanElement, isTrue);
+          expect(divel.text, equals("aloha"));
+          expect(spanel.text, equals("alooha"));
+
+        }));
+        
+      });      
+
+      test("should create component dangerously seted inner HTML", () {
+        String text = "aloha";
+        when(component.render())
+          .thenReturn(div());
+
+        mountComponent(description, mountRoot);
+
+        Text innerElement = mountRoot.firstChild.firstChild;
+        expect(innerElement, isNull);
+
+        controller.add(true);
+        when(component.render())
+          .thenReturn(div(children: div(props: {"dangerouslySetInnerHTML": text})));
+
+        window.animationFrame.then(expectAsync((data) {
+          innerElement = mountRoot.firstChild.firstChild.firstChild;
+          expect(innerElement is Text, isTrue);
+          expect(innerElement.text, equals(text));
+        }));
+      });
+      
     });
 
   });

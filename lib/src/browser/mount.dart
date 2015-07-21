@@ -3,6 +3,7 @@ part of tiles_browser;
 const _REF = "ref";
 const _VALUE = "value";
 const _DEFAULTVALUE = "defaultValue";
+const _DANGEROUSLYSETINNERHTML = "dangerouslySetInnerHTML";
 
 /**
  * Map needed when doing updates on dom.
@@ -27,6 +28,10 @@ typedef void _Ref(Component component);
  */
 mountComponent(ComponentDescription description, html.HtmlElement mountRoot) {
   logger.fine("mountComponent called");
+  
+  if(_isMounted(description, mountRoot)) {
+    return _remountDescription(description, mountRoot);
+  }
 
   Node node = new Node.fromDescription(null, description);
 
@@ -42,6 +47,16 @@ mountComponent(ComponentDescription description, html.HtmlElement mountRoot) {
    * mount root node to mount root to be able easy unmount node.
    */
   _elementToNode[mountRoot] = node;
+}
+
+void _remountDescription(ComponentDescription description, html.HtmlElement mountRoot) {
+  Node node = _elementToNode[mountRoot];
+  node.apply(props: description.props, children: description.children, listeners: description.listeners);
+  node.isDirty = true;
+}
+
+bool _isMounted(ComponentDescription description, html.HtmlElement mountRoot) {
+  return _elementToNode[mountRoot] != null && _elementToNode[mountRoot].factory == description.factory;
 }
 
 /**
@@ -82,7 +97,11 @@ _mountNode(Node node, html.HtmlElement mountRoot, {Node nextNode}) {
     _saveRelations(node, componentElement);
 
     _applyAttributes(componentElement, component.props, svg: component.svg, node: node, listeners: node.listeners);
-    node.children.forEach((Node child) => _mountNode(child, componentElement));
+    if(component.props.containsKey(_DANGEROUSLYSETINNERHTML)){
+      _dangerouslySetInnerHTML(component, componentElement);
+    } else {
+      node.children.forEach((Node child) => _mountNode(child, componentElement));
+    }
 
     if (nextNode != null) {
       mountRoot.insertBefore(componentElement, _nodeToElement[nextNode]);
@@ -121,6 +140,13 @@ _mountNode(Node node, html.HtmlElement mountRoot, {Node nextNode}) {
   } catch (e) {}
 }
 
+void _dangerouslySetInnerHTML(DomComponent component, html.Element element) {
+  if(component.children != null) {
+    throw new Exception("Component with dangerously setted inner html should not have childre");
+  }
+  element.setInnerHtml(component.props[_DANGEROUSLYSETINNERHTML]);
+}
+
 /**
  * Returns boolean which is true
  * if attribute with passed key can be added
@@ -128,8 +154,24 @@ _mountNode(Node node, html.HtmlElement mountRoot, {Node nextNode}) {
  */
 _canAddAttribute(bool svg, String key) {
   return (!svg && allowedAttrs.contains(key))
-      || (svg && allowedSvgAttributes.contains(key));
+      || (svg && allowedSvgAttributes.contains(key)) 
+      || _matchAllowedPrefix(key);
 
+}
+
+/**
+ * tells if the key match some of allowed prefixes
+ */
+bool _matchAllowedPrefix(String key) {
+  bool match = false;
+  
+  allowedAttrsPrefixes.forEach((prefix) {
+    if (key.startsWith(prefix)) {
+      match = true;
+    }
+  });
+
+  return match;
 }
 
 /**

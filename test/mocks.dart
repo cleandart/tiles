@@ -1,6 +1,6 @@
 library tiles_test_mocks;
 
-import 'package:mock/mock.dart';
+import 'package:mockito/mockito.dart';
 import 'package:tiles/tiles.dart';
 import 'dart:async';
 

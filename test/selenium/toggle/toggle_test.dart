@@ -1,7 +1,7 @@
 library selenium_application_test;
 
 import 'package:webdriver/webdriver.dart';
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 import '../test_utils.dart';
 
 void main() {

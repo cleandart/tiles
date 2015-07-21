@@ -1,15 +1,15 @@
 name: tiles
-version: 0.1.2
+version: 0.1.3+5
 author: Jakuub Uhrik <jakuub@mail.com>
 description: The UI component library inspirated by Facebook React Javascript library.
 homepage: https://github.com/cleandart/tiles
 dependencies:
-  logging: any
+  logging: '>=0.9.1+1 <0.10.0'
 dev_dependencies:
   browser: any
   meta: any
-  mock: any
+  mockito: any
   react: any
-  unittest: any
+  test: any
   useful: any
   webdriver: any

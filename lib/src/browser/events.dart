@@ -23,48 +23,6 @@ getElementForComponent(Component component) {
 }
 
 /**
- * Helper function which create map for events,
- * which tell's for each tiles evnt which real event should be mapped to it.
- *
- * As imput take's list like
- *     [
- *       "click",
- *       "mouseDown",
- *       /*..*/
- *     ]
- *
- * It looks like
- *     {
- *       "onClick": "click",
- *       "onMouseDown": "mousedown",
- *       /*...*/
- *     }
- */
-Map<String, String> _createEventsMapFromList(List<String> events) {
-  Map<String, String> eventsMap = {};
-  events.forEach((event) {
-    if (event.length > 0) {
-      event = event[0].toUpperCase() + event.substring(1);
-    }
-    eventsMap["on$event"] = event.toLowerCase();
-  });
-  return eventsMap;
-}
-
-/**
- * Map of all supported events.
- *
- * Created by _createEventsMapFromList
- */
-final Map<String, String> allowedEvents = _createEventsMapFromList(["keyDown",
-  "keyPress", "keyUp", "focus", "blur", "change", "input", "submit", "click",
-  "doubleClick", "drag", "dragEnd", "dragEnter", "dragExit", "dragLeave",
-  "dragOver", "dragStart", "drop", "mouseDown", "mouseEnter", "mouseLeave",
-  "mouseMove", "mouseOut", "mouseOver", "mouseUp", "touchCancel", "touchEnd",
-  "touchMove", "touchStart", "scroll", "wheel", "paste",
-]);
-
-/**
  * define a type, which shoul every event listener
  * in props of DomComponent match.
  */
@@ -76,28 +34,24 @@ typedef bool EventListener(Component component, html.Event event);
  */
 _processEvent(String key, dynamic value, Node node) {
   logger.fine("_processEvent called on key $key");
-  if (allowedEvents.containsKey(key)) {
-    if (!(value is EventListener)) {
-      throw "there can be only EventListener in $key attribute";
-    }
+  if (!(value is EventListener)) {
+    throw "there can be only EventListener in $key attribute";
+  }
 
-    /**
+  /**
      * Find root node.
      *
      * For now not very effective,
      * later it should be passed as argument.
      */
-    var parent = node;
-    while (parent.parent != null) {
-      parent = parent.parent;
-    }
-
-    html.Element masterRoot = _nodeToElement[parent];
-
-    _registerListener(masterRoot, key);
-  } else {
-    throw "Listeners should be applied only to valid event types, not on $key";
+  var parent = node;
+  while (parent.parent != null) {
+    parent = parent.parent;
   }
+
+  html.Element masterRoot = _nodeToElement[parent];
+
+  _registerListener(masterRoot, key);
 }
 
 /**
@@ -119,7 +73,8 @@ _handleEventType(String what) {
 
         listener = targetNode.listeners[what];
 
-        if (listener != null && listener(targetNode.component, event) == false) {
+        if (listener != null &&
+            listener(targetNode.component, event) == false) {
           break;
         }
       }
@@ -141,13 +96,27 @@ _registerListener(html.Element element, String event) {
   }
 
   if (!registeredListeners.contains(event)) {
-    element.on[allowedEvents[event]].listen(_handleEventType(event));
+    element.on[_removeOnAndLowercase(event)].listen(_handleEventType(event));
     registeredListeners.add(event);
   }
 }
 
 /**
+ * Helper function which remove on from the event listneer and lowercase first letter.
+ * For example it will produce "click" from "onClick";
+ */
+String _removeOnAndLowercase(String event) {
+  String result = event;
+
+  result = result.replaceAll(new RegExp(r"^on"), "");
+
+  if (result.length > 0) {
+    result = result[0].toLowerCase() + result.substring(1);
+  }
+  return result;
+}
+
+/**
  * Map which saves which element have which events allready registered
  */
-final Map<html.Element, Set<String>>_registeredListeners = {};
-
+final Map<html.Element, Set<String>> _registeredListeners = {};
