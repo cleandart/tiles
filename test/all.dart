@@ -7,10 +7,13 @@ import "core/node_change_test.dart" as nodeChange;
 import "core/component_test.dart" as component;
 import "core/register_component_test.dart" as registerComponent;
 import "core/lifecycle_test.dart" as lifecycle;
+
 import "dom/dom_component_test.dart" as domComponent;
 import "dom/dom_elements_test.dart" as domElements;
 import "dom/dom_elements_special_test.dart" as domElementsSpecial;
 import "dom/dom_text_component_test.dart" as domTextComponent;
+
+import "server/server.dart" as server;
 
 main () {
   component.main();
@@ -26,4 +29,6 @@ main () {
   domElements.main();
   domElementsSpecial.main();
   domTextComponent.main();
+  
+  server.main();
 }

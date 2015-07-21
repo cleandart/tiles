@@ -1,6 +1,7 @@
 library tiles_browser;
 import 'dart:html' as html;
-import 'package:tiles/tiles.dart';
+import 'tiles.dart';
+import 'src/dom/dom_attributes.dart';
 
 part 'src/browser/mount.dart';
 part 'src/browser/unmount.dart';
