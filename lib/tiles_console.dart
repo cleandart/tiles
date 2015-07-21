@@ -17,7 +17,7 @@ String renderToString(ComponentDescription source) {
 }
 
 String _renderComponent(Component component) {
-  return _children(component.children);
+  return _children(component.render());
 }
 
 String _renderDomComponent(DomComponent component) {

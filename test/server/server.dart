@@ -191,7 +191,9 @@ main() {
       });
 
       test("should render children of custom component", () {
-        mockComponent(new Component(null, [div()]));
+        ComponentMock component = new ComponentMock();
+        when(component.render()).thenReturn([div()]);
+        mockComponent(component);
         expect(renderToString(description), equals('<div></div>'));
       });
     });
