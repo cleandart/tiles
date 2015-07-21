@@ -3,7 +3,7 @@ library webdriver_test_util;
 import 'dart:io';
 import 'dart:async';
 import 'package:path/path.dart' as path;
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 import 'package:webdriver/webdriver.dart';
 
 WebDriver driver;

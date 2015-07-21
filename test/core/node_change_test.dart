@@ -1,10 +1,10 @@
 library tiles_node_change_test;
 
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 import 'package:tiles/tiles.dart';
 import '../mocks.dart';
 import 'dart:math';
-import 'package:mock/mock.dart';
+import 'package:mockito/mockito.dart';
 
 main() {
 

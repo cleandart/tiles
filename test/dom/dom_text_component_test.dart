@@ -1,7 +1,7 @@
 library tiles_dom_text_component_test;
 
 import 'package:tiles/tiles.dart';
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 
 
 main() {

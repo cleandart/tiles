@@ -1,7 +1,7 @@
 library tiles_browser_events_test;
 
-import 'package:unittest/unittest.dart';
-import 'package:mock/mock.dart';
+import 'package:test/test.dart';
+import 'package:mockito/mockito.dart';
 import 'package:tiles/tiles.dart';
 import 'package:tiles/tiles_browser.dart';
 import 'dart:html';
@@ -23,7 +23,7 @@ main() {
       component = new DomComponent(tagName: "span");
 
       description = new ComponentDescriptionMock();
-      description.when(callsTo("createComponent")).alwaysReturn(component);
+      when(description.createComponent()).thenReturn(component);
     });
 
     test("shold return html element for correct component", () {
@@ -138,7 +138,7 @@ main() {
         "should listen to events on custom component also, if props has [onEvent] in props",
         () {
       ComponentMock componentMock = new ComponentMock();
-      componentMock.when(callsTo("render")).alwaysReturn(div());
+      when(componentMock.render()).thenReturn(div());
       ComponentDescriptionFactory component =
           registerComponent(({props, children}) => componentMock);
 

@@ -1,7 +1,7 @@
 library tiles_special_attributes_test;
 
-import 'package:unittest/unittest.dart';
-import 'package:mock/mock.dart';
+import 'package:test/test.dart';
+import 'package:mockito/mockito.dart';
 import 'package:tiles/tiles.dart';
 import 'package:tiles/tiles_browser.dart';
 import 'dart:html';
@@ -38,23 +38,19 @@ main() {
       component = new ComponentMock();
 
       description = new ComponentDescriptionMock();
-      description.when(callsTo("createComponent"))
-        .alwaysReturn(component);
+      when(description.createComponent()).thenReturn(component);
 
       /**
        * prepare controller which simulates component redraw
        */
       controller = new StreamController();
-      component.when(callsTo("get needUpdate"))
-        .alwaysReturn(controller.stream);
+      when(component.needUpdate).thenReturn(controller.stream);
 
       /**
        * prepare component mock redraw method
        * to work intuitively to easily writable test
        */
-      component.when(callsTo("redraw"))
-        .alwaysCall(([bool what]) => controller.add(what));
-      component.when(callsTo("shouldUpdate")).alwaysReturn(true);
+      when(component.shouldUpdate(any, any)).thenReturn(true);
 
       /**
        * uncomment to see what theese test do in browser
@@ -63,9 +59,8 @@ main() {
     });
 
     test("should set value if seted attribute value", () {
-      component.when(callsTo("render"))
-        .thenReturn(input(props: {value: value1}))
-        .thenReturn(input(props: {value: value2}));
+      when(component.render())
+          .thenReturn(input(props: {value: value1}));
 
       mountComponent(description, mountRoot);
 
@@ -74,17 +69,21 @@ main() {
 
       element.value = elseValue;
 
-      component.redraw();
+      controller.add(null);
+      when(component.render())
+          .thenReturn(input(props: {value: value2}));
 
       window.animationFrame.then(expectAsync((_) {
         expect(element.value, equals(value2));
       }));
     });
 
-    test("should set default value and not replace real value if seted attribute defaultValue", () {
-      component.when(callsTo("render"))
-        .thenReturn(input(props: {defaultValue: value1}))
-        .thenReturn(input(props: {defaultValue: value2}));
+    test(
+        "should set default value and not replace real value if seted attribute defaultValue",
+        () {
+      when(component.render())
+          .thenReturn(input(props: {defaultValue: value1}))
+          .thenReturn(input(props: {defaultValue: value2}));
 
       mountComponent(description, mountRoot);
 
@@ -93,7 +92,7 @@ main() {
 
       element.value = elseValue;
 
-      component.redraw();
+      controller.add(null);
 
       window.animationFrame.then(expectAsync((_) {
         expect(element.value, equals(elseValue));
@@ -101,9 +100,9 @@ main() {
     });
 
     test('should add value into textarea from "value" prop', () {
-      component.when(callsTo("render"))
-        .thenReturn(textarea(props: {value: value1}, children: div()))
-        .thenReturn(textarea(props: {value: value2}));
+      when(component.render())
+          .thenReturn(textarea(props: {value: value1}, children: div()))
+          .thenReturn(textarea(props: {value: value2}));
 
       mountComponent(description, mountRoot);
 
@@ -112,9 +111,8 @@ main() {
     });
 
     test('should update value in textarea from "value" prop', () {
-      component.when(callsTo("render"))
-        .thenReturn(textarea(props: {value: value1}, children: div()))
-        .thenReturn(textarea(props: {value: value2}));
+      when(component.render())
+          .thenReturn(textarea(props: {value: value1}, children: div()));
 
       mountComponent(description, mountRoot);
 
@@ -123,13 +121,13 @@ main() {
 
       element.value = elseValue;
 
-      component.redraw();
+      controller.add(null);
+      when(component.render())
+          .thenReturn(textarea(props: {value: value2}));
 
       window.animationFrame.then(expectAsync((_) {
         expect(element.value, equals(value2));
       }));
     });
-
   });
 }
-

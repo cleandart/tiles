@@ -1,7 +1,7 @@
 library tiles_node_update_children_test;
 
-import 'package:unittest/unittest.dart';
-import 'package:mock/mock.dart';
+import 'package:test/test.dart';
+import 'package:mockito/mockito.dart';
 import 'package:tiles/tiles.dart';
 import '../mocks.dart';
 
@@ -13,7 +13,7 @@ main() {
     ComponentDescriptionMock description2;
 
     ComponentMock componentForDescription = new ComponentMock();
-    componentForDescription.when(callsTo("shouldUpdate")).alwaysReturn(true);
+    when(componentForDescription.shouldUpdate(any, any)).thenReturn(true);
 
 
     ComponentMock component;
@@ -24,8 +24,8 @@ main() {
     ComponentDescriptionMock createDefaultDescription() {
       ComponentDescriptionMock description = new ComponentDescriptionMock();
 
-      description.when(callsTo("createComponent")).alwaysReturn(componentForDescription);
-      description.when(callsTo("get factory")).alwaysReturn(({dynamic props, children}) => componentForDescription);
+      when(description.createComponent()).thenReturn(componentForDescription);
+      when(description.factory).thenReturn(({dynamic props, children}) => componentForDescription);
 
       return description;
     }
@@ -35,8 +35,8 @@ main() {
       description2 = createDefaultDescription();
       component = new ComponentMock();
 
-      component.when(callsTo("render")).alwaysReturn([description]);
-      component.when(callsTo("shouldUpdate")).alwaysReturn(true);
+      when(component.render()).thenReturn([description]);
+      when(component.shouldUpdate(any, any)).thenReturn(true);
 
       changes = [];
 
@@ -44,17 +44,17 @@ main() {
 
     eraseComponent() {
       component = new ComponentMock();
-      component.when(callsTo("shouldUpdate")).alwaysReturn(true);
+      when(component.shouldUpdate(any, any)).thenReturn(true);
 
     }
 
     eraseDescription() {
       description = new ComponentDescriptionMock();
-      description.when(callsTo("createComponent")).alwaysReturn(componentForDescription);
+      when(description.createComponent()).thenReturn(componentForDescription);
 
       component = new ComponentMock();
-      component.when(callsTo("render")).alwaysReturn([description]);
-      component.when(callsTo("shouldUpdate")).alwaysReturn(true);
+      when(component.render()).thenReturn([description]);
+      when(component.shouldUpdate(any, any)).thenReturn(true);
     }
 
     void createNode() {
@@ -132,8 +132,8 @@ main() {
     test("should accept iterable as result of render", () {
       Iterable iterable = [description].reversed;
       component = new ComponentMock();
-      component.when(callsTo("render")).alwaysReturn(iterable);
-      component.when(callsTo("shouldUpdate")).alwaysReturn(true);
+      when(component.render()).thenReturn(iterable);
+      when(component.shouldUpdate(any, any)).thenReturn(true);
 
       createNode();
 
@@ -162,11 +162,8 @@ main() {
          */
         ComponentFactory factory1 = ({dynamic props, children}) => componentForDescription;
         ComponentFactory factory2 = ({dynamic props, children}) => componentForDescription;
-        ComponentFactory factory3 = ({dynamic props, children}) => componentForDescription;
-        description.when(callsTo("get factory"))
-          .thenReturn(factory1)
-          .thenReturn(factory2)
-          .thenReturn(factory3);
+        when(description.factory)
+          .thenReturn(factory1);
 
         createNode();
 
@@ -180,6 +177,8 @@ main() {
          */
         Node oldChild = node.children.first;
 
+        when(description.factory)
+          .thenReturn(factory2);
         updateNode();
         /**
          * because in RenderingAlwaysNewFactoryComponent is always created new,
@@ -192,15 +191,16 @@ main() {
 
         eraseComponent();
 
-        component.when(callsTo("render"))
-          .thenReturn([description])
-          .thenReturn([]);
+        when(component.render())
+          .thenReturn([description]);
 
 
         createNode();
 
         expect(node.children.isEmpty, isFalse);
 
+        when(component.render())
+          .thenReturn([]);
         updateNode();
         /**
          * expect there are 2 updates, first update of node and second of removing it's child
@@ -223,11 +223,15 @@ main() {
         setUp(() {
           eraseComponent();
 
-          component.when(callsTo("render"))
-            .thenReturn([description, description2])
-            .thenReturn([description2, description]);
+          when(component.render())
+            .thenReturn([description, description2]);
 
         });
+        
+        nextRender() {
+          when(component.render())
+            .thenReturn([description2, description]);
+        }
 
         countChangeTypes(List<NodeChange> changes, NodeChangeType type) {
           num count = 0;
@@ -236,12 +240,13 @@ main() {
         }
 
         addKey(ComponentDescriptionMock description) {
-          description.when(callsTo("get key")).alwaysReturn(new Mock());
+          when(description.key).thenReturn(new Mock());
         }
 
         createAndUpdateNode() {
           createNode();
-
+          
+          nextRender();
           updateNode();
         }
 
@@ -253,6 +258,7 @@ main() {
           var child1 = node.children.first;
           var child2 = node.children.last;
 
+          nextRender();
           updateNode();
 
           expect(node.children.length, equals(2));
@@ -274,6 +280,7 @@ main() {
           var child1 = node.children.first;
           var child2 = node.children.last;
 
+          nextRender();
           updateNode();
 
           expect(node.children.length, equals(2));
@@ -295,6 +302,7 @@ main() {
           var child1 = node.children.first;
           var child2 = node.children.last;
 
+          nextRender();
           updateNode();
 
           expect(node.children.length, equals(2));
@@ -355,13 +363,15 @@ main() {
           ComponentDescriptionMock dk2 = createDefaultDescription();
           addKey(dk2);
 
-          component.when(callsTo("render"))
-            .thenReturn([d0, d1, d2,  d3, dk1, d5,  d6, dk2])
-            .thenReturn([d0, d1, dk2, d3, d4,  dk1, d6, d7]);
+          when(component.render())
+            .thenReturn([d0, d1, d2,  d3, dk1, d5,  d6, dk2]);
 
           createNode();
 
           List<Node> children = node.children;
+
+          when(component.render())
+            .thenReturn([d0, d1, dk2, d3, d4,  dk1, d6, d7]);
 
           updateNode();
 
@@ -409,17 +419,16 @@ main() {
           description2 = description;
           eraseDescription();
 
-          description.when(callsTo("get listeners")).alwaysReturn(listeners1);
-          description.when(callsTo("get factory")).alwaysReturn(factory);
-          description2.when(callsTo("get listeners")).alwaysReturn(listeners2);
-          description2.when(callsTo("get factory")).alwaysReturn(factory);
+          when(description.listeners).thenReturn(listeners1);
+          when(description.factory).thenReturn(factory);
+          when(description2.listeners).thenReturn(listeners2);
+          when(description2.factory).thenReturn(factory);
 
           component = new ComponentMock();
-          component.when(callsTo("shouldUpdate")).alwaysReturn(true);
+          when(component.shouldUpdate(any, any)).thenReturn(true);
 
-          component.when(callsTo("render"))
-            .thenReturn(description)
-            .thenReturn(description2);
+          when(component.render())
+            .thenReturn(description);
 
           node = new Node(null, component, factory);
 
@@ -428,6 +437,9 @@ main() {
 
           expect(node.children.length, equals(1));
           expect(node.children.first.listeners, equals(listeners1));
+
+          when(component.render())
+            .thenReturn(description2);
 
           node.update(force: true, changes: changes);
 

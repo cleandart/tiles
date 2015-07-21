@@ -1,17 +1,17 @@
 library tiles_lifecycle_test;
-import 'package:unittest/unittest.dart';
-import 'package:mock/mock.dart';
+import 'package:test/test.dart';
+import 'package:mockito/mockito.dart';
 import 'package:tiles/tiles.dart';
 import '../mocks.dart';
 
 main() {
   group("(LifeCycle)", () {
-    ComponentMock component;
+    Component component;
     Node node;
 
     setUp(() {
       component = new ComponentMock();
-      component.when(callsTo("shouldUpdate")).alwaysReturn(true);
+      when(component.shouldUpdate(any, any)).thenReturn(true);
 
       node = new Node(null, component, null);
       node.update();
@@ -34,7 +34,7 @@ main() {
     group("(render)", () {
       test("should call render once on create and update node", () {
 
-        component.getLogs(callsTo("render")).verify(happenedExactly(1));
+        verify(component.render());
       });
     });
 
@@ -42,40 +42,38 @@ main() {
       test("should call willReceiveProps once on node apply", () {
         node.apply();
 
-        component.getLogs(callsTo("willReceiveProps")).verify(happenedExactly(1));
+        verify(component.willReceiveProps(any)).called(1);
       });
     });
 
     group("(shouldUpdate)", () {
       test("should not call shouldUpdate on first update", () {
-        component.getLogs(callsTo("shouldUpdate")).verify(neverHappened);
+        verifyNever(component.shouldUpdate(any, any));
       });
 
       test("should call shouldUpdate once on node not first update", () {
         updateNode();
-        component.getLogs(callsTo("shouldUpdate")).verify(happenedExactly(1));
+        verify(component.shouldUpdate(any, any));
       });
 
       test("should not call render, if shouldUpdate return false", () {
         eraseComponent();
 
-        component.when(callsTo("shouldUpdate")).alwaysReturn(false);
-        component.clearLogs();
+        when(component.shouldUpdate(any, any)).thenReturn(false);
+        reset(component);
 
         updateNode();
 
-        component.getLogs(callsTo("render")).verify(neverHappened);
+        verify(component.render());
       });
 
       test("should receive correct old and next props in shouldUpdate", () {
-        eraseComponent();
+        component = spy(new ComponentMock(), new Component(null));
 
-        /**
-         * fake props functionality
-         */
-        var props;
-        component.when(callsTo("set props")).alwaysCall((_props) => props = _props);
-        component.when(callsTo("get props")).alwaysCall(() => props);
+        node = new Node(null, component, null);
+        node.update();
+
+
 
         /**
          * apply props
@@ -86,10 +84,11 @@ main() {
         /**
          * expect called of shouldUpdate with correct values
          */
-        component.when(callsTo("shouldUpdate")).thenCall(expectAsync((nextProps, oldProps) {
+        when(component.shouldUpdate(any, any)).thenAnswer(expectAsync((Invocation inv) {
+            var oldProps = inv.positionalArguments[1];
+            var nextProps = inv.positionalArguments[0]; 
             expect(oldProps, equals("oldProps"));
             expect(nextProps, equals("nextProps"));
-            expect(props, equals(nextProps));
             return true;
           }));
 
@@ -104,41 +103,57 @@ main() {
 
       createDefaultDescription (ComponentMock component) {
         ComponentDescriptionMock description = new ComponentDescriptionMock();
-        description.when(callsTo("createComponent")).alwaysReturn(component);
+        when(description.createComponent()).thenReturn(component);
         return description;
       }
       createDefaultComponent ([List<ComponentDescription> whatToRender]) {
         ComponentMock component = new ComponentMock();
-        component.when(callsTo("shouldUpdate")).alwaysReturn(true);
-        component.when(callsTo("render")).alwaysReturn(whatToRender);
+        when(component.shouldUpdate(any, any)).thenReturn(true);
+        when(component.render()).thenReturn(whatToRender);
         return component;
       }
 
       clearLogs() {
-        c1.clearLogs();
-        c2.clearLogs();
-        c3.clearLogs();
-        c4.clearLogs();
-        c5.clearLogs();
-        c6.clearLogs();
-        c7.clearLogs();
-        c8.clearLogs();
-        c9.clearLogs();
-        c10.clearLogs();
-        c11.clearLogs();
+        clearInteractions(c1);
+        clearInteractions(c2);
+        clearInteractions(c3);
+        clearInteractions(c4);
+        clearInteractions(c5);
+        clearInteractions(c6);
+        clearInteractions(c7);
+        clearInteractions(c8);
+        clearInteractions(c9);
+        clearInteractions(c10);
+        clearInteractions(c11);
       }
 
+      var ONCE = "ONCE";
+      var NEVER = "NEVER";
+      
       shouldHappened(List<ComponentMock> components, String what, expect) {
         for (component in components) {
-          component.getLogs(callsTo(what)).verify(expect);
+          var verif;
+          if(expect == NEVER) {
+            verif = verifyNever;
+          }
+          if (expect == ONCE) {
+            verif = verify;
+          }
+          
+          var whatt;
+          if(what == "render") whatt = component.render(); 
+          if(what == "shouldUpdate") whatt = component.shouldUpdate(any, any);
+          if(what == "willReceiveProps") whatt = component.willReceiveProps(any);
+                    
+          verif(whatt);
         }
       }
 
       shouldHappenedOnce(String what) {
-        shouldHappened([c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11], what, happenedOnce);
+        shouldHappened([c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11], what, ONCE);
       }
       shouldNeverHappened(String what) {
-        shouldHappened([c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11], what, neverHappened);
+        shouldHappened([c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11], what, NEVER);
       }
 
       setUp(() {
@@ -253,16 +268,16 @@ main() {
 
         n2.isDirty = true;
         node.update();
-        shouldHappened([c1, c3, c6, c10, c11], "render", neverHappened);
-        shouldHappened([c2, c4, c5, c7, c8, c9], "render", happenedOnce);
+        shouldHappened([c1, c3, c6, c10, c11], "render", NEVER);
+        shouldHappened([c2, c4, c5, c7, c8, c9], "render", ONCE);
       });
       test("shold call willReceiveProps on correct places", () {
         clearLogs();
 
         n2.isDirty = true;
         node.update();
-        shouldHappened([c1, c2, c3, c6, c10, c11], "willReceiveProps", neverHappened);
-        shouldHappened([c4, c5, c7, c8, c9], "willReceiveProps", happenedOnce);
+        shouldHappened([c1, c2, c3, c6, c10, c11], "willReceiveProps", NEVER);
+        shouldHappened([c4, c5, c7, c8, c9], "willReceiveProps", ONCE);
       });
 
       test("shold call render, shouldUpdate and willReceiveProps on correct places, when 2 nodes are dirty in one route from root to leaf", () {
@@ -271,14 +286,14 @@ main() {
         n2.isDirty = true;
         n4.isDirty = true;
         node.update();
-        shouldHappened([c1, c3, c6, c10, c11], "render", neverHappened);
-        shouldHappened([c2, c4, c5, c7, c8, c9], "render", happenedOnce);
+        shouldHappened([c1, c3, c6, c10, c11], "render", NEVER);
+        shouldHappened([c2, c4, c5, c7, c8, c9], "render", ONCE);
 
-        shouldHappened([c1, c3, c6, c10, c11], "shouldUpdate", neverHappened);
-        shouldHappened([c2, c4, c5, c7, c8, c9], "shouldUpdate", happenedOnce);
+        shouldHappened([c1, c3, c6, c10, c11], "shouldUpdate", NEVER);
+        shouldHappened([c2, c4, c5, c7, c8, c9], "shouldUpdate", ONCE);
 
-        shouldHappened([c1, c2, c3, c6, c10, c11], "willReceiveProps", neverHappened);
-        shouldHappened([c4, c5, c7, c8, c9], "willReceiveProps", happenedOnce);
+        shouldHappened([c1, c2, c3, c6, c10, c11], "willReceiveProps", NEVER);
+        shouldHappened([c4, c5, c7, c8, c9], "willReceiveProps", ONCE);
       });
 
       test("should do nothing, if there was nothing dirty, after more times, when something was dirty", () {

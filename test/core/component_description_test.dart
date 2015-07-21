@@ -1,9 +1,9 @@
 library tiles_compoenent_description_test;
 
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 import 'package:tiles/tiles.dart';
 import '../mocks.dart';
-import 'package:mock/mock.dart';
+import 'package:mockito/mockito.dart';
 
 main() {
   group("(ComponentDescription)", () {

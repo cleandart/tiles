@@ -1,7 +1,7 @@
 library tiles_mount_component_test;
 
-import 'package:unittest/unittest.dart';
-import 'package:mock/mock.dart';
+import 'package:test/test.dart';
+import 'package:mockito/mockito.dart';
 import 'package:tiles/tiles.dart';
 import 'package:tiles/tiles_browser.dart';
 import 'dart:html';
@@ -33,20 +33,18 @@ main() {
        */
 
       componentWithSpan = new ComponentMock();
-      componentWithSpan.when(callsTo("render")).alwaysReturn([span()]);
+      when(componentWithSpan.render()).thenReturn([span()]);
 
       descriptionWithSpan = new ComponentDescriptionMock();
-      descriptionWithSpan
-          .when(callsTo("createComponent"))
-          .alwaysReturn(componentWithSpan);
+      when(descriptionWithSpan.createComponent())
+          .thenReturn(componentWithSpan);
 
       componentWithImage = new ComponentMock();
-      componentWithImage.when(callsTo("render")).alwaysReturn([img()]);
+      when(componentWithImage.render()).thenReturn([img()]);
 
       descriptionWithImage = new ComponentDescriptionMock();
-      descriptionWithImage
-          .when(callsTo("createComponent"))
-          .alwaysReturn(componentWithImage);
+      when(descriptionWithImage.createComponent())
+          .thenReturn(componentWithImage);
 
       /**
        * uncomment to see what theese test do in browser
@@ -160,7 +158,7 @@ main() {
         expect(component, equals(componentWithSpan));
       });
 
-      componentWithSpan.when(callsTo("get props")).alwaysReturn(props);
+      when(componentWithSpan.props).thenReturn(props);
 
       mountComponent(descriptionWithSpan, mountRoot);
       expect(descriptionWithSpan.createComponent(), equals(componentWithSpan));
@@ -168,7 +166,7 @@ main() {
     });
 
     test("should work if component not have props", () {
-      componentWithSpan.when(callsTo("get props")).alwaysReturn(null);
+      when(componentWithSpan.props).thenReturn(null);
 
       /**
        * just test, if no exception is thrown
@@ -180,7 +178,7 @@ main() {
     test("should work with something weird in props ref", () {
       var props = {};
       props["ref"] = new Mock();
-      componentWithSpan.when(callsTo("get props")).alwaysReturn(props);
+      when(componentWithSpan.props).thenReturn(props);
 
       expect(
           () => mountComponent(descriptionWithSpan, mountRoot), isNot(throws));
@@ -244,26 +242,30 @@ main() {
         }));
       }
 
+      ComponentMock component;
       ComponentDescription _createMockDescription() {
         ComponentDescriptionMock description = new ComponentDescriptionMock();
-        ComponentMock component = new ComponentMock();
+        component = new ComponentMock();
 
         var factory = ({props, children}) => component;
         var listeners = {"onClick": (_, __) {}};
         var props = {"key": "value"};
 
-        description.when(callsTo("get factory")).alwaysReturn(factory);
-        description.when(callsTo("createComponent")).alwaysReturn(component);
-        description.when(callsTo("get props")).alwaysReturn(props);
-        description.when(callsTo("get listeners")).alwaysReturn(listeners);
-        description.when(callsTo("get children")).alwaysReturn(null);
+        when(description.factory).thenReturn(factory);
+        when(description.createComponent()).thenReturn(component);
+        when(description.props).thenReturn(props);
+        when(description.listeners).thenReturn(listeners);
+        when(description.children).thenReturn(null);
 
-        component
-            .when(callsTo("render"))
-            .thenReturn(children1)
-            .thenReturn(children2);
+        when(component.render())
+            .thenReturn(children1);
         
         return description;
+      }
+      
+      void nextRender() {
+        when(component.render())
+            .thenReturn(children2);
       }
 
       test("should only remount on second mount of the same dom component", () {
@@ -282,6 +284,7 @@ main() {
         mountComponent(description, mountRoot);
 
         _saveElements();
+        nextRender();
 
         mountComponent(description, mountRoot);
 
@@ -305,10 +308,10 @@ main() {
 
     test("should remove whole markup when custom componet was mounted", () {
       ComponentMock component = new ComponentMock();
-      component.when(callsTo("render")).alwaysReturn([div()]);
+      when(component.render()).thenReturn([div()]);
 
       ComponentDescriptionMock description = new ComponentDescriptionMock();
-      description.when(callsTo("createComponent")).alwaysReturn(component);
+      when(description.createComponent()).thenReturn(component);
 
       mountComponent(description, mountRoot);
       unmountComponent(mountRoot);
@@ -319,9 +322,8 @@ main() {
     test("should remove relation between component and element on unmount", () {
       Component divComponent = new DomComponent(tagName: "div");
       ComponentDescriptionMock divDescription = new ComponentDescriptionMock();
-      divDescription
-          .when(callsTo("createComponent"))
-          .alwaysReturn(divComponent);
+      when(divDescription.createComponent())
+          .thenReturn(divComponent);
 
       mountComponent(divDescription, mountRoot);
       unmountComponent(mountRoot);
