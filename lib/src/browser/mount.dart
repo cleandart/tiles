@@ -1,8 +1,6 @@
 part of tiles_browser;
 
 const _REF = "ref";
-const _VALUE = "value";
-const _DEFAULTVALUE = "defaultValue";
 const _DANGEROUSLYSETINNERHTML = "dangerouslySetInnerHTML";
 
 /**
@@ -148,33 +146,6 @@ void _dangerouslySetInnerHTML(DomComponent component, html.Element element) {
 }
 
 /**
- * Returns boolean which is true
- * if attribute with passed key can be added
- * to element of component from arguments.
- */
-_canAddAttribute(bool svg, String key) {
-  return (!svg && allowedAttrs.contains(key))
-      || (svg && allowedSvgAttributes.contains(key)) 
-      || _matchAllowedPrefix(key);
-
-}
-
-/**
- * tells if the key match some of allowed prefixes
- */
-bool _matchAllowedPrefix(String key) {
-  bool match = false;
-  
-  allowedAttrsPrefixes.forEach((prefix) {
-    if (key.startsWith(prefix)) {
-      match = true;
-    }
-  });
-
-  return match;
-}
-
-/**
  * Applies props to element.
  *
  * If oldProps setted, use them to compare new and remove old.
@@ -191,7 +162,7 @@ _applyAttributes(html.Element element, Map props, {bool svg: false, Node node, M
         /**
          * filter props by allowedAttrs and allowedSvgAttrs
          */
-        if (_canAddAttribute(svg, key)) {
+        if (canAddAttribute(svg, key)) {
           if (oldProps[key] != value
               && element.getAttribute(key) != value) {
             _applyAttribute(element, key, value);
@@ -233,12 +204,12 @@ _applyAttribute(html.Element element, String key, dynamic value) {
     /**
      * retype it to not throwing warving
      */
-    if (key == _VALUE) {
+    if (key == VALUE) {
       if (element.value != value.toString()) {
         element.value = value.toString();
       }
-    } else if (key == _DEFAULTVALUE) {
-      element.setAttribute(_VALUE, value.toString());
+    } else if (key == DEFAULTVALUE) {
+      element.setAttribute(VALUE, value.toString());
       return;
     }
   }
