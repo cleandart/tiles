@@ -72,8 +72,8 @@ mountComponent(ComponentDescription description, html.HtmlElement mountRoot,
 }
 
 void _clearRest(bool clearNotUsed, html.HtmlElement mountRoot, Iterator<html.Node> iterator) {
-  if(clearNotUsed && iterator.current != null) {
-    iterator.current.remove();
+  if(clearNotUsed && _getCurrent(iterator) != null) {
+    _getCurrent(iterator).remove();
     iterator.moveNext();
     _clearRest(clearNotUsed, mountRoot, iterator);
   }
@@ -136,7 +136,8 @@ _mountNode(Node node, html.HtmlElement mountRoot, {Node nextNode,
     if (component.props.containsKey(_DANGEROUSLYSETINNERHTML)) {
       _dangerouslySetInnerHTML(component, componentElement);
     } else {
-      Iterator iterator = componentElement.childNodes.iterator..moveNext();
+      List children = []..addAll(componentElement.childNodes);
+      Iterator iterator = children.iterator..moveNext();
       node.children.forEach((Node child) => _mountNode(child, componentElement,
           useExisting: true,
           nextElement: iterator, clearNotUsed: clearNotUsed, clearNotUsedAttributes: clearNotUsedAttributes));
@@ -150,7 +151,7 @@ _mountNode(Node node, html.HtmlElement mountRoot, {Node nextNode,
       if (_getCurrent(nextElement) == null) {
         mountRoot.children.add(componentElement);
       } else {
-        mountRoot.insertBefore(componentElement, nextElement.current);
+        mountRoot.insertBefore(componentElement, _getCurrent(nextElement));
       }
     }
   } else {
@@ -187,7 +188,7 @@ _mountNode(Node node, html.HtmlElement mountRoot, {Node nextNode,
 
 html.Text _getText(
     String content, Iterator<html.Node> nextElement, bool useExisting) {
-  html.Node node = nextElement.current;
+  html.Node node = _getCurrent(nextElement);
   if (useExisting && node is html.Text) {
     node.text = content;
     nextElement.moveNext();
