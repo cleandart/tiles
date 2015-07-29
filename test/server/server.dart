@@ -211,11 +211,3 @@ main() {
   });
 }
 
-class CustomComponent extends Component {
-  CustomComponent(props, children) : super(props, children);
-
-  render() => children;
-}
-
-ComponentDescriptionFactory customComponent = registerComponent(
-    ({props, children}) => new CustomComponent(props, children));

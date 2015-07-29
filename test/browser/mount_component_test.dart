@@ -7,11 +7,13 @@ import 'package:tiles/tiles_browser.dart';
 import 'dart:html';
 import '../mocks.dart';
 
+import 'mount_use_existing_test.dart' as useExisting;
+
 main() {
   group("(browser) (mountComponent)", () {
     Element mountRoot;
     String imageSource =
-        "http: //github.global.ssl.fastly.net/images/modules/logos_page/GitHub-Mark.png";
+        "http://github.global.ssl.fastly.net/images/modules/logos_page/GitHub-Mark.png";
 
     ComponentDescriptionMock descriptionWithSpan;
     ComponentDescriptionMock descriptionWithImage;
@@ -345,5 +347,34 @@ main() {
         mountComponent(div(children: "hello", props:{"dangerouslySetInnerHTML": "<span class='cl'>hello</span>"}), mountRoot);
       }, throws);
     });
+        
+    group("(clearNotUsed)", () {
+      
+      test("should mount component without clearig mount root",  () {
+        mountRoot.children.add(new SpanElement());
+        
+        mountComponent(div(), mountRoot, clearNotUsed: false);
+        
+        expect(mountRoot.children.last is SpanElement, isTrue);
+        expect(mountRoot.children.first is DivElement, isTrue);
+      });
+      
+      test("should be able to mount to head", () {
+        var head = querySelector("head");
+        mountComponent(div(), head, clearNotUsed: false);
+        
+        expect(head, isNotNull);
+        expect(head.firstChild is DivElement, isTrue);
+      });
+      
+      test("should be possible to mount to html", () {
+        var html = querySelector("html");
+        mountComponent(div(), html, clearNotUsed: false);
+        
+        expect(html.firstChild is DivElement, isTrue);
+      });
+    });
+    
+    useExisting.main();
   });
 }

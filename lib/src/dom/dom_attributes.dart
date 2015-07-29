@@ -34,6 +34,7 @@ final Set<String> allowedAttrs = new Set.from([
   "allowFullScreen",
   "allowTransparency",
   "alt",
+  "async",
   "autoCapitalize",
   "autoComplete",
   "autoFocus",
