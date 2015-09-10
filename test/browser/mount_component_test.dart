@@ -316,10 +316,16 @@ main() {
       test("should set aso href argument", () {
         mountRoot = new DivElement();
         querySelector("body").append(mountRoot);
-        mountComponent(div(props:{DANGEROUSLYSETINNERHTML: "<a href='hreff'>hello</a>"}), mountRoot);
+        mountComponent(div(props:{
+          DANGEROUSLYSETINNERHTML: '<p>description sk  <a href="http://www.google.com">google</a></p>',
+          DANGEROUSLYSETINNERHTMLUNSANITIZE: [{
+            "element": "a",
+            "attributes": ["href"]
+          }] 
+        }), mountRoot);
         
-        expect(mountRoot.children.first.children.first is AnchorElement, isTrue);
-        expect(mountRoot.children.first.children.first.getAttribute("href"), equals("hreff"));
+        expect(mountRoot.children.first.children.first.children.first is AnchorElement, isTrue);
+        expect(mountRoot.children.first.children.first.children.first.getAttribute("href"), equals("http://www.google.com"));
       });
           
     });
