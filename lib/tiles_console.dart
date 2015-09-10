@@ -28,10 +28,21 @@ String _renderDomComponent(DomComponent component) {
     if (component is TextareaComponent) {
       buffer.write(_getValue(component.props));
     }
-    buffer.write(_children(component.children));
+    if(_haveDangerouslySetInnerHtml(component)) {
+      buffer.write(component.props[DANGEROUSLYSETINNERHTML]);
+    } else {
+      buffer.write(_children(component.children));
+    }
     buffer.write(_endTag(component.tagName));
   }
   return buffer.toString();
+}
+
+bool _haveDangerouslySetInnerHtml(DomComponent component) {
+  if(component.props.containsKey(DANGEROUSLYSETINNERHTML) && component.children != null) {
+    throw new Exception(DANGEROUSLYSETINNERHTMLCHILDRENEXCEPTION);
+  }
+  return component.props.containsKey(DANGEROUSLYSETINNERHTML);
 }
 
 Object _getValue(Map props) {

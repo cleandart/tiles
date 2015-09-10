@@ -1,7 +1,6 @@
 part of tiles_browser;
 
 const _REF = "ref";
-const _DANGEROUSLYSETINNERHTML = "dangerouslySetInnerHTML";
 
 const bool _USE_EXISTING_DEFAULT = true;
 const bool _CLEAR_NOT_USED_DEFAULT = true;
@@ -133,7 +132,7 @@ _mountNode(Node node, html.HtmlElement mountRoot, {Node nextNode,
 
     _applyAttributes(componentElement, component.props,
         svg: component.svg, node: node, listeners: node.listeners, clearNotUsedAttributes: clearNotUsedAttributes);
-    if (component.props.containsKey(_DANGEROUSLYSETINNERHTML)) {
+    if (component.props.containsKey(DANGEROUSLYSETINNERHTML)) {
       _dangerouslySetInnerHTML(component, componentElement);
     } else {
       List children = []..addAll(componentElement.childNodes);
@@ -215,10 +214,9 @@ html.Node _getCurrent(Iterator<html.Node> nextElement) {
 
 void _dangerouslySetInnerHTML(DomComponent component, html.Element element) {
   if (component.children != null) {
-    throw new Exception(
-        "Component with dangerously setted inner html should not have childre");
+    throw new Exception(DANGEROUSLYSETINNERHTMLCHILDRENEXCEPTION);
   }
-  element.setInnerHtml(component.props[_DANGEROUSLYSETINNERHTML]);
+  element.setInnerHtml(component.props[DANGEROUSLYSETINNERHTML]);
 }
 
 /**
