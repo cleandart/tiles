@@ -7,6 +7,7 @@ import 'package:tiles/tiles_browser.dart';
 import 'dart:html';
 import '../mocks.dart';
 import 'dart:async';
+import 'package:tiles/src/dom/dom_attributes.dart';
 
 main() {
   group("(browser) (updateComponent)", () {
@@ -573,7 +574,7 @@ main() {
       }));
     });
     
-    group("(dangerouslySetInnerHTML)", () {
+    group("($DANGEROUSLYSETINNERHTML)", () {
       test("should update dangerously seted inner HTML", () {
         String text1 = "hello",
             text2 = "aloha";
@@ -648,6 +649,26 @@ main() {
           expect(innerElement is Text, isTrue);
           expect(innerElement.text, equals(text));
         }));
+      });
+      
+      test("should set also href argument", () {
+        String text1 = "<span>hello</span><div>helloo</div>",
+            text2 = "<a href='hreff'>anchor</a>";
+        when(component.render())
+          .thenReturn(div(props: {"dangerouslySetInnerHTML": text1}));
+
+        mountComponent(description, mountRoot);
+
+        controller.add(true);
+        when(component.render())
+          .thenReturn(div(props: {"dangerouslySetInnerHTML": text2}));
+
+        window.animationFrame.then(expectAsync((data) {
+          expect(mountRoot.firstChild.firstChild is AnchorElement, isTrue);
+          expect(mountRoot.children.first.children.first.getAttribute("href"), equals("hreff"));
+
+        }));
+        
       });
       
     });

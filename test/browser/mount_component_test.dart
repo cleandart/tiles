@@ -8,6 +8,7 @@ import 'dart:html';
 import '../mocks.dart';
 
 import 'mount_use_existing_test.dart' as useExisting;
+import 'package:tiles/src/dom/dom_attributes.dart';
 
 main() {
   group("(browser) (mountComponent)", () {
@@ -293,7 +294,65 @@ main() {
         checkRemount(mountRoot, divEl, spanEl);
       });
     });
-  });
+
+
+    group("($DANGEROUSLYSETINNERHTML)", () {
+      
+      test("should dangorously insert inner HTML", () {
+        mountRoot = new DivElement();
+        mountComponent(div(props:{DANGEROUSLYSETINNERHTML: "<span class='cl'>hello</span>"}), mountRoot);
+        
+        expect(mountRoot.children.first.children.first is SpanElement, isTrue);
+      });
+      
+      test("should throw if want to set inner html and also have childre", () {
+        mountRoot = new DivElement();
+
+        expect(() {
+          mountComponent(div(children: "hello", props:{DANGEROUSLYSETINNERHTML: "<span class='cl'>hello</span>"}), mountRoot);
+        }, throws);
+      });
+      
+      test("should set aso href argument", () {
+        mountRoot = new DivElement();
+        querySelector("body").append(mountRoot);
+        mountComponent(div(props:{DANGEROUSLYSETINNERHTML: "<a href='hreff'>hello</a>"}), mountRoot);
+        
+        expect(mountRoot.children.first.children.first is AnchorElement, isTrue);
+        expect(mountRoot.children.first.children.first.getAttribute("href"), equals("hreff"));
+      });
+          
+    });
+    
+    group("(clearNotUsed)", () {
+      
+      test("should mount component without clearig mount root",  () {
+        mountRoot.children.add(new SpanElement());
+        
+        mountComponent(div(), mountRoot, clearNotUsed: false);
+        
+        expect(mountRoot.children.last is SpanElement, isTrue);
+        expect(mountRoot.children.first is DivElement, isTrue);
+      });
+      
+      test("should be able to mount to head", () {
+        var head = querySelector("head");
+        mountComponent(div(), head, clearNotUsed: false);
+        
+        expect(head, isNotNull);
+        expect(head.firstChild is DivElement, isTrue);
+      });
+      
+      test("should be possible to mount to html", () {
+        var html = querySelector("html");
+        mountComponent(div(), html, clearNotUsed: false);
+        
+        expect(html.firstChild is DivElement, isTrue);
+      });
+    });
+    
+    useExisting.main();
+});
 
   group("(browser) (unmountComponent)", () {
     Element mountRoot;
@@ -333,48 +392,5 @@ main() {
       expect(getElementForComponent(divComponent), isNull);
     });
     
-    test("should dangorously insert inner HTML", () {
-      mountRoot = new DivElement();
-      mountComponent(div(props:{"dangerouslySetInnerHTML": "<span class='cl'>hello</span>"}), mountRoot);
-      
-      expect(mountRoot.children.first.children.first is SpanElement, isTrue);
-    });
-    
-    test("should throw if want to set inner html and also have childre", () {
-      mountRoot = new DivElement();
-
-      expect(() {
-        mountComponent(div(children: "hello", props:{"dangerouslySetInnerHTML": "<span class='cl'>hello</span>"}), mountRoot);
-      }, throws);
-    });
-        
-    group("(clearNotUsed)", () {
-      
-      test("should mount component without clearig mount root",  () {
-        mountRoot.children.add(new SpanElement());
-        
-        mountComponent(div(), mountRoot, clearNotUsed: false);
-        
-        expect(mountRoot.children.last is SpanElement, isTrue);
-        expect(mountRoot.children.first is DivElement, isTrue);
-      });
-      
-      test("should be able to mount to head", () {
-        var head = querySelector("head");
-        mountComponent(div(), head, clearNotUsed: false);
-        
-        expect(head, isNotNull);
-        expect(head.firstChild is DivElement, isTrue);
-      });
-      
-      test("should be possible to mount to html", () {
-        var html = querySelector("html");
-        mountComponent(div(), html, clearNotUsed: false);
-        
-        expect(html.firstChild is DivElement, isTrue);
-      });
-    });
-    
-    useExisting.main();
   });
 }
