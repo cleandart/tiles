@@ -142,4 +142,4 @@ const VALUE = "value";
 const DEFAULTVALUE = "defaultValue";
 const DANGEROUSLYSETINNERHTML = "dangerouslySetInnerHTML";
 const DANGEROUSLYSETINNERHTMLCHILDRENEXCEPTION = "Component with dangerously setted inner html should not have childre";
-
+const DANGEROUSLYSETINNERHTMLUNSANITIZE = "dangerouslySetInnerHTMLUnsanitize";
