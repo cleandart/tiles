@@ -1,7 +1,9 @@
 part of tiles_browser;
 
 const _REF = "ref";
-const _DANGEROUSLYSETINNERHTML = "dangerouslySetInnerHTML";
+
+const bool _USE_EXISTING_DEFAULT = true;
+const bool _CLEAR_NOT_USED_DEFAULT = true;
 
 /**
  * Map needed when doing updates on dom.
@@ -23,11 +25,29 @@ typedef void _Ref(Component component);
  *
  * That means, that render structure described
  * in the component description into element
+ * 
+ * Have two aditinal arguments:
+ * 
+ * * useExisting: default true
+ * This means, if the existing structure should be "infected", co if it is possible, used and activated listeners on it.
+ * 
+ * * clearNotUsed: default true
+ * This means, that if there are some elements, not used in the "infection", there are cleared at the end of the mounting
+ * 
+ * * clearNotUsedAttributes: default clearNotUsed
+ * This will remove all attributes from elements, not defined by tiles.
+ * 
+ * So by default, mount will use existing structure and fully modify it to represent the description. It will remove not used elements and not used attributes.
  */
-mountComponent(ComponentDescription description, html.HtmlElement mountRoot) {
+mountComponent(ComponentDescription description, html.HtmlElement mountRoot,
+    {bool clearNotUsed: _CLEAR_NOT_USED_DEFAULT, bool useExisting: _USE_EXISTING_DEFAULT, bool clearNotUsedAttributes: null}) {
   logger.fine("mountComponent called");
   
-  if(_isMounted(description, mountRoot)) {
+  if(clearNotUsedAttributes == null) {
+    clearNotUsedAttributes = clearNotUsed;
+  }
+
+  if (_isMounted(description, mountRoot)) {
     return _remountDescription(description, mountRoot);
   }
 
@@ -37,9 +57,12 @@ mountComponent(ComponentDescription description, html.HtmlElement mountRoot) {
 
   node.update();
 
-  mountRoot.children.clear();
+  List children = []..addAll(mountRoot.childNodes);
+  Iterator iterator = children.iterator..moveNext();
+  _mountNode(node, mountRoot,
+      useExisting: useExisting, nextElement: iterator, clearNotUsed: clearNotUsed, clearNotUsedAttributes: clearNotUsedAttributes);
 
-  _mountNode(node, mountRoot);
+  _clearRest(clearNotUsed, mountRoot, iterator);
 
   /**
    * mount root node to mount root to be able easy unmount node.
@@ -47,14 +70,27 @@ mountComponent(ComponentDescription description, html.HtmlElement mountRoot) {
   _elementToNode[mountRoot] = node;
 }
 
-void _remountDescription(ComponentDescription description, html.HtmlElement mountRoot) {
+void _clearRest(bool clearNotUsed, html.HtmlElement mountRoot, Iterator<html.Node> iterator) {
+  if(clearNotUsed && _getCurrent(iterator) != null) {
+    _getCurrent(iterator).remove();
+    iterator.moveNext();
+    _clearRest(clearNotUsed, mountRoot, iterator);
+  }
+}
+
+void _remountDescription(
+    ComponentDescription description, html.HtmlElement mountRoot) {
   Node node = _elementToNode[mountRoot];
-  node.apply(props: description.props, children: description.children, listeners: description.listeners);
+  node.apply(
+      props: description.props,
+      children: description.children,
+      listeners: description.listeners);
   node.isDirty = true;
 }
 
 bool _isMounted(ComponentDescription description, html.HtmlElement mountRoot) {
-  return _elementToNode[mountRoot] != null && _elementToNode[mountRoot].factory == description.factory;
+  return _elementToNode[mountRoot] != null &&
+      _elementToNode[mountRoot].factory == description.factory;
 }
 
 /**
@@ -62,8 +98,8 @@ bool _isMounted(ComponentDescription description, html.HtmlElement mountRoot) {
  *
  * That means, it render it's tree structure into element.
  */
-_mountNode(Node node, html.HtmlElement mountRoot, {Node nextNode}) {
-  logger.fine("_mountNode called");
+_mountNode(Node node, html.HtmlElement mountRoot, {Node nextNode,
+    Iterator<html.Node> nextElement, bool useExisting: false, bool clearNotUsed: false, bool clearNotUsedAttributes: false}) {
   /**
    * update to build full node tree structure
    */
@@ -72,14 +108,13 @@ _mountNode(Node node, html.HtmlElement mountRoot, {Node nextNode}) {
     /**
      * if node contains text, write text and end recursion
      */
-    html.Text text = new html.Text(node.component.props);
+    html.Text text = _getText(node.component.props, nextElement, useExisting);
     _saveRelations(node, text);
     if (nextNode != null) {
       mountRoot.insertBefore(text, _nodeToElement[nextNode]);
     } else {
       mountRoot.append(text);
     }
-
   } else if (node.component is DomComponent) {
     logger.finer("mounting DomComponent");
     /**
@@ -91,20 +126,32 @@ _mountNode(Node node, html.HtmlElement mountRoot, {Node nextNode}) {
      */
 
     DomComponent component = node.component;
-    html.Element componentElement = new html.Element.tag(component.tagName);
+    html.Element componentElement =
+        _getHtmlElement(component, nextElement, useExisting);
     _saveRelations(node, componentElement);
 
-    _applyAttributes(componentElement, component.props, svg: component.svg, node: node, listeners: node.listeners);
-    if(component.props.containsKey(_DANGEROUSLYSETINNERHTML)){
+    _applyAttributes(componentElement, component.props,
+        svg: component.svg, node: node, listeners: node.listeners, clearNotUsedAttributes: clearNotUsedAttributes);
+    if (component.props.containsKey(DANGEROUSLYSETINNERHTML)) {
       _dangerouslySetInnerHTML(component, componentElement);
     } else {
-      node.children.forEach((Node child) => _mountNode(child, componentElement));
+      List children = []..addAll(componentElement.childNodes);
+      Iterator iterator = children.iterator..moveNext();
+      node.children.forEach((Node child) => _mountNode(child, componentElement,
+          useExisting: true,
+          nextElement: iterator, clearNotUsed: clearNotUsed, clearNotUsedAttributes: clearNotUsedAttributes));
+      ;
+      _clearRest(clearNotUsed, mountRoot, iterator);
     }
 
     if (nextNode != null) {
       mountRoot.insertBefore(componentElement, _nodeToElement[nextNode]);
-    } else {
-      mountRoot.children.add(componentElement);
+    } else if (!useExisting || !mountRoot.childNodes.contains(componentElement)) {
+      if (_getCurrent(nextElement) == null) {
+        mountRoot.children.add(componentElement);
+      } else {
+        mountRoot.insertBefore(componentElement, _getCurrent(nextElement));
+      }
     }
   } else {
     logger.finer("mounting custom component");
@@ -116,7 +163,7 @@ _mountNode(Node node, html.HtmlElement mountRoot, {Node nextNode}) {
     _applyEventListeners(node.listeners, node);
 
     node.children.forEach((Node child) {
-      _mountNode(child, mountRoot, nextNode: nextNode);
+      _mountNode(child, mountRoot, nextNode: nextNode, useExisting: useExisting, nextElement: nextElement, clearNotUsed: clearNotUsed, clearNotUsedAttributes: clearNotUsedAttributes);
     });
   }
   /**
@@ -129,20 +176,47 @@ _mountNode(Node node, html.HtmlElement mountRoot, {Node nextNode}) {
    * execute it with the coponent as argument
    */
   try {
-    if (node.component.props != null
-        && node.component.props[_REF] != null
-        && node.component.props[_REF] is _Ref) {
+    if (node.component.props != null &&
+        node.component.props[_REF] != null &&
+        node.component.props[_REF] is _Ref) {
       logger.finest("calling reference");
       node.component.props[_REF](node.component);
     }
   } catch (e) {}
 }
 
-void _dangerouslySetInnerHTML(DomComponent component, html.Element element) {
-  if(component.children != null) {
-    throw new Exception("Component with dangerously setted inner html should not have childre");
+html.Text _getText(
+    String content, Iterator<html.Node> nextElement, bool useExisting) {
+  html.Node node = _getCurrent(nextElement);
+  if (useExisting && node is html.Text) {
+    node.text = content;
+    nextElement.moveNext();
+    return node;
   }
-  element.setInnerHtml(component.props[_DANGEROUSLYSETINNERHTML]);
+  return new html.Text(content);
+}
+
+html.Element _getHtmlElement(
+    DomComponent component, Iterator<html.Node> nextElement, bool useExisting) {
+  html.Node node = _getCurrent(nextElement);
+  if (useExisting &&
+      node is html.Element &&
+      node.tagName.toLowerCase() == component.tagName.toLowerCase()) {
+    nextElement.moveNext();
+    return node;
+  }
+  return new html.Element.tag(component.tagName);
+}
+
+html.Node _getCurrent(Iterator<html.Node> nextElement) {
+  return nextElement != null ? nextElement.current : null;
+}
+
+void _dangerouslySetInnerHTML(DomComponent component, html.Element element) {
+  if (component.children != null) {
+    throw new Exception(DANGEROUSLYSETINNERHTMLCHILDRENEXCEPTION);
+  }
+  element.setInnerHtml(component.props[DANGEROUSLYSETINNERHTML]);
 }
 
 /**
@@ -150,7 +224,8 @@ void _dangerouslySetInnerHTML(DomComponent component, html.Element element) {
  *
  * If oldProps setted, use them to compare new and remove old.
  */
-_applyAttributes(html.Element element, Map props, {bool svg: false, Node node, Map oldProps, Map listeners}) {
+_applyAttributes(html.Element element, Map props,
+    {bool svg: false, Node node, Map oldProps, Map listeners, bool clearNotUsedAttributes: false}) {
   logger.fine("_applyAttributes called");
   if (oldProps == null) {
     oldProps = {};
@@ -159,19 +234,18 @@ _applyAttributes(html.Element element, Map props, {bool svg: false, Node node, M
   }
 
   props.forEach((String key, value) {
-        /**
+    /**
          * filter props by allowedAttrs and allowedSvgAttrs
          */
-        if (canAddAttribute(svg, key)) {
-          if (oldProps[key] != value
-              && element.getAttribute(key) != value) {
-            _applyAttribute(element, key, value);
-          }
-          /**
+    if (canAddAttribute(svg, key)) {
+      if (oldProps[key] != value && element.getAttribute(key) != value) {
+        _applyAttribute(element, key, value);
+      }
+      /**
            * remove key from oldProps to "mark it" as present in new props
            */
-          oldProps.remove(key);
-        }
+      oldProps.remove(key);
+    }
   });
 
   /**
@@ -179,15 +253,24 @@ _applyAttributes(html.Element element, Map props, {bool svg: false, Node node, M
    */
   _applyEventListeners(listeners, node);
 
-
   /**
    * remove old props not present in new one.
    */
   oldProps.forEach((String key, value) {
     element.attributes.remove(key);
   });
+  
+  if(clearNotUsedAttributes) {
+    _removeNotUsedAtrributes(element, props.keys);
+  }
+}
 
-
+void _removeNotUsedAtrributes(html.Element element, Iterable keys) {
+  for(String key in element.attributes.keys) {
+    if(!keys.contains(key) && !(key == VALUE && keys.contains(DEFAULTVALUE))) {
+      element.attributes.remove(key);
+    }
+  }
 }
 
 _applyEventListeners(Map listeners, Node node) {
@@ -234,6 +317,4 @@ void _deleteRelations(Node node, html.Node element) {
   _nodeToElement.remove(node);
   _componentToElement.remove(node.component);
   _elementToNode.remove(element);
-
 }
-

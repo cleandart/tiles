@@ -208,14 +208,20 @@ main() {
         textarea(props: {"defaultValue": "value"})
       ])))), equals('<div class="firstDiv">test<span></span><textarea>value</textarea></div>'));
     });
+    
+    group("($DANGEROUSLYSETINNERHTML)", () {
+      test("should write to html", () {
+        expect(renderToString(div(
+                props: {DANGEROUSLYSETINNERHTML: "<a></a>"}
+        )), equals('<div><a></a></div>'));
+      });
+      test("should throw if have already children", () {
+        expect(() => renderToString(div(
+                props: {DANGEROUSLYSETINNERHTML: "<a></a>"},
+                children: ["nieco"]
+        )), throws);
+      });
+    });    
   });
 }
 
-class CustomComponent extends Component {
-  CustomComponent(props, children) : super(props, children);
-
-  render() => children;
-}
-
-ComponentDescriptionFactory customComponent = registerComponent(
-    ({props, children}) => new CustomComponent(props, children));

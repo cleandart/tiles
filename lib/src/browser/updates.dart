@@ -161,7 +161,7 @@ _applyUpdatedChange(NodeChange change) {
      * change or remove old attributes
      */
     _applyAttributes(element, newProps, svg: component.svg, node: change.node, oldProps: oldProps, listeners: change.node.listeners);
-    if(component.props.containsKey(_DANGEROUSLYSETINNERHTML)){
+    if(component.props.containsKey(DANGEROUSLYSETINNERHTML)){
       _dangerouslySetInnerHTML(component, element);
     }
 
