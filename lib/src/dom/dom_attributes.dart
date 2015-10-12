@@ -62,6 +62,7 @@ final Set<String> allowedAttrs = new Set.from([
   "height",
   "hidden",
   "href",
+  "hreflang",
   "htmlFor",
   "httpEquiv",
   "icon",
@@ -102,7 +103,8 @@ final Set<String> allowedAttrs = new Set.from([
   "value",
   "defaultValue",
   "width",
-  "wmode"
+  "wmode",
+  "xmlns"
 ]);
 
 final Set<String> allowedSvgAttributes = new Set.from([
