@@ -9,6 +9,13 @@ part of tiles_browser;
 final Map<html.Node, Node> _elementToNode = {};
 
 /**
+ * A small List used to determine if an event will bubble up to it's
+ * parent. If not, we need to listen to the event on the element itself,
+ * not use the optimizations of batching listening on the root element.
+ */
+final List<String> _nonBubblingEvents = ["scroll", "focus", "blur"];
+
+/**
  * needed to enable user of API to get element,
  * which is component mapped to.
  */
@@ -36,6 +43,12 @@ _processEvent(String key, dynamic value, Node node) {
   logger.fine("_processEvent called on key $key");
   if (!(value is EventListener)) {
     throw "there can be only EventListener in $key attribute";
+  }
+
+  // if the event cannot bubble, skip finding root node
+  if(_nonBubblingEvents.contains(key)) {
+    _registerListener(_nodeToElement[node], key);
+    return;
   }
 
   /**
