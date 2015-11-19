@@ -13,7 +13,7 @@ final Map<html.Node, Node> _elementToNode = {};
  * parent. If not, we need to listen to the event on the element itself,
  * not use the optimizations of batching listening on the root element.
  */
-final List<String> _nonBubblingEvents = ["scroll", "focus", "blur"];
+final List<String> _nonBubblingEvents = ["scroll", "focus", "blur", "load", "unload"];
 
 /**
  * needed to enable user of API to get element,
