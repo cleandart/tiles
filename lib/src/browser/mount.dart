@@ -3,6 +3,7 @@ part of tiles_browser;
 const _REF = "ref";
 const _ELEMENT = "element";
 const _ATTRIBUTES = "attributes";
+const _URI_POLICY = "uriPolicy";
 
 const bool _USE_EXISTING_DEFAULT = true;
 const bool _CLEAR_NOT_USED_DEFAULT = true;
@@ -247,10 +248,27 @@ _createValidator(DomComponent component) {
   if (component.props.containsKey(DANGEROUSLYSETINNERHTMLUNSANITIZE)) {
     for (Map unsanitize in component.props[DANGEROUSLYSETINNERHTMLUNSANITIZE]) {
       _htmlValidator.allowElement(unsanitize[_ELEMENT],
-          attributes: unsanitize[_ATTRIBUTES]);
+          attributes: unsanitize[_ATTRIBUTES],
+          uriPolicy: _regexUriPolicy(unsanitize[_URI_POLICY]));
     }
   }
   return _htmlValidator;
+}
+
+_regexUriPolicy(String regex) {
+  return new RegexpUriPolicy(regex);
+}
+
+class RegexpUriPolicy implements html.UriPolicy{
+
+  RegexpUriPolicy(String regex):
+        this.regex = new RegExp(regex);
+
+  final RegExp regex;
+
+  bool allowsUri(String uri) {
+    return regex.hasMatch(uri);
+  }
 }
 
 /**

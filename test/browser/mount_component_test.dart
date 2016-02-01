@@ -320,8 +320,9 @@ main() {
           DANGEROUSLYSETINNERHTML: '<p>description sk  <a href="http://www.google.com">google</a></p>',
           DANGEROUSLYSETINNERHTMLUNSANITIZE: [{
             "element": "a",
-            "attributes": ["href"]
-          }] 
+            "attributes": ["href"],
+            "uriPolicy": r".*",
+          }],
         }), mountRoot);
         
         expect(mountRoot.children.first.children.first.children.first is AnchorElement, isTrue);
