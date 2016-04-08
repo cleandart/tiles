@@ -110,6 +110,17 @@ main() {
       expect(testareaEl.value, equals(value1));
     });
 
+    test('should add value into textarea from "defaultValue" prop', () {
+      when(component.render())
+          .thenReturn(textarea(props: {defaultValue: value1}, children: div()))
+          .thenReturn(textarea(props: {defaultValue: value2}));
+
+      mountComponent(description, mountRoot);
+
+      TextAreaElement testareaEl = mountRoot.firstChild;
+      expect(testareaEl.value, equals(value1));
+    });
+
     test('should update value in textarea from "value" prop', () {
       when(component.render())
           .thenReturn(textarea(props: {value: value1}, children: div()));
@@ -129,5 +140,25 @@ main() {
         expect(element.value, equals(value2));
       }));
     });
+    test('should not update value into textarea from "defaultValue" prop', () {
+      when(component.render())
+          .thenReturn(textarea(props: {defaultValue: value1}, children: div()));
+
+      mountComponent(description, mountRoot);
+
+      TextAreaElement element = mountRoot.firstChild;
+      expect(element.value, equals(value1));
+
+      element.value = elseValue;
+
+      controller.add(null);
+      when(component.render())
+          .thenReturn(textarea(props: {defaultValue: value2}));
+
+      window.animationFrame.then(expectAsync((_) {
+        expect(element.value, equals(elseValue));
+      }));
+    });
+
   });
 }

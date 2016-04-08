@@ -144,7 +144,7 @@ _mountNode(Node node, html.HtmlElement mountRoot, {Node nextNode,
         svg: component.svg,
         node: node,
         listeners: node.listeners,
-        clearNotUsedAttributes: clearNotUsedAttributes);
+        clearNotUsedAttributes: clearNotUsedAttributes, mount: true);
     if (component.props.containsKey(DANGEROUSLYSETINNERHTML)) {
       _dangerouslySetInnerHTML(component, componentElement);
     } else {
@@ -277,7 +277,7 @@ class RegexpUriPolicy implements html.UriPolicy{
  * If oldProps setted, use them to compare new and remove old.
  */
 _applyAttributes(html.Element element, Map props, {bool svg: false, Node node,
-    Map oldProps, Map listeners, bool clearNotUsedAttributes: false}) {
+    Map oldProps, Map listeners, bool clearNotUsedAttributes: false, bool mount: false}) {
   logger.fine("_applyAttributes called");
   if (oldProps == null) {
     oldProps = {};
@@ -291,7 +291,7 @@ _applyAttributes(html.Element element, Map props, {bool svg: false, Node node,
          */
     if (canAddAttribute(svg, key)) {
       if (oldProps[key] != value && element.getAttribute(key) != value) {
-        _applyAttribute(element, key, value);
+        _applyAttribute(element, key, value, mount: mount);
       }
       /**
            * remove key from oldProps to "mark it" as present in new props
@@ -333,7 +333,7 @@ _applyEventListeners(Map listeners, Node node) {
   }
 }
 
-_applyAttribute(html.Element element, String key, dynamic value) {
+_applyAttribute(html.Element element, String key, dynamic value, {bool mount: false}) {
   logger.finer("_applyAttribute called");
   if (element is html.InputElement || element is html.TextAreaElement) {
     /**
@@ -344,7 +344,12 @@ _applyAttribute(html.Element element, String key, dynamic value) {
         element.value = value.toString();
       }
     } else if (key == DEFAULTVALUE) {
-      element.setAttribute(VALUE, value.toString());
+      if(element is html.TextAreaElement && mount) {
+        // TODO
+        element.value = value.toString();
+      } else {
+        element.setAttribute(VALUE, value.toString());
+      }
       return;
     }
   }
