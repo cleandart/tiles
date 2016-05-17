@@ -64,6 +64,7 @@ mountComponent(ComponentDescription description, html.HtmlElement mountRoot,
 
   List children = []..addAll(mountRoot.childNodes);
   Iterator iterator = children.iterator..moveNext();
+  _resetFocus();
   _mountNode(node, mountRoot,
       useExisting: useExisting,
       nextElement: iterator,
@@ -76,6 +77,8 @@ mountComponent(ComponentDescription description, html.HtmlElement mountRoot,
    * mount root node to mount root to be able easy unmount node.
    */
   _elementToNode[mountRoot] = node;
+
+  _focus();
 }
 
 void _clearRest(bool clearNotUsed, html.HtmlElement mountRoot,
@@ -349,6 +352,11 @@ _applyAttribute(html.Element element, String key, dynamic value, {bool mount: fa
         element.value = value.toString();
       } else {
         element.setAttribute(VALUE, value.toString());
+      }
+      return;
+    } else if (key == FOCUS) {
+      if (value == true) {
+        _toBeFocused = element;
       }
       return;
     }

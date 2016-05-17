@@ -7,3 +7,4 @@ part 'src/browser/mount.dart';
 part 'src/browser/unmount.dart';
 part 'src/browser/updates.dart';
 part 'src/browser/events.dart';
+part 'src/browser/focus.dart';

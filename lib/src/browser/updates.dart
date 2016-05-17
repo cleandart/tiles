@@ -49,9 +49,11 @@ _update(num data) {
  * Find all root nodes, and updte each tree by updating root node.
  */
 _updateTrees() {
+  _resetFocus();
   _rootNodes.forEach((Node node) {
     _updateTree(node);
   });
+  _focus();
 }
 
 /**
