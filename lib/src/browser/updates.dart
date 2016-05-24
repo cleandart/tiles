@@ -239,7 +239,7 @@ _removeNodeFromDom(Node node) {
     /**
      * remove all relations and notify component about unmount
      */
-    node.component.willUnmount();
+    _callUnmount(node);
 
     _deleteRelations(node, element);
     element.remove();
@@ -251,5 +251,12 @@ _removeNodeFromDom(Node node) {
     for (Node child in node.children) {
       _removeNodeFromDom(child);
     }
+  }
+}
+
+_callUnmount(Node node) {
+  node.component.willUnmount();
+  for (Node child in node.children) {
+    _callUnmount(child);
   }
 }
