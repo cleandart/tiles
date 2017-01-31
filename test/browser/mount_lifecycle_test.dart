@@ -3,6 +3,7 @@ library tiles_mount_lifecycle_test;
 import 'package:test/test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:tiles/tiles_browser.dart';
+import 'package:tiles/tiles.dart';
 import 'dart:html';
 import 'dart:async';
 import '../mocks.dart';
@@ -73,12 +74,34 @@ main() {
       unmountComponent(mountRoot);
 
       verify(component.willUnmount());
-      
+
       verifyNever(component.shouldUpdate(any, any));
       verifyNever(component.willReceiveProps(any));
       verifyNever(component.render());
       verifyNever(component.didUpdate());
     });
+
+    createDescription([toRender]) {
+      ComponentDescriptionMock description2;
+      ComponentMock component2;
+
+      component2 = new ComponentMock();
+      when(component2.render).thenReturn(toRender);
+      when(component2.shouldUpdate).thenReturn(true);
+
+      description2 = new ComponentDescriptionMock();
+      when(description2.createComponent()).thenReturn(component2);
+
+      StreamController controller;
+      controller = new StreamController();
+      when(component2.needUpdate).thenReturn(controller.stream);
+
+      return description2;
+    }
+
+    verifyUnmounted(ComponentDescriptionMock description) {
+      verify(description.createComponent().willUnmount());
+    }
 
     group("(core complex)", () {
       Map<dynamic, StreamController> controllers;
@@ -174,9 +197,12 @@ main() {
          *           /  \
          *         c2    c3
          *        /  \     \
-         *      c4    c5    \___c6
-         *     /     /  \      /  \
-         *   c7     c8   c9   c10  c11
+         *      c4    c5    \___span
+         *     /     /  \        |
+         *   c7     c8   c9     c6
+         *                     /  \
+         *                    c10  c11
+         *
          */
         c11 = createDefaultComponent();
         named(c11, name: "c11");
@@ -206,7 +232,7 @@ main() {
         dc5 = createDefaultDescription(c5);
         dc6 = createDefaultDescription(c6);
 
-        c3 = createDefaultComponent([dc6]);
+        c3 = createDefaultComponent([span(children:dc6)]);
         named(c3, name: "c3");
         c2 = createDefaultComponent([dc4, dc5]);
         named(c2, name: "c2");
@@ -267,6 +293,19 @@ main() {
           c10,
           c11
         ], "willUnmount", ONCE);
+      });
+
+      test("should unmount everything on changed render", () {
+        resetAll();
+
+        when(c1.render()).thenReturn([dc2]);
+
+        controllers[c1].add(true);
+        window.animationFrame.then(expectAsync((data) {
+          shouldHappened([c3, c6, c10, c11], "willUnmount", ONCE);
+          shouldHappened([c1, c2, c4, c5, c7, c8, c9], "willUnmount", NEVER);
+        }));
+
       });
 
       test("should unmount whole subtree when one component remove child", () {

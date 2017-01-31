@@ -56,6 +56,7 @@ final Set<String> allowedAttrs = new Set.from([
   "disabled",
   "draggable",
   "encType",
+  FOCUS,
   "for",
   "form",
   "frameBorder",
@@ -100,8 +101,8 @@ final Set<String> allowedAttrs = new Set.from([
   "target",
   "title",
   "type",
-  "value",
-  "defaultValue",
+  VALUE,
+  DEFAULTVALUE,
   "width",
   "wmode",
   "xmlns"
@@ -142,6 +143,7 @@ final Set<String> allowedAttrsPrefixes = new Set.from(["data-", "aria-"]);
 
 const VALUE = "value";
 const DEFAULTVALUE = "defaultValue";
+const FOCUS = "focus";
 const DANGEROUSLYSETINNERHTML = "dangerouslySetInnerHTML";
 const DANGEROUSLYSETINNERHTMLCHILDRENEXCEPTION = "Component with dangerously setted inner html should not have childre";
 const DANGEROUSLYSETINNERHTMLUNSANITIZE = "dangerouslySetInnerHTMLUnsanitize";

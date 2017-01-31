@@ -3,6 +3,7 @@ part of tiles_browser;
 const _REF = "ref";
 const _ELEMENT = "element";
 const _ATTRIBUTES = "attributes";
+const _URI_POLICY = "uriPolicy";
 
 const bool _USE_EXISTING_DEFAULT = true;
 const bool _CLEAR_NOT_USED_DEFAULT = true;
@@ -63,6 +64,7 @@ mountComponent(ComponentDescription description, html.HtmlElement mountRoot,
 
   List children = []..addAll(mountRoot.childNodes);
   Iterator iterator = children.iterator..moveNext();
+  _resetFocus();
   _mountNode(node, mountRoot,
       useExisting: useExisting,
       nextElement: iterator,
@@ -75,6 +77,8 @@ mountComponent(ComponentDescription description, html.HtmlElement mountRoot,
    * mount root node to mount root to be able easy unmount node.
    */
   _elementToNode[mountRoot] = node;
+
+  _focus();
 }
 
 void _clearRest(bool clearNotUsed, html.HtmlElement mountRoot,
@@ -143,7 +147,7 @@ _mountNode(Node node, html.HtmlElement mountRoot, {Node nextNode,
         svg: component.svg,
         node: node,
         listeners: node.listeners,
-        clearNotUsedAttributes: clearNotUsedAttributes);
+        clearNotUsedAttributes: clearNotUsedAttributes, mount: true);
     if (component.props.containsKey(DANGEROUSLYSETINNERHTML)) {
       _dangerouslySetInnerHTML(component, componentElement);
     } else {
@@ -247,10 +251,27 @@ _createValidator(DomComponent component) {
   if (component.props.containsKey(DANGEROUSLYSETINNERHTMLUNSANITIZE)) {
     for (Map unsanitize in component.props[DANGEROUSLYSETINNERHTMLUNSANITIZE]) {
       _htmlValidator.allowElement(unsanitize[_ELEMENT],
-          attributes: unsanitize[_ATTRIBUTES]);
+          attributes: unsanitize[_ATTRIBUTES],
+          uriPolicy: _regexUriPolicy(unsanitize[_URI_POLICY]));
     }
   }
   return _htmlValidator;
+}
+
+_regexUriPolicy(String regex) {
+  return new RegexpUriPolicy(regex);
+}
+
+class RegexpUriPolicy implements html.UriPolicy{
+
+  RegexpUriPolicy(String regex):
+        this.regex = new RegExp(regex);
+
+  final RegExp regex;
+
+  bool allowsUri(String uri) {
+    return regex.hasMatch(uri);
+  }
 }
 
 /**
@@ -259,7 +280,7 @@ _createValidator(DomComponent component) {
  * If oldProps setted, use them to compare new and remove old.
  */
 _applyAttributes(html.Element element, Map props, {bool svg: false, Node node,
-    Map oldProps, Map listeners, bool clearNotUsedAttributes: false}) {
+    Map oldProps, Map listeners, bool clearNotUsedAttributes: false, bool mount: false}) {
   logger.fine("_applyAttributes called");
   if (oldProps == null) {
     oldProps = {};
@@ -273,7 +294,7 @@ _applyAttributes(html.Element element, Map props, {bool svg: false, Node node,
          */
     if (canAddAttribute(svg, key)) {
       if (oldProps[key] != value && element.getAttribute(key) != value) {
-        _applyAttribute(element, key, value);
+        _applyAttribute(element, key, value, mount: mount);
       }
       /**
            * remove key from oldProps to "mark it" as present in new props
@@ -315,7 +336,7 @@ _applyEventListeners(Map listeners, Node node) {
   }
 }
 
-_applyAttribute(html.Element element, String key, dynamic value) {
+_applyAttribute(html.Element element, String key, dynamic value, {bool mount: false}) {
   logger.finer("_applyAttribute called");
   if (element is html.InputElement || element is html.TextAreaElement) {
     /**
@@ -326,7 +347,17 @@ _applyAttribute(html.Element element, String key, dynamic value) {
         element.value = value.toString();
       }
     } else if (key == DEFAULTVALUE) {
-      element.setAttribute(VALUE, value.toString());
+      if(element is html.TextAreaElement && mount) {
+        // TODO
+        element.value = value.toString();
+      } else {
+        element.setAttribute(VALUE, value.toString());
+      }
+      return;
+    } else if (key == FOCUS) {
+      if (value == true) {
+        _toBeFocused = element;
+      }
       return;
     }
   }
